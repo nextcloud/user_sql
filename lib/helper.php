@@ -225,7 +225,7 @@ class Helper {
     public function connectToDb($settings)
     {
         $this -> settings = $settings;
-        $cm = new \OC\DB\ConnectionFactory();
+        $cm = new \OC\DB\ConnectionFactory(\OC::$server->getConfig());
         $parameters = array('host' => $this -> settings['sql_hostname'],
                 'password' => $this -> settings['sql_password'],
                 'user' => $this -> settings['sql_username'],

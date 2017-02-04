@@ -15,6 +15,6 @@
        <category>auth</category>
        <dependencies>
            <owncloud min-version="8.1" max-version="9.1"/>
-           <nextcloud min-version="9" max-version="10"/>
+           <nextcloud min-version="9" max-version="11"/>
        </dependencies>
 </info>

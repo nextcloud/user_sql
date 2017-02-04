@@ -21,7 +21,7 @@
 *
 */
 
-require_once('apps/user_sql/user_sql.php');
+require_once __DIR__ . '/../user_sql.php';
 \OCP\App::registerAdmin('user_sql','settings');
 
 $backend = new \OCA\user_sql\OC_USER_SQL;
