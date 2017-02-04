@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<info>
+       <id>user_sql</id>
+       <name>SQL user backend</name>
+       <summary>Authenticate Users by SQL</summary>
+       <description>Authenticate Users by SQL</description>
+       <version>2.3.1</version>
+       <licence>agpl</licence>
+       <author>Andreas Boehler &lt;dev (at) aboehler 
+(dot) at &gt;</author>
+       <namespace>user_sql</namespace>
+       <types>
+       		<authentication/>
+       </types>
+       <category>auth</category>
+       <dependencies>
+           <owncloud min-version="8.1" max-version="9.1"/>
+           <nextcloud min-version="9" max-version="10"/>
+       </dependencies>
+</info>

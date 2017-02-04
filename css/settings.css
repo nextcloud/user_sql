@@ -1,0 +1,24 @@
+.statusmessage {
+        background-color: #DDDDFF;
+}
+.errormessage {
+        background-color: #FFDDDD;
+}
+.successmessage {
+        background-color: #DDFFDD;
+}
+.statusmessage,.errormessage,.successmessage{
+        display:none;
+        padding: 1px;
+}
+
+#sql-1 p label:first-child,
+#sql-2 p label:first-child,
+#sql-3 p label:first-child,
+#sql-4 p label:first-child,
+#sql-5 p label:first-child {
+    display: inline-block;
+    text-align: right;
+    width: 300px;
+    padding-right: 10px;
+}
