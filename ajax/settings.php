@@ -159,7 +159,7 @@ if(isset($_POST['appname']) && ($_POST['appname'] === 'user_sql') && isset($_POS
 
         // Try to verify the database connection settings
         case 'verifySettings':
-            $cm = new \OC\DB\ConnectionFactory();
+            $cm = new \OC\DB\ConnectionFactory(\OC::$server->getSystemConfig());
 
             if(!isset($_POST['sql_driver']))
             {
