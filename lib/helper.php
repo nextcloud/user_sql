@@ -295,7 +295,7 @@ class Helper {
      */
     public function getTables($parameters, $sql_driver)
     {
-        $cm = new \OC\DB\ConnectionFactory();
+        $cm = new \OC\DB\ConnectionFactory(\OC::$server->getSystemConfig());
         try {
             $conn = $cm -> getConnection($sql_driver, $parameters);
             $platform = $conn -> getDatabasePlatform();
@@ -324,7 +324,7 @@ class Helper {
      */
     public function getColumns($parameters, $sql_driver, $table)
     {
-        $cm = new \OC\DB\ConnectionFactory();
+        $cm = new \OC\DB\ConnectionFactory(\OC::$server->getSystemConfig());
         try {
             $conn = $cm -> getConnection($sql_driver, $parameters);
             $platform = $conn -> getDatabasePlatform();
