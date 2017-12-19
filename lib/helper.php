@@ -314,13 +314,19 @@ class Helper {
         try {
             $conn = $cm -> getConnection($sql_driver, $parameters);
             $platform = $conn -> getDatabasePlatform();
-            $query = $platform -> getListTablesSQL();
-            $result = $conn -> executeQuery($query);
+
+            $queries = array(
+                'Tables_in_'.$parameters['dbname'] => $platform -> getListTablesSQL(),
+                'TABLE_NAME' => $platform -> getListViewsSQL($parameters['dbname']));
             $ret = array();
-            while($row = $result -> fetch())
+            foreach($queries as $field => $query)
             {
-                $name = $row['Tables_in_'.$parameters['dbname']];
-                $ret[] = $name;
+                $result = $conn -> executeQuery($query);
+                while($row = $result -> fetch())
+                {
+                    $name = $row[$field];
+                    $ret[] = $name;
+                }
             }
             return $ret;
         }

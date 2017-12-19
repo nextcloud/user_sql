@@ -17,7 +17,7 @@ user_sql.adminSettingsUI = function()
         $('#sqlDiv').tabs();
         
         // Attach auto-completion to all column fields
-        $('#col_username, #col_password, #col_displayname, #col_active, #col_email, #col_gethome').autocomplete({
+        $('#col_username, #col_password, #col_displayname, #col_active, #col_email, #col_gethome, #col_group_name, #col_group_username').autocomplete({
             source: function(request, response)
             {
                 var post = $('#sqlForm').serializeArray();
@@ -56,7 +56,7 @@ user_sql.adminSettingsUI = function()
         });        
         
         // Attach auto-completion to all table fields
-        $('#sql_table').autocomplete({
+        $('#sql_table, #sql_group_table').autocomplete({
             source: function(request, response)
             {
                 var post = $('#sqlForm').serializeArray();
