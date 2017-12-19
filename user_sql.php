@@ -31,7 +31,13 @@ namespace OCA\user_sql;
 
 use \OCA\user_sql\lib\Helper;
  
-class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\UserInterface
+if(!interface_exists('OCP\\User\\IProvidesEMailBackend'))
+{
+   // hack for nextcloud
+   eval("namespace OCP\User; interface IProvidesEMailBackend {}");
+}
+
+class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\UserInterface, \OCP\User\IProvidesEMailBackend
 {
     protected $cache;
     protected $settings;
@@ -114,6 +120,15 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
         }
         
         return true;
+    }
+
+    /**
+     * Only used by OwnCloud to get the email address
+     */
+    public function getEMailAddress($uid) {
+        $this->doEmailSync($uid);
+        $email = $this->ocConfig->getUserValue($uid, 'settings', 'email', '');
+        return $email;
     }
 
     /**
