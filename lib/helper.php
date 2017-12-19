@@ -188,6 +188,10 @@ class Helper {
             case 'getGroupUsers':
                 $query = "SELECT distinct ".$this->settings['col_group_username']." FROM ".$this->settings['sql_group_table']." WHERE ".$this->settings['col_group_name']." = :gid";
             break;
+
+            case 'countUsersInGroup':
+                $query = "SELECT count(".$this->settings['col_group_username'].") FROM ".$this->settings['sql_group_table']." WHERE ".$this->settings['col_group_name']." = :gid AND ".$this->settings['col_group_username']." LIKE :search";
+            break;
         }
 
         if(isset($limits['limit']) && $limits['limit'] !== null)

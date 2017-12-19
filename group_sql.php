@@ -75,5 +75,20 @@ class OC_GROUP_SQL extends \OC_Group_Backend implements \OCP\GroupInterface
         } 
         return $users;
     }
+
+    public function countUsersInGroup($gid, $search = '') {
+        if(empty($this -> settings['sql_group_table']))
+        {
+            return 0;
+        }
+        $search = "%".$search."%";
+        $count = $this -> helper -> runQuery('countUsersInGroup', array('gid' => $gid, 'search' => $search));
+        if($count === false)
+        {
+            return 0;
+        } else {
+            return intval(reset($count));
+        }
+    }
 }
 ?>
