@@ -268,10 +268,10 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
 			if(!$salt)
 				return false;
 			$enc_password = sha1($salt['salt'].sha1($password));
-		}
-		elseif($this -> settings['set_crypt_type'] === 'sha1')
-		{
-			$enc_password = sha1($password);
+        }
+        elseif($this -> settings['set_crypt_type'] === 'sha1')
+        {
+            $enc_password = sha1($password);
         } else
         {
             $enc_password = $this -> pacrypt($password, $old_password);
@@ -325,10 +325,10 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
 			if(!$salt)
 				return false;
 			$ret = sha1($salt['salt'].sha1($password)) === $db_pass;
-		}
-		elseif($this -> settings['set_crypt_type'] == 'sha1')
-		{
-			$ret = sha1($password) === $db_pass;
+        }
+        elseif($this -> settings['set_crypt_type'] == 'sha1')
+        {
+            $ret = sha1($password) === $db_pass;
         } else
         {
             $ret = $this -> pacrypt($password, $db_pass) === $db_pass;
