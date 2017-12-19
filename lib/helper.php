@@ -64,7 +64,10 @@ class Helper {
             'set_mail_sync_mode',
             'set_enable_gethome',
             'set_gethome_mode',
-            'set_gethome'
+            'set_gethome',
+            'sql_group_table',
+            'col_group_username',
+            'col_group_name'
         );
 
         return $params;
@@ -172,6 +175,18 @@ class Helper {
 
             case 'mysqlPassword':
                 $query = "SELECT PASSWORD(:pw);";
+            break;
+
+            case 'getUserGroups':
+                $query = "SELECT ".$this->settings['col_group_name']." FROM ".$this->settings['sql_group_table']." WHERE ".$this->settings['col_group_username']." = :uid";
+            break;
+
+            case 'getGroups':
+                $query = "SELECT distinct ".$this->settings['col_group_name']." FROM ".$this->settings['sql_group_table'];
+            break;
+
+            case 'getGroupUsers':
+                $query = "SELECT distinct ".$this->settings['col_group_username']." FROM ".$this->settings['sql_group_table']." WHERE ".$this->settings['col_group_name']." = :gid";
             break;
         }
 

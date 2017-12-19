@@ -80,7 +80,7 @@ if(isset($_POST['appname']) && ($_POST['appname'] === 'user_sql') && isset($_POS
             $columns = array();
             foreach($params as $param)
             {
-                if(strpos($param, 'col_') === 0)
+                if(strpos($param, 'col_') === 0 && strpos($param, 'col_group_') !== 0)
                 {
                     if(isset($_POST[$param]) && $_POST[$param] !== '')
                         $columns[] = $_POST[$param];

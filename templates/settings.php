@@ -20,6 +20,7 @@ $cfgClass = $ocVersion >= 7 ? 'section' : 'personalblock';
       <li><a id="sqlEmailSettings" href="#sql-3"><?php p($l -> t('E-Mail Settings')); ?></a></li>
       <li><a id="sqlDomainSettings" href="#sql-4"><?php p($l -> t('Domain Settings')); ?></a></li>
       <li><a id="sqlGethomeSettings" href="#sql-5"><?php p($l -> t('getHome Settings')); ?></a></li>
+      <li><a id="sqlGroupsSettings" href="#sql-6"><?php p($l -> t('Groups Settings')); ?></a></li>
     </ul>
 
         <fieldset id="sql-1">
@@ -155,6 +156,15 @@ $cfgClass = $ocVersion >= 7 ? 'section' : 'personalblock';
             <em><?php p($l -> t('You can use the placeholders %%u to specify the user ID (before appending the default domain), %%ud to specify the user ID (after appending the default domain) and %%d to specify the default domain')); ?></em></p>
             
         </fieldset>
+        <fieldset id="sql-6">
+            <p><label for="sql_group_table"><?php p($l -> t('Table')); ?></label><input type="text" id="sql_group_table" name="sql_group_table" value="<?php p($_['sql_group_table']); ?>" /></p>
+            
+            <p><label for="col_group_username"><?php p($l -> t('Username Column')); ?></label><input type="text" id="col_group_username" name="col_group_username" value="<?php p($_['col_group_username']); ?>" /></p>
+            
+            <p><label for="col_group_name"><?php p($l -> t('Group Name Column')); ?></label><input type="text" id="col_group_name" name="col_group_name" value="<?php p($_['col_group_name']); ?>" /></p>
+            
+        </fieldset>
+
         <input type="hidden" name="requesttoken" value="<?php p($_['requesttoken']); ?>" id="requesttoken" />
         <input type="hidden" name="appname" value="user_sql" />
         <input id="sqlSubmit" type="submit" value="<?php p($l -> t('Save')); ?>" />
