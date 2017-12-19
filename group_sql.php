@@ -42,8 +42,9 @@ class OC_GROUP_SQL extends \OC_Group_Backend implements \OCP\GroupInterface
         if(empty($this -> settings['sql_group_table']))
         {
             return [];
-        }   
-        $rows = $this -> helper -> runQuery('getGroups', array(), false, true);
+        }
+        $search = "%".$search."%";
+        $rows = $this -> helper -> runQuery('getGroups', array('search' => $search), false, true, array('limit' => $limit, 'offset' => $offset));
         if($rows === false)
         {
             return [];

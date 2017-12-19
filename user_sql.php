@@ -404,7 +404,7 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
         }
         else 
         {
-	       $search = "%".$this -> doUserDomainMapping("")."%";   
+            $search = "%".$this -> doUserDomainMapping("")."%";   
         }
         
         $rows = $this -> helper -> runQuery('getUsers', array('search' => $search), false, true, array('limit' => $limit, 'offset' => $offset));
