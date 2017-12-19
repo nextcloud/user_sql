@@ -280,7 +280,7 @@ class Helper {
             if(!in_array($col, $columns, true))
             {
                 $res = false;
-                $err .= $col.' ';
+                $err .= $table.'.'.$col.' ';
             }
         }
         if($res)

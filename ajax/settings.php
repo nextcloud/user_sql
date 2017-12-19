@@ -75,20 +75,40 @@ if(isset($_POST['appname']) && ($_POST['appname'] === 'user_sql') && isset($_POS
                             'data' => array('message' => $l -> t('The selected SQL table '.$_POST['sql_table'].' does not exist!'))));
                 break;
             }
+            if(!empty($_POST['sql_group_table']) && !$helper->verifyTable($parameters, $_POST['sql_driver'], $_POST['sql_group_table']))
+            {
+                $response->setData(array('status' => 'error',
+                            'data' => array('message' => $l -> t('The selected SQL table '.$_POST['sql_group_table'].' does not exist!'))));
+                break;
+            }
             
             // Retrieve all column settings
             $columns = array();
+            $group_columns = array();
             foreach($params as $param)
             {
-                if(strpos($param, 'col_') === 0 && strpos($param, 'col_group_') !== 0)
+                if(strpos($param, 'col_') === 0)
                 {
                     if(isset($_POST[$param]) && $_POST[$param] !== '')
-                        $columns[] = $_POST[$param];
+                    {
+                        if(strpos($param, 'col_group_') === 0)
+                        {
+                            $group_columns[] = $_POST[$param];
+                        }
+                        else
+                        {
+                            $columns[] = $_POST[$param];
+                        }
+                    }
                 }
             }
 
             // Check if the columns exist
             $status = $helper->verifyColumns($parameters, $_POST['sql_driver'], $_POST['sql_table'], $columns);
+            if(!empty($_POST['sql_group_table']) && $status === true)
+            {
+                $status = $helper->verifyColumns($parameters, $_POST['sql_driver'], $_POST['sql_group_table'], $group_columns);
+            }
             if($status !== true)
             {
                 $response->setData(array('status' => 'error',
