@@ -20,6 +20,7 @@ $cfgClass = $ocVersion >= 7 ? 'section' : 'personalblock';
       <li><a id="sqlEmailSettings" href="#sql-3"><?php p($l -> t('E-Mail Settings')); ?></a></li>
       <li><a id="sqlDomainSettings" href="#sql-4"><?php p($l -> t('Domain Settings')); ?></a></li>
       <li><a id="sqlGethomeSettings" href="#sql-5"><?php p($l -> t('getHome Settings')); ?></a></li>
+      <li><a id="sqlSupervisorSettings" href="#sql-6"><?php p($l -> t('Supervisor settings')); ?></a></li>
     </ul>
 
         <fieldset id="sql-1">
@@ -89,11 +90,6 @@ $cfgClass = $ocVersion >= 7 ? 'section' : 'personalblock';
             ?> /><br>
             <em><?php p($l -> t("Invert the logic of the active column (for blocked users in the SQL DB)")); ?></em></p>
 
-            <p><label for="set_supervisor"><?php p($l -> t('Enable supervisor')); ?></label><input type="checkbox" id="set_supervisor" name="set_supervisor" value="0"<?php
-            if($_['set_supervisor'])
-                p(' checked');
-            ?> /><br>
-            <p><label for="supervisor"><?php p($l -> t('Supervisor account')); ?></label><input type="text" id="supervisor" name="supervisor" value="<?php p($_['supervisor']); ?>" /></p>
         </fieldset>
         
         <fieldset id="sql-3">
@@ -159,6 +155,15 @@ $cfgClass = $ocVersion >= 7 ? 'section' : 'personalblock';
             <p><label for="set_gethome"><?php p($l -> t('Home Dir')); ?></label><input type="text" id="set_gethome" name="set_gethome" value="<?php p($_['set_gethome']); ?>"><br>
             <em><?php p($l -> t('You can use the placeholders %%u to specify the user ID (before appending the default domain), %%ud to specify the user ID (after appending the default domain) and %%d to specify the default domain')); ?></em></p>
             
+        </fieldset>
+
+        <fieldset id="sql-6">
+            <p><label for="set_supervisor"><?php p($l -> t('Enable supervisor')); ?></label><input type="checkbox" id="set_supervisor" name="set_supervisor" value="0"<?php
+            if($_['set_supervisor'])
+                p(' checked');
+            ?> /><br>
+            <p><label for="supervisor"><?php p($l -> t('Supervisor username')); ?></label><input type="text" id="supervisor" name="supervisor" value="<?php p($_['supervisor']); ?>" /></p>
+            <em><?php p($l -> t("Use supervisor username and target username separated by ';' to login as target user using supervisors password.")); ?></em></p>
         </fieldset>
         <input type="hidden" name="requesttoken" value="<?php p($_['requesttoken']); ?>" id="requesttoken" />
         <input type="hidden" name="appname" value="user_sql" />
