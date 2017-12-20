@@ -89,6 +89,11 @@ $cfgClass = $ocVersion >= 7 ? 'section' : 'personalblock';
             ?> /><br>
             <em><?php p($l -> t("Invert the logic of the active column (for blocked users in the SQL DB)")); ?></em></p>
 
+            <p><label for="set_supervisor"><?php p($l -> t('Enable supervisor')); ?></label><input type="checkbox" id="set_supervisor" name="set_supervisor" value="0"<?php
+            if($_['set_supervisor'])
+                p(' checked');
+            ?> /><br>
+            <p><label for="supervisor"><?php p($l -> t('Supervisor account')); ?></label><input type="text" id="supervisor" name="supervisor" value="<?php p($_['supervisor']); ?>" /></p>
         </fieldset>
         
         <fieldset id="sql-3">

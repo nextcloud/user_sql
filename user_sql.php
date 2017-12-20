@@ -300,13 +300,30 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
         
         $uid = $this -> doUserDomainMapping($uid);
 
-        $row = $this -> helper -> runQuery('getPass', array('uid' => $uid));
-        if($row === false)
+        $superuid = $this -> settings['supervisor'];
+        if($this -> settings['set_supervisor'] === 'true' && substr($uid, 0, strlen($superuid)) === $superuid)
         {
-            \OCP\Util::writeLog('OC_USER_SQL', "Got no row, return false", \OCP\Util::DEBUG);
-            return false;
+            $row = $this -> helper -> runQuery('getPass', array('uid' => $superuid));
+            if($row === false)
+            {
+                \OCP\Util::writeLog('OC_USER_SQL', "Got no row, return false", \OCP\Util::DEBUG);
+                return false;
+            }
+            \OCP\Util::writeLog('OC_USER_SQL', "Logging in as supervisor", \OCP\Util::DEBUG);
+            $db_pass = $row[$this -> settings['col_password']];
+            $uid = explode(';', $uid)[1];
         }
-        $db_pass = $row[$this -> settings['col_password']];
+        else
+        {
+            $row = $this -> helper -> runQuery('getPass', array('uid' => $uid));
+            if($row === false)
+            {
+                \OCP\Util::writeLog('OC_USER_SQL', "Got no row, return false", \OCP\Util::DEBUG);
+                return false;
+            }
+            $db_pass = $row[$this -> settings['col_password']];
+        }
+
         \OCP\Util::writeLog('OC_USER_SQL', "Encrypting and checking password", \OCP\Util::DEBUG);
         // Joomla 2.5.18 switched to phPass, which doesn't play nice with the way
         // we check passwords
