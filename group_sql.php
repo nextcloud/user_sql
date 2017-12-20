@@ -42,8 +42,9 @@ class OC_GROUP_SQL extends \OC_Group_Backend implements \OCP\GroupInterface
         if(empty($this -> settings['sql_group_table']))
         {
             return [];
-        }   
-        $rows = $this -> helper -> runQuery('getGroups', array(), false, true);
+        }
+        $search = "%".$search."%";
+        $rows = $this -> helper -> runQuery('getGroups', array('search' => $search), false, true, array('limit' => $limit, 'offset' => $offset));
         if($rows === false)
         {
             return [];
@@ -74,6 +75,21 @@ class OC_GROUP_SQL extends \OC_Group_Backend implements \OCP\GroupInterface
             $users[] = $row[$this -> settings['col_group_username']];
         } 
         return $users;
+    }
+
+    public function countUsersInGroup($gid, $search = '') {
+        if(empty($this -> settings['sql_group_table']))
+        {
+            return 0;
+        }
+        $search = "%".$search."%";
+        $count = $this -> helper -> runQuery('countUsersInGroup', array('gid' => $gid, 'search' => $search));
+        if($count === false)
+        {
+            return 0;
+        } else {
+            return intval(reset($count));
+        }
     }
 }
 ?>

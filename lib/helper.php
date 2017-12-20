@@ -182,11 +182,15 @@ class Helper {
             break;
 
             case 'getGroups':
-                $query = "SELECT distinct ".$this->settings['col_group_name']." FROM ".$this->settings['sql_group_table'];
+                $query = "SELECT distinct ".$this->settings['col_group_name']." FROM ".$this->settings['sql_group_table']." WHERE ".$this->settings['col_group_name']." LIKE :search";
             break;
 
             case 'getGroupUsers':
                 $query = "SELECT distinct ".$this->settings['col_group_username']." FROM ".$this->settings['sql_group_table']." WHERE ".$this->settings['col_group_name']." = :gid";
+            break;
+
+            case 'countUsersInGroup':
+                $query = "SELECT count(".$this->settings['col_group_username'].") FROM ".$this->settings['sql_group_table']." WHERE ".$this->settings['col_group_name']." = :gid AND ".$this->settings['col_group_username']." LIKE :search";
             break;
         }
 
