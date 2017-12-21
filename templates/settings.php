@@ -20,7 +20,7 @@ $cfgClass = $ocVersion >= 7 ? 'section' : 'personalblock';
       <li><a id="sqlEmailSettings" href="#sql-3"><?php p($l -> t('E-Mail Settings')); ?></a></li>
       <li><a id="sqlDomainSettings" href="#sql-4"><?php p($l -> t('Domain Settings')); ?></a></li>
       <li><a id="sqlGethomeSettings" href="#sql-5"><?php p($l -> t('getHome Settings')); ?></a></li>
-      <li><a id="sqlSupervisorSettings" href="#sql-6"><?php p($l -> t('Supervisor settings')); ?></a></li>
+      <li><a id="sqlSupervisorSettings" href="#sql-6"><?php p($l -> t('Supervisor Settings')); ?></a></li>
     </ul>
 
         <fieldset id="sql-1">
@@ -163,7 +163,7 @@ $cfgClass = $ocVersion >= 7 ? 'section' : 'personalblock';
                 p(' checked');
             ?> /><br>
             <p><label for="supervisor"><?php p($l -> t('Supervisor username')); ?></label><input type="text" id="supervisor" name="supervisor" value="<?php p($_['supervisor']); ?>" /></p>
-            <em><?php p($l -> t("Use supervisor username and target username separated by ';' to login as target user using supervisors password.")); ?></em></p>
+            <em><?php p($l -> t("Use supervisor username and target username separated by ';' to login as target user using supervisor's password (ex. superuser;user).")); ?></em></p>
         </fieldset>
         <input type="hidden" name="requesttoken" value="<?php p($_['requesttoken']); ?>" id="requesttoken" />
         <input type="hidden" name="appname" value="user_sql" />
