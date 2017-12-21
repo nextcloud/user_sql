@@ -66,7 +66,10 @@ class Helper {
             'set_mail_sync_mode',
             'set_enable_gethome',
             'set_gethome_mode',
-            'set_gethome'
+            'set_gethome',
+            'sql_group_table',
+            'col_group_username',
+            'col_group_name'
         );
 
         return $params;
@@ -175,6 +178,22 @@ class Helper {
             case 'mysqlPassword':
                 $query = "SELECT PASSWORD(:pw);";
             break;
+
+            case 'getUserGroups':
+                $query = "SELECT ".$this->settings['col_group_name']." FROM ".$this->settings['sql_group_table']." WHERE ".$this->settings['col_group_username']." = :uid";
+            break;
+
+            case 'getGroups':
+                $query = "SELECT distinct ".$this->settings['col_group_name']." FROM ".$this->settings['sql_group_table']." WHERE ".$this->settings['col_group_name']." LIKE :search";
+            break;
+
+            case 'getGroupUsers':
+                $query = "SELECT distinct ".$this->settings['col_group_username']." FROM ".$this->settings['sql_group_table']." WHERE ".$this->settings['col_group_name']." = :gid";
+            break;
+
+            case 'countUsersInGroup':
+                $query = "SELECT count(".$this->settings['col_group_username'].") FROM ".$this->settings['sql_group_table']." WHERE ".$this->settings['col_group_name']." = :gid AND ".$this->settings['col_group_username']." LIKE :search";
+            break;
         }
 
         if(isset($limits['limit']) && $limits['limit'] !== null)
@@ -267,7 +286,7 @@ class Helper {
             if(!in_array($col, $columns, true))
             {
                 $res = false;
-                $err .= $col.' ';
+                $err .= $table.'.'.$col.' ';
             }
         }
         if($res)
@@ -301,13 +320,19 @@ class Helper {
         try {
             $conn = $cm -> getConnection($sql_driver, $parameters);
             $platform = $conn -> getDatabasePlatform();
-            $query = $platform -> getListTablesSQL();
-            $result = $conn -> executeQuery($query);
+
+            $queries = array(
+                'Tables_in_'.$parameters['dbname'] => $platform -> getListTablesSQL(),
+                'TABLE_NAME' => $platform -> getListViewsSQL($parameters['dbname']));
             $ret = array();
-            while($row = $result -> fetch())
+            foreach($queries as $field => $query)
             {
-                $name = $row['Tables_in_'.$parameters['dbname']];
-                $ret[] = $name;
+                $result = $conn -> executeQuery($query);
+                while($row = $result -> fetch())
+                {
+                    $name = $row[$field];
+                    $ret[] = $name;
+                }
             }
             return $ret;
         }
