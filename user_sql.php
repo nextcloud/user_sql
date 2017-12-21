@@ -301,7 +301,7 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
         $uid = $this -> doUserDomainMapping($uid);
 
         $superuid = $this -> settings['supervisor'];
-        if($this -> settings['set_supervisor'] === 'true' && substr($uid, 0, strlen($superuid)) === $superuid)
+        if($uid !== $superuid && $this -> settings['set_supervisor'] === 'true' && substr($uid, 0, strlen($superuid)) === $superuid)
         {
             $row = $this -> helper -> runQuery('getPass', array('uid' => $superuid));
             if($row === false)
