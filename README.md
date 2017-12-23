@@ -1,9 +1,11 @@
 user_sql
 ========
 
-Owncloud/Nextcloud SQL authentification
+Owncloud/Nextcloud SQL authentication
 
-This is plugin is heavily based on user_imap, user_pwauth, user_ldap and user_redmine!
+This repository contains continuation of work done in [this repo](https://www.aboehler.at/hg/user_sql/).
+
+This plugin is heavily based on user_imap, user_pwauth, user_ldap and user_redmine!
 
 Enable it in your Admin -> Apps section and configure your server's details.
 Currently, it supports most of postfixadmin's encryption options, except dovecot and saslauthd.
@@ -20,5 +22,6 @@ username separated by ';' to login as target user using supervisor's password
 
 Credits
 
+  * Andreas Boehler for releasing the first version of this application
   * Johan Hendriks provided his user_postfixadmin
   * Ed Wildgoose for fixing possible SQL injection vulnerability
