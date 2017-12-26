@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <info>
-       <id>user_sql_2</id>
-       <name>SQL user backend 2</name>
+       <id>user_sql</id>
+       <name>SQL user backend</name>
        <summary>Authenticate users by SQL queries.</summary>
        <description>Authenticate users by SQL queries.</description>
-       <version>1.0.0</version>
+       <version>2.4.0</version>
        <licence>agpl</licence>
        <author>Andreas Boehler &lt;dev (at) aboehler (dot) at &gt;</author>
        <namespace>user_sql</namespace>
        <bugs>https://github.com/mlojewski-me/user_sql/issues</bugs>
        <repository>https://github.com/mlojewski-me/user_sql</repository>
-       <screenshot>https://raw.githubusercontent.com/mlojewski-me/user_sql/2_v1.0.0/screenshot.png</screenshot>
+       <screenshot>https://raw.githubusercontent.com/mlojewski-me/user_sql/v2.4.0/screenshot.png</screenshot>
        <types>
        		<authentication/>
        </types>
