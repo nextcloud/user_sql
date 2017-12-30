@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Column autocomplete for PostgreSQL
 - Currently supported parameters in README.md
+### Fixed
+- Column autocomplete in "Groups Settings"
 
 ## [2.4.0] - 2017-12-26
 ### Added
