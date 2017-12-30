@@ -304,35 +304,39 @@ class Helper {
      */
     public function verifyTable($parameters, $sql_driver, $table)
     {
-        $tables = $this->getTables($parameters, $sql_driver);
-        return in_array($table, $tables, true);
+        $tablesWithSchema = $this->getTables($parameters, $sql_driver, true);
+        $tablesWithoutSchema = $this->getTables($parameters, $sql_driver, false);
+        return in_array($table, $tablesWithSchema, true) || in_array($table, $tablesWithoutSchema, true);
     }
     
     /**
      * Retrieve a list of tables for the given connection parameters
      * @param array $parameters The connection parameters
      * @param string $sql_driver The SQL driver to use
-     * @return array The found tables, empty if an error occured
+     * @param boolean $schema Return table name with schema
+     * @return array The found tables, empty if an error occurred
      */
-    public function getTables($parameters, $sql_driver)
+    public function getTables($parameters, $sql_driver, $schema = true)
     {
         $cm = new \OC\DB\ConnectionFactory(\OC::$server->getSystemConfig());
         try {
             $conn = $cm -> getConnection($sql_driver, $parameters);
             $platform = $conn -> getDatabasePlatform();
 
-            $queries = array(
-                'Tables_in_'.$parameters['dbname'] => $platform -> getListTablesSQL(),
-                'TABLE_NAME' => $platform -> getListViewsSQL($parameters['dbname']));
+            $queryTables = $platform->getListTablesSQL();
+            $queryViews = $platform->getListViewsSQL($parameters['dbname']);
             $ret = array();
-            foreach($queries as $field => $query)
-            {
-                $result = $conn -> executeQuery($query);
-                while($row = $result -> fetch())
-                {
-                    $name = $row[$field];
-                    $ret[] = $name;
-                }
+
+            $result = $conn->executeQuery($queryTables);
+            while ($row = $result->fetch()) {
+                $name = $this->getTableNameFromRow($sql_driver, $parameters['dbname'], $row, $schema);
+                $ret[] = $name;
+            }
+
+            $result = $conn->executeQuery($queryViews);
+            while ($row = $result->fetch()) {
+                $name = $this->getViewNameFromRow($sql_driver, $row, $schema);
+                $ret[] = $name;
             }
             return $ret;
         }
@@ -341,7 +345,54 @@ class Helper {
             return array();
         }
     }
-    
+
+    /**
+     * Retrieve table name from database list table SQL
+     * @param string $sql_driver The SQL driver to use
+     * @param string $dbname The database name
+     * @param array $row Query result row
+     * @param boolean $schema Return table name with schema
+     * @return string Table name
+     */
+    public function getTableNameFromRow($sql_driver, $dbname, $row, $schema)
+    {
+        switch ($sql_driver) {
+            case 'mysql':
+                return $row['Tables_in_' . $dbname];
+            case 'pgsql':
+                if ($schema) {
+                    return $row['schema_name'] . '.' . $row['table_name'];
+                } else {
+                    return $row['table_name'];
+                }
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * Retrieve view name from database list table SQL
+     * @param string $sql_driver The SQL driver to use
+     * @param array $row Query result row
+     * @param boolean $schema Return table name with schema
+     * @return string Table name
+     */
+    public function getViewNameFromRow($sql_driver, $row, $schema)
+    {
+        switch ($sql_driver) {
+            case 'mysql':
+                return $row['TABLE_NAME'];
+            case 'pgsql':
+                if ($schema) {
+                    return $row['schemaname'] . '.' . $row['viewname'];
+                } else {
+                    return $row['viewname'];
+                }
+            default:
+                return null;
+        }
+    }
+
     /**
      * Retrieve a list of columns for the given connection parameters
      * @param array $parameters The connection parameters
@@ -360,7 +411,16 @@ class Helper {
             $ret = array();
             while($row = $result -> fetch())
             {
-                $name = $row['Field'];
+                switch ($sql_driver) {
+                    case 'mysql':
+                        $name = $row['Field'];
+                        break;
+                    case 'pgsql':
+                        $name = $row['field'];
+                        break;
+                    default:
+                        return $ret;
+                }
                 $ret[] = $name;
             }
             return $ret;
