@@ -17,7 +17,7 @@ user_sql.adminSettingsUI = function()
         $('#sqlDiv').tabs();
         
         // Attach auto-completion to all column fields
-        $('#col_username, #col_password, #col_displayname, #col_active, #col_email, #col_gethome, #col_group_name, #col_group_username').autocomplete({
+        $('#col_username, #col_password, #col_displayname, #col_active, #col_email, #col_gethome').autocomplete({
             source: function(request, response)
             {
                 var post = $('#sqlForm').serializeArray();
@@ -53,7 +53,51 @@ user_sql.adminSettingsUI = function()
            {
                $(this).autocomplete("search");
            } 
-        });        
+        });
+
+        // Attach auto-completion to all group column fields
+        $('#col_group_name, #col_group_username').autocomplete({
+            source: function(request, response)
+            {
+                var post = $('#sqlForm').serializeArray();
+                var domain = $('#sql_domain_chooser option:selected').val();
+
+                post.push({
+                    name: 'groupTable',
+                    value: 'true'
+                });
+
+                post.push({
+                    name: 'function',
+                    value: 'getColumnAutocomplete'
+                });
+
+                post.push({
+                    name: 'domain',
+                    value: domain
+                });
+
+                post.push({
+                    name: 'request',
+                    value: request.term
+                });
+
+                // Ajax foobar
+                $.post(OC.filePath('user_sql', 'ajax', 'settings.php'), post, response, 'json');
+            },
+            minLength: 0,
+            open: function() {
+                $(this).attr('state', 'open');
+            },
+            close: function() {
+                $(this).attr('state', 'closed');
+            }
+        }).focus(function() {
+           if($(this).attr('state') != 'open')
+           {
+               $(this).autocomplete("search");
+           }
+        });
         
         // Attach auto-completion to all table fields
         $('#sql_table, #sql_group_table').autocomplete({

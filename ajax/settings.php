@@ -232,9 +232,15 @@ if(isset($_POST['appname']) && ($_POST['appname'] === 'user_sql') && isset($_POS
                 'dbname' => $_POST['sql_database'],
                 'tablePrefix' => ''
             );
-            
+
+            if ($_POST['groupTable'] === 'true') {
+                $sql_table = $_POST['sql_group_table'];
+            } else {
+                $sql_table = $_POST['sql_table'];
+            }
+
             if($helper->verifyTable($parameters, $_POST['sql_driver'], $_POST['sql_table']))
-                $columns = $helper->getColumns($parameters, $_POST['sql_driver'], $_POST['sql_table']);
+                $columns = $helper->getColumns($parameters, $_POST['sql_driver'], $sql_table);
             else
                 $columns = array();
             
