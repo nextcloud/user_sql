@@ -1,13 +1,39 @@
 user_sql
 ========
 
-Owncloud/Nextcloud SQL authentication
+**Owncloud/Nextcloud SQL user authentication.**
 
-This repository contains continuation of work done in [this repo](https://www.aboehler.at/hg/user_sql/).
+![](https://github.com/nextcloud/user_sql/blob/master/screenshot.png)
 
-This plugin is heavily based on user_imap, user_pwauth, user_ldap and user_redmine!
+## Getting Started
+1. SSH into your server
 
-Enable it in your Admin -> Apps section and configure your server's details.
+2. Get into the apps folder of your NextCloud installation, for example /var/www/nextcloud/apps
+
+3. Git clone this project
+```
+git clone https://github.com/nextcloud/user_sql.git
+```
+
+4. Login your NextCloud as admin
+
+5. Navigate to Apps from the menu and enable the SQL user backend 
+
+6. Navigate to Admin from menu and switch to Addentional Settings, scroll down the page and you will see SQL User Backend settings
+
+## Integrations
+
+### WordPress
+Thanks to this app, NextCloud can easily integrate with Wordpress.
+
+In the Column Setting of SQL User Backend, configure it as
+```
+Table: wp_users
+Username Column: user_login
+Password Column: user_pass
+Encryption Type: Joomla > 2.5.18 phppass
+```
+## Features
 Currently, it supports most of postfixadmin's encryption options, except dovecot and saslauthd.
 It was tested and developed for a postfixadmin database.
 
@@ -55,6 +81,11 @@ For example to set 'sql_hostname' parameter in default domain use:
 - sql_group_table
 - col_group_username
 - col_group_name
+
+## Acknowledgments
+This repository contains continuation of work done in [this repo](https://www.aboehler.at/hg/user_sql/).
+
+This plugin is heavily based on user_imap, user_pwauth, user_ldap and user_redmine!
 
 ### Credits
 
