@@ -19,7 +19,7 @@ git clone https://github.com/nextcloud/user_sql.git
 
 5. Navigate to Apps from the menu and enable the SQL user backend 
 
-6. Navigate to Admin from menu and switch to Addentional Settings, scroll down the page and you will see SQL User Backend settings
+6. Navigate to Admin from menu and switch to Additional Settings, scroll down the page and you will see SQL User Backend settings
 
 ## Integrations
 
