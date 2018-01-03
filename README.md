@@ -35,11 +35,11 @@ Encryption Type: Joomla > 2.5.18 phppass
 ```
 
 ### JHipster
-It is very easy to integrate NextCloud with JHipster.
+It is very easy to integrate Nextcloud with JHipster.
 
 Follow the Using the Database instructions in [Using Jhipster in development](http://www.jhipster.tech/development/) to configure your database. Assume you chose MySQL as JHipster database.
 
-In the NextCloud Column Settings of SQL User Backend, configure it as
+In the Nextcloud Column Settings of SQL User Backend, configure it as
 ```
 Table: jhi_users
 Username Column: login
