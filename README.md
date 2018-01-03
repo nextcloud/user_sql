@@ -26,7 +26,7 @@ git clone https://github.com/nextcloud/user_sql.git
 ### WordPress
 Thanks to this app, NextCloud can easily integrate with Wordpress.
 
-In the NextCloud Column Settings of SQL User Backend, configure it as
+In the Nextcloud Column Settings of SQL User Backend, configure it as
 ```
 Table: wp_users
 Username Column: user_login
