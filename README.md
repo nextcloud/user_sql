@@ -1,21 +1,21 @@
 user_sql
 ========
 
-**Owncloud/Nextcloud SQL user authentication.**
+**Nextcloud SQL user authentication.**
 
 ![](https://github.com/nextcloud/user_sql/blob/master/screenshot.png)
 
 ## Getting Started
 1. SSH into your server
 
-2. Get into the apps folder of your NextCloud installation, for example /var/www/nextcloud/apps
+2. Get into the apps folder of your Nextcloud installation, for example /var/www/nextcloud/apps
 
 3. Git clone this project
 ```
 git clone https://github.com/nextcloud/user_sql.git
 ```
 
-4. Login your NextCloud as admin
+4. Login your Nextcloud as admin
 
 5. Navigate to Apps from the menu and enable the SQL user backend 
 
@@ -24,7 +24,7 @@ git clone https://github.com/nextcloud/user_sql.git
 ## Integrations
 
 ### WordPress
-Thanks to this app, NextCloud can easily integrate with Wordpress.
+Thanks to this app, Nextcloud can easily integrate with Wordpress.
 
 In the Column Setting of SQL User Backend, configure it as
 ```
