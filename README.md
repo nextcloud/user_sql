@@ -26,13 +26,29 @@ git clone https://github.com/nextcloud/user_sql.git
 ### WordPress
 Thanks to this app, Nextcloud can easily integrate with Wordpress.
 
-In the Column Setting of SQL User Backend, configure it as
+In the Nextcloud Column Settings of SQL User Backend, configure it as
 ```
 Table: wp_users
 Username Column: user_login
 Password Column: user_pass
 Encryption Type: Joomla > 2.5.18 phppass
 ```
+
+### JHipster
+It is very easy to integrate Nextcloud with JHipster.
+
+Follow the Using the Database instructions in [Using Jhipster in development](http://www.jhipster.tech/development/) to configure your database. Assume you chose MySQL as JHipster database.
+
+In the Nextcloud Column Settings of SQL User Backend, configure it as
+```
+Table: jhi_users
+Username Column: login
+Password Column: password_hash
+Encryption Type: Joomla > 2.5.18 phppass
+User Activate Column: activated
+Email Column: email
+```
+
 ## Features
 Currently, it supports most of postfixadmin's encryption options, except dovecot and saslauthd.
 It was tested and developed for a postfixadmin database.
