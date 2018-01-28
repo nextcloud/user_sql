@@ -21,13 +21,13 @@ class OC_GROUP_SQL extends \OC_Group_Backend implements \OCP\GroupInterface
     public function getUserGroups($uid) {
         if(empty($this -> settings['sql_group_table']))
         {
-            \OCP\Util::writeLog('OC_USER_SQL', "Group table not configured", \OCP\Util::DEBUG);
+            Util::writeLog('OC_USER_SQL', "Group table not configured", Util::DEBUG);
             return [];
         }
         $rows = $this -> helper -> runQuery('getUserGroups', array('uid' => $uid), false, true);
         if($rows === false)
         {
-            \OCP\Util::writeLog('OC_USER_SQL', "Found no group", \OCP\Util::DEBUG);
+            Util::writeLog('OC_USER_SQL', "Found no group", Util::DEBUG);
             return [];
         }
         $groups = array();
@@ -60,13 +60,13 @@ class OC_GROUP_SQL extends \OC_Group_Backend implements \OCP\GroupInterface
     public function usersInGroup($gid, $search = '', $limit = null, $offset = null) {
         if(empty($this -> settings['sql_group_table']))
         {
-            \OCP\Util::writeLog('OC_USER_SQL', "Group table not configured", \OCP\Util::DEBUG);
+            Util::writeLog('OC_USER_SQL', "Group table not configured", Util::DEBUG);
             return [];
         }
         $rows = $this -> helper -> runQuery('getGroupUsers', array('gid' => $gid), false, true);
         if($rows === false)
         {
-            \OCP\Util::writeLog('OC_USER_SQL', "Found no users for group", \OCP\Util::DEBUG);
+            Util::writeLog('OC_USER_SQL', "Found no users for group", Util::DEBUG);
             return [];
         }
         $users = array();

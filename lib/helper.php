@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ownCloud - user_sql
+ * nextCloud - user_sql
  *
  * @author Andreas Böhler and contributors
  * @copyright 2012-2015 Andreas Böhler <dev (at) aboehler (dot) at>
