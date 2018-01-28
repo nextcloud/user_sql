@@ -3,6 +3,7 @@
 namespace OCA\user_sql;
 
 use \OCA\user_sql\lib\Helper;
+use OCP\Util;
 
 class OC_GROUP_SQL extends \OC_Group_Backend implements \OCP\GroupInterface
 {
