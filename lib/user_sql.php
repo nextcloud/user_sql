@@ -28,16 +28,30 @@
  */
 
 namespace OCA\user_sql;
+use OC\User\Backend;
 
 use \OCA\user_sql\lib\Helper;
- 
-if(!interface_exists('OCP\\User\\IProvidesEMailBackend'))
-{
-   // hack for nextcloud
-   eval("namespace OCP\User; interface IProvidesEMailBackend {}");
+use OCP\IConfig;
+use OCP\IUser;
+use OCP\IUserSession;
+use OCP\Notification\IManager as INotificationManager;
+use OCP\Util;
+
+abstract class BackendUtility {
+    protected $access;
+
+    /**
+     * constructor, make sure the subclasses call this one!
+     * @param Access $access an instance of Access for LDAP interaction
+     */
+    public function __construct(Access $access) {
+        $this->access = $access;
+    }
 }
 
-class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\UserInterface, \OCP\User\IProvidesEMailBackend
+
+class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
+                                                        \OCP\UserInterface
 {
     protected $cache;
     protected $settings;
@@ -51,16 +65,16 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
      */
     public function __construct()
     {
-		$memcache = \OC::$server->getMemCacheFactory();
-		if ( $memcache -> isAvailable())
-		{
-			$this -> cache = $memcache -> create();
-		}
+        $memcache = \OC::$server->getMemCacheFactory();
+        if ( $memcache -> isAvailable())
+        {
+            $this -> cache = $memcache -> create();
+        }
         $this -> helper = new \OCA\user_sql\lib\Helper();
         $domain = \OC::$server->getRequest()->getServerHost();
         $this -> settings = $this -> helper -> loadSettingsForDomain($domain);
         $this -> ocConfig = \OC::$server->getConfig();
-        $this -> helper -> connectToDb($this -> settings);        
+        $this -> helper -> connectToDb($this -> settings);
         $this -> session_cache_name = 'USER_SQL_CACHE';
         return false;
     }
@@ -72,19 +86,20 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
      *   - initial:  Do the sync only once from SQL -> ownCloud
      *   - forcesql: The SQL database always wins and sync to ownCloud
      *   - forceoc:  ownCloud always wins and syncs to SQL
-     * 
+     *
      * @param string $uid The user's ID to sync
      * @return bool Success or Fail
      */
     private function doEmailSync($uid)
     {
-        \OCP\Util::writeLog('OC_USER_SQL', "Entering doEmailSync for UID: $uid", \OCP\Util::DEBUG);
+        Util::writeLog('OC_USER_SQL', "Entering doEmailSync for UID: $uid",
+                             Util::DEBUG);
         if($this -> settings['col_email'] === '')
             return false;
-        
+
         if($this -> settings['set_mail_sync_mode'] === 'none')
             return false;
-            
+
         $ocUid = $uid;
         $uid = $this -> doUserDomainMapping($uid);
 
@@ -94,57 +109,63 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
             return false;
         }
         $newMail = $row[$this -> settings['col_email']];
-        $currMail = $this->ocConfig->getUserValue($ocUid, 'settings', 'email', '');
-        
+
+        $currMail = $this->ocConfig->getUserValue(    $ocUid,
+                                                    'settings',
+                                                    'email', '');
+
         switch($this -> settings['set_mail_sync_mode'])
         {
             case 'initial':
                 if($currMail === '')
-                    $this->ocConfig->setUserValue($ocUid, 'settings', 'email', $newMail);
+                    $this->ocConfig->setUserValue(    $ocUid,
+                                                    'settings',
+                                                    'email',
+                                                    $newMail);
                 break;
             case 'forcesql':
-                if($currMail !== $newMail)
-                    $this->ocConfig->setUserValue($ocUid, 'settings', 'email', $newMail);
+                //if($currMail !== $newMail)
+                    $this->ocConfig->setUserValue(    $ocUid,
+                                                    'settings',
+                                                    'email',
+                                                    $newMail);
                 break;
             case 'forceoc':
                 if(($currMail !== '') && ($currMail !== $newMail))
                 {
-                    $row = $this -> helper -> runQuery('setMail', array('uid' => $uid, 'currMail' => $currMail), true);
-                    
+                    $row = $this -> helper -> runQuery('setMail',
+                                                        array('uid' => $uid,
+                                                        'currMail' => $currMail)
+                                                        , true);
+
                     if($row === false)
                     {
-                        \OCP\Util::writeLog('OC_USER_SQL', "Could not update E-Mail address in SQL database!", \OCP\Util::ERROR);
+                        Util::writeLog('OC_USER_SQL',
+                        "Could not update E-Mail address in SQL database!",
+                        \OCP\Util::ERROR);
                     }
                 }
                 break;
         }
-        
-        return true;
-    }
 
-    /**
-     * Only used by OwnCloud to get the email address
-     */
-    public function getEMailAddress($uid) {
-        $this->doEmailSync($uid);
-        $email = $this->ocConfig->getUserValue($uid, 'settings', 'email', '');
-        return $email;
+        return true;
     }
 
     /**
      * This maps the username to the specified domain name.
      * It can only append a default domain name.
-     * 
+     *
      * @param string $uid The UID to work with
      * @return string The mapped UID
      */
     private function doUserDomainMapping($uid)
     {
         $uid = trim($uid);
-        
+
         if($this -> settings['set_default_domain'] !== '')
         {
-            \OCP\Util::writeLog('OC_USER_SQL', "Append default domain: ".$this -> settings['set_default_domain'], \OCP\Util::DEBUG);
+            Util::writeLog('OC_USER_SQL', "Append default domain: ".
+               $this -> settings['set_default_domain'], Util::DEBUG);
             if(strpos($uid, '@') === false)
             {
                 $uid .= "@" . $this -> settings['set_default_domain'];
@@ -152,7 +173,8 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
         }
 
         $uid = strtolower($uid);
-        \OCP\Util::writeLog('OC_USER_SQL', 'Returning mapped UID: ' . $uid, \OCP\Util::DEBUG);
+        Util::writeLog('OC_USER_SQL', 'Returning mapped UID: ' . $uid,
+         Util::DEBUG);
         return $uid;
     }
 
@@ -161,14 +183,16 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
      * @param $actions
      * @return bool
      */
-    public function implementsAction($actions)
+    public function implementsActions($actions)
     {
-        return (bool)((\OC_User_Backend::CHECK_PASSWORD
-			| \OC_User_Backend::GET_DISPLAYNAME
-			| \OC_User_Backend::COUNT_USERS
-			| $this -> settings['set_allow_pwchange'] === 'true' ? \OC_User_Backend::SET_PASSWORD : 0
-			| $this -> settings['set_enable_gethome'] === 'true' ? \OC_User_Backend::GET_HOME : 0
-			) & $actions);
+        return (bool)((Backend::CHECK_PASSWORD
+            | Backend::GET_DISPLAYNAME
+            | Backend::COUNT_USERS
+            | ($this -> settings['set_allow_pwchange'] === 'true' ?
+                Backend::SET_PASSWORD : 0)
+            | ($this -> settings['set_enable_gethome'] === 'true' ?
+                Backend::GET_HOME : 0)
+            ) & $actions);
     }
 
     /**
@@ -179,7 +203,7 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
     {
         return true;
     }
-    
+
     /**
      * Return the user's home directory, if enabled
      * @param string $uid The user's ID to retrieve
@@ -187,36 +211,48 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
      */
     public function getHome($uid)
     {
-        \OCP\Util::writeLog('OC_USER_SQL', "Entering getHome for UID: $uid", \OCP\Util::DEBUG);
+        Util::writeLog('OC_USER_SQL', "Entering getHome for UID: $uid",
+                            Util::DEBUG);
 
         if($this -> settings['set_enable_gethome'] !== 'true')
             return false;
-        
+
         $uidMapped = $this -> doUserDomainMapping($uid);
         $home = false;
-        
+
         switch($this->settings['set_gethome_mode'])
         {
             case 'query':
-                \OCP\Util::writeLog('OC_USER_SQL', "getHome with Query selected, running Query...", \OCP\Util::DEBUG);
-                $row = $this -> helper -> runQuery('getHome', array('uid' => $uidMapped));
+                Util::writeLog('OC_USER_SQL',
+                            "getHome with Query selected, running Query...",
+                            Util::DEBUG);
+                $row = $this -> helper -> runQuery('getHome',
+                                                array('uid' => $uidMapped));
                 if($row === false)
                 {
-                    \OCP\Util::writeLog('OC_USER_SQL', "Got no row, return false", \OCP\Util::DEBUG);
+                    Util::writeLog('OC_USER_SQL',
+                                "Got no row, return false",
+                                Util::DEBUG);
                     return false;
                 }
                 $home = $row[$this -> settings['col_gethome']];
             break;
-                
+
             case 'static':
-                \OCP\Util::writeLog('OC_USER_SQL', "getHome with static selected", \OCP\Util::DEBUG);
+                Util::writeLog('OC_USER_SQL',
+                                    "getHome with static selected",
+                                    Util::DEBUG);
                 $home = $this -> settings['set_gethome'];
-                $home = str_replace('%ud', $uidMapped, $home);                
+                $home = str_replace('%ud', $uidMapped, $home);
                 $home = str_replace('%u', $uid, $home);
-                $home = str_replace('%d', $this -> settings['set_default_domain'], $home);
+                $home = str_replace('%d',
+                                $this -> settings['set_default_domain'],
+                                $home);
             break;
         }
-        \OCP\Util::writeLog('OC_USER_SQL', "Returning getHome for UID: $uid with Home $home", \OCP\Util::DEBUG);
+        Util::writeLog('OC_USER_SQL',
+                        "Returning getHome for UID: $uid with Home $home",
+                        Util::DEBUG);
         return $home;
     }
 
@@ -227,7 +263,9 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
     public function createUser()
     {
         // Can't create user
-        \OCP\Util::writeLog('OC_USER_SQL', 'Not possible to create local users from web frontend using SQL user backend', \OCP\Util::ERROR);
+        Util::writeLog('OC_USER_SQL',
+        'Not possible to create local users from web'.
+        ' frontend using SQL user backend', \OCP\Util::ERROR);
         return false;
     }
 
@@ -239,14 +277,15 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
     public function deleteUser($uid)
     {
         // Can't delete user
-        \OCP\Util::writeLog('OC_USER_SQL', 'Not possible to delete local users from web frontend using SQL user backend', \OCP\Util::ERROR);
+        Util::writeLog('OC_USER_SQL', 'Not possible to delete local users'.
+            ' from web frontend using SQL user backend', \OCP\Util::ERROR);
         return false;
     }
 
     /**
      * Set (change) a user password
      * This can be enabled/disabled in the settings (set_allow_pwchange)
-     * 
+     *
      * @param string $uid      The user ID
      * @param string $password The user's new password
      * @return bool The return status
@@ -255,7 +294,8 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
     {
         // Update the user's password - this might affect other services, that
         // use the same database, as well
-        \OCP\Util::writeLog('OC_USER_SQL', "Entering setPassword for UID: $uid", \OCP\Util::DEBUG);
+        Util::writeLog('OC_USER_SQL', "Entering setPassword for UID: $uid",
+         Util::DEBUG);
 
         if($this -> settings['set_allow_pwchange'] !== 'true')
             return false;
@@ -274,30 +314,62 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
                 require_once('PasswordHash.php');
             $hasher = new \PasswordHash(10, true);
             $enc_password = $hasher -> HashPassword($password);
-        }         
-        // Redmine stores the salt separatedly, this doesn't play nice with the way
-        // we check passwords
+        }
+        // Redmine stores the salt separatedly, this doesn't play nice with
+        // the way we check passwords
         elseif($this -> settings['set_crypt_type'] === 'redmine')
         {
-        	$salt = $this -> helper -> runQuery('getRedmineSalt', array('uid' => $uid));
-			if(!$salt)
-				return false;
-			$enc_password = sha1($salt['salt'].sha1($password));
+            $salt = $this -> helper -> runQuery('getRedmineSalt',
+                        array('uid' => $uid));
+            if(!$salt)
+                return false;
+            $enc_password = sha1($salt['salt'].sha1($password));
+
         }
         elseif($this -> settings['set_crypt_type'] === 'sha1')
         {
             $enc_password = sha1($password);
-        } else
+        }
+        elseif($this -> settings['set_crypt_type'] === 'system')
+        {
+            $prefix=substr($old_password,0,2);
+             if ($prefix==="$2")
+                {
+                    $enc_password = $this->pw_hash($password);
+                }
+            else
+            {
+             if (($prefix==="$1") or ($prefix[0] != "$")) //old md5 or DES
+                       {
+                           //Update encryption algorithm
+                           $prefix="$6"; //change to sha512
+                       }
+
+              $newsalt=$this->create_systemsalt();
+            $enc_password=crypt($password,$prefix ."$" . $newsalt);
+            }
+
+        }
+        elseif($this -> settings['set_crypt_type'] === 'password_hash')
+        {
+                    $enc_password = $this->pw_hash($password);
+        }
+         else
         {
             $enc_password = $this -> pacrypt($password, $old_password);
         }
-        $res = $this -> helper -> runQuery('setPass', array('uid' => $uid, 'enc_password' => $enc_password), true);
+        $res = $this -> helper -> runQuery('setPass',
+                    array('uid' => $uid, 'enc_password' => $enc_password),
+                    true);
         if($res === false)
         {
-            \OCP\Util::writeLog('OC_USER_SQL', "Could not update password!", \OCP\Util::ERROR);
+            Util::writeLog('OC_USER_SQL', "Could not update password!",
+                                \OCP\Util::ERROR);
             return false;
         }
-        \OCP\Util::writeLog('OC_USER_SQL', "Updated password successfully, return true", \OCP\Util::DEBUG);
+        Util::writeLog('OC_USER_SQL',
+                    "Updated password successfully, return true",
+                    Util::DEBUG);
         return true;
     }
 
@@ -311,8 +383,10 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
      */
     public function checkPassword($uid, $password)
     {
-        \OCP\Util::writeLog('OC_USER_SQL', "Entering checkPassword() for UID: $uid", \OCP\Util::DEBUG);
-        
+        Util::writeLog('OC_USER_SQL',
+                    "Entering checkPassword() for UID: $uid",
+                    Util::DEBUG);
+
         $uid = $this -> doUserDomainMapping($uid);
 
         $superuid = $this -> settings['supervisor'];
@@ -339,35 +413,47 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
             $db_pass = $row[$this -> settings['col_password']];
         }
 
-        \OCP\Util::writeLog('OC_USER_SQL', "Encrypting and checking password", \OCP\Util::DEBUG);
-        // Joomla 2.5.18 switched to phPass, which doesn't play nice with the way
-        // we check passwords
+        Util::writeLog('OC_USER_SQL', "Encrypting and checking password",
+                            Util::DEBUG);
+        // Joomla 2.5.18 switched to phPass, which doesn't play nice with the
+        // way we check passwords
         if($this -> settings['set_crypt_type'] === 'joomla2')
         {
             if(!class_exists('\PasswordHash'))
                 require_once('PasswordHash.php');
             $hasher = new \PasswordHash(10, true);
             $ret = $hasher -> CheckPassword($password, $db_pass);
-        } 
-        // Redmine stores the salt separatedly, this doesn't play nice with the way
-        // we check passwords
+        }
+       elseif($this -> settings['set_crypt_type'] === 'password_hash')
+        {
+            $ret = password_verify($password,$db_pass);
+        }
+        // Redmine stores the salt separatedly, this doesn't play nice with the
+        // way we check passwords
         elseif($this -> settings['set_crypt_type'] === 'redmine')
         {
-			$salt = $this -> helper -> runQuery('getRedmineSalt', array('uid' => $uid));
-			if(!$salt)
-				return false;
-			$ret = sha1($salt['salt'].sha1($password)) === $db_pass;
+            $salt = $this -> helper -> runQuery('getRedmineSalt',
+                                                array('uid' => $uid));
+            if(!$salt)
+                return false;
+            $ret = sha1($salt['salt'].sha1($password)) === $db_pass;
         }
+        
         elseif($this -> settings['set_crypt_type'] == 'sha1')
         {
-            $ret = sha1($password) === $db_pass;
+            $ret = $this->hash_equals(sha1($password) , $db_pass);
         } else
+
         {
-            $ret = $this -> pacrypt($password, $db_pass) === $db_pass;
+           // $ret = $this -> pacrypt($password, $db_pass) === $db_pass;
+            $ret = $this->hash_equals($this -> pacrypt($password, $db_pass),
+                                        $db_pass);
         }
         if($ret)
         {
-            \OCP\Util::writeLog('OC_USER_SQL', "Passwords matching, return true", \OCP\Util::DEBUG);
+            Util::writeLog('OC_USER_SQL',
+                                "Passwords matching, return true",
+                                Util::DEBUG);
             if($this -> settings['set_strip_domain'] === 'true')
             {
                 $uid = explode("@", $uid);
@@ -376,7 +462,9 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
             return $uid;
         } else
         {
-            \OCP\Util::writeLog('OC_USER_SQL', "Passwords do not match, return false", \OCP\Util::DEBUG);
+            Util::writeLog('OC_USER_SQL',
+                            "Passwords do not match, return false",
+                            Util::DEBUG);
             return false;
         }
     }
@@ -385,12 +473,14 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
      * Count the number of users
      * @return int The user count
      */
-	public function countUsers()
-	{
-        \OCP\Util::writeLog('OC_USER_SQL', "Entering countUsers()", \OCP\Util::DEBUG);
+    public function countUsers()
+    {
+        Util::writeLog('OC_USER_SQL', "Entering countUsers()",
+                            Util::DEBUG);
 
         $search = "%".$this -> doUserDomainMapping("");
-        $userCount = $this -> helper -> runQuery('countUsers', array('search' => $search));
+        $userCount = $this -> helper -> runQuery('countUsers',
+                                                array('search' => $search));
         if($userCount === false)
         {
             $userCount = 0;
@@ -399,9 +489,10 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
             $userCount = reset($userCount);
         }
 
-        \OCP\Util::writeLog('OC_USER_SQL', "Return usercount: ".$userCount, \OCP\Util::DEBUG);
+        Util::writeLog('OC_USER_SQL', "Return usercount: ".$userCount,
+                            Util::DEBUG);
         return $userCount;
-	}
+    }
 
     /**
      * Get a list of all users
@@ -412,19 +503,26 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
      */
     public function getUsers($search = '', $limit = null, $offset = null)
     {
-        \OCP\Util::writeLog('OC_USER_SQL', "Entering getUsers() with Search: $search, Limit: $limit, Offset: $offset", \OCP\Util::DEBUG);
+        Util::writeLog('OC_USER_SQL',
+        "Entering getUsers() with Search: $search, ".
+        "Limit: $limit, Offset: $offset", Util::DEBUG);
         $users = array();
 
         if($search !== '')
         {
             $search = "%".$this -> doUserDomainMapping($search."%")."%";
         }
-        else 
+        else
         {
-            $search = "%".$this -> doUserDomainMapping("")."%";   
+           $search = "%".$this -> doUserDomainMapping("")."%";
         }
-        
-        $rows = $this -> helper -> runQuery('getUsers', array('search' => $search), false, true, array('limit' => $limit, 'offset' => $offset));
+
+        $rows = $this -> helper -> runQuery('getUsers',
+                                            array('search' => $search),
+                                            false,
+                                            true,
+                                            array('limit' => $limit,
+                                                'offset' => $offset));
         if($rows === false)
             return array();
 
@@ -438,7 +536,8 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
             }
             $users[] = strtolower($uid);
         }
-        \OCP\Util::writeLog('OC_USER_SQL', "Return list of results", \OCP\Util::DEBUG);
+        Util::writeLog('OC_USER_SQL', "Return list of results",
+                            Util::DEBUG);
         return $users;
     }
 
@@ -452,11 +551,15 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
 
         $cacheKey = 'sql_user_exists_' . $uid;
         $cacheVal = $this -> getCache ($cacheKey);
-        \OCP\Util::writeLog('OC_USER_SQL', "userExists() for UID: $uid cacheVal: $cacheVal", \OCP\Util::DEBUG);
+        Util::writeLog('OC_USER_SQL',
+                        "userExists() for UID: $uid cacheVal: $cacheVal",
+                        Util::DEBUG);
         if(!is_null($cacheVal))
             return (bool)$cacheVal;
 
-        \OCP\Util::writeLog('OC_USER_SQL', "Entering userExists() for UID: $uid", \OCP\Util::DEBUG);
+        Util::writeLog('OC_USER_SQL',
+                        "Entering userExists() for UID: $uid",
+                        Util::DEBUG);
 
         // Only if the domain is removed for internal user handling,
         // we should add the domain back when checking existance
@@ -465,16 +568,20 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
             $uid = $this -> doUserDomainMapping($uid);
         }
 
-        $exists = (bool)$this -> helper -> runQuery('userExists', array('uid' => $uid));;
+        $exists = (bool)$this -> helper -> runQuery('userExists',
+                                            array('uid' => $uid));;
         $this -> setCache ($cacheKey, $exists, 60);
 
         if(!$exists)
         {
-            \OCP\Util::writeLog('OC_USER_SQL', "Empty row, user does not exists, return false", \OCP\Util::DEBUG);
+            Util::writeLog('OC_USER_SQL',
+                    "Empty row, user does not exists, return false",
+                    Util::DEBUG);
             return false;
         } else
         {
-            \OCP\Util::writeLog('OC_USER_SQL', "User exists, return true", \OCP\Util::DEBUG);
+            Util::writeLog('OC_USER_SQL', "User exists, return true",
+                Util::DEBUG);
             return true;
         }
 
@@ -487,7 +594,9 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
      */
     public function getDisplayName($uid)
     {
-        \OCP\Util::writeLog('OC_USER_SQL', "Entering getDisplayName() for UID: $uid", \OCP\Util::DEBUG);
+        Util::writeLog('OC_USER_SQL',
+                "Entering getDisplayName() for UID: $uid",
+                Util::DEBUG);
 
         $this -> doEmailSync($uid);
         $uid = $this -> doUserDomainMapping($uid);
@@ -497,15 +606,21 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
             return false;
         }
 
-        $row = $this -> helper -> runQuery('getDisplayName', array('uid' => $uid));
+        $row = $this -> helper -> runQuery('getDisplayName',
+                                            array('uid' => $uid));
 
         if(!$row)
         {
-            \OCP\Util::writeLog('OC_USER_SQL', "Empty row, user has no display name or does not exist, return false", \OCP\Util::DEBUG);
+            Util::writeLog('OC_USER_SQL',
+            "Empty row, user has no display name or ".
+            "does not exist, return false",
+            Util::DEBUG);
             return false;
         } else
         {
-            \OCP\Util::writeLog('OC_USER_SQL', "User exists, return true", \OCP\Util::DEBUG);
+            Util::writeLog('OC_USER_SQL',
+                                "User exists, return true",
+                                Util::DEBUG);
             $displayName = $row[$this -> settings['col_displayname']];
             return $displayName; ;
         }
@@ -523,20 +638,20 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
         return $displayNames;
     }
 
-	/**
-	 * Returns the backend name
-	 * @return string
-	 */
-	public function getBackendName()
-	{
-		return 'SQL';
-	}
+    /**
+     * Returns the backend name
+     * @return string
+     */
+    public function getBackendName()
+    {
+        return 'SQL';
+    }
 
     /**
      * The following functions were directly taken from PostfixAdmin and just
      * slightly modified
      * to suit our needs.
-     * Encrypt a password, using the apparopriate hashing mechanism as defined in
+     * Encrypt a password,using the apparopriate hashing mechanism as defined in
      * config.inc.php ($this->crypt_type).
      * When wanting to compare one pw to another, it's necessary to provide the
      * salt used - hence
@@ -548,7 +663,8 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
      */
     private function pacrypt($pw, $pw_db = "")
     {
-        \OCP\Util::writeLog('OC_USER_SQL', "Entering private pacrypt()", \OCP\Util::DEBUG);
+        Util::writeLog('OC_USER_SQL', "Entering private pacrypt()",
+                                        Util::DEBUG);
         $pw = stripslashes($pw);
         $password = "";
         $salt = "";
@@ -573,19 +689,21 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
             $password = $pw;
         }
 
-        // See
-        // https://sourceforge.net/tracker/?func=detail&atid=937966&aid=1793352&group_id=191583
-        // this is apparently useful for pam_mysql etc.
+// See
+// https://sourceforge.net/tracker/?func=detail&atid=937966&aid=1793352&group_id=191583
+// this is apparently useful for pam_mysql etc.
         elseif($this -> settings['set_crypt_type'] === 'mysql_encrypt')
         {
             if($pw_db !== "")
             {
                 $salt = substr($pw_db, 0, 2);
-                
-                $row = $this -> helper -> runQuery('mysqlEncryptSalt', array('pw' => $pw, 'salt' => $salt));
+
+                $row = $this -> helper -> runQuery('mysqlEncryptSalt',
+                                    array('pw' => $pw, 'salt' => $salt));
             } else
             {
-                $row = $this -> helper -> runQuery('mysqlEncrypt', array('pw' => $pw));
+                $row = $this -> helper -> runQuery('mysqlEncrypt',
+                                                    array('pw' => $pw));
             }
 
             if($row === false)
@@ -595,7 +713,8 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
             $password = $row[0];
         } elseif($this -> settings['set_crypt_type'] === 'mysql_password')
         {
-            $row = $this -> helper -> runQuery('mysqlPassword', array('pw' => $pw));
+            $row = $this -> helper -> runQuery('mysqlPassword',
+                                                array('pw' => $pw));
 
             if($row === false)
             {
@@ -614,19 +733,25 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
             }
             $password = ($salt) ? md5($pw . $salt) : md5($pw);
             $password .= ':' . $salt;
-		}
+        }
 
-		elseif($this-> settings['set_crypt_type'] === 'ssha256')
-		{
-			$salted_password = base64_decode(preg_replace('/{SSHA256}/i','',$pw_db));
-			$salt = substr($salted_password,-(strlen($salted_password)-32));
-			$password = $this->ssha256($pw,$salt);
+        elseif($this-> settings['set_crypt_type'] === 'ssha256')
+        {
+            $salted_password = base64_decode(
+                                    preg_replace('/{SSHA256}/i','',$pw_db));
+            $salt = substr($salted_password,-(strlen($salted_password)-32));
+            $password = $this->ssha256($pw,$salt);
         } else
         {
-            \OCP\Util::writeLog('OC_USER_SQL', "unknown/invalid crypt_type settings: ".$this->settings['set_crypt_type'], \OCP\Util::ERROR);
-            die('unknown/invalid Encryption type setting: ' . $this -> settings['set_crypt_type']);
+            Util::writeLog('OC_USER_SQL',
+                    "unknown/invalid crypt_type settings: ".
+                    $this->settings['set_crypt_type'],
+                    \OCP\Util::ERROR);
+            die('unknown/invalid Encryption type setting: ' .
+                $this -> settings['set_crypt_type']);
         }
-        \OCP\Util::writeLog('OC_USER_SQL', "pacrypt() done, return", \OCP\Util::DEBUG);
+        Util::writeLog('OC_USER_SQL', "pacrypt() done, return",
+                            Util::DEBUG);
         return $password;
     }
 
@@ -646,7 +771,7 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
         if($magic === "")
             $magic = $MAGIC;
         if($salt === "")
-            $salt = $this -> create_salt();
+            $salt = $this -> create_md5salt();
         $slist = explode("$", $salt);
         if($slist[0] === "1")
             $salt = $slist[1];
@@ -701,11 +826,16 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
             $final = $this -> pahex2bin(md5($ctx1));
         }
         $passwd = "";
-        $passwd .= $this -> to64(((ord($final[0])<<16) | (ord($final[6])<<8) | (ord($final[12]))), 4);
-        $passwd .= $this -> to64(((ord($final[1])<<16) | (ord($final[7])<<8) | (ord($final[13]))), 4);
-        $passwd .= $this -> to64(((ord($final[2])<<16) | (ord($final[8])<<8) | (ord($final[14]))), 4);
-        $passwd .= $this -> to64(((ord($final[3])<<16) | (ord($final[9])<<8) | (ord($final[15]))), 4);
-        $passwd .= $this -> to64(((ord($final[4])<<16) | (ord($final[10])<<8) | (ord($final[5]))), 4);
+        $passwd .= $this -> to64(((ord($final[0])<<16) |
+                            (ord($final[6])<<8) | (ord($final[12]))), 4);
+        $passwd .= $this -> to64(((ord($final[1])<<16) |
+                            (ord($final[7])<<8) | (ord($final[13]))), 4);
+        $passwd .= $this -> to64(((ord($final[2])<<16) |
+                            (ord($final[8])<<8) | (ord($final[14]))), 4);
+        $passwd .= $this -> to64(((ord($final[3])<<16) |
+                            (ord($final[9])<<8) | (ord($final[15]))), 4);
+        $passwd .= $this -> to64(((ord($final[4])<<16) |
+                            (ord($final[10])<<8) | (ord($final[5]))), 4);
         $passwd .= $this -> to64(ord($final[11]), 2);
         return "$magic$salt\$$passwd";
     }
@@ -714,7 +844,7 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
      * Create a new salte
      * @return string The salt
      */
-    private function create_salt()
+    private function create_md5salt()
     {
         srand((double) microtime() * 1000000);
         $salt = substr(md5(rand(0, 9999999)), 0, 8);
@@ -728,9 +858,9 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
      * @return string The hashed password, prefixed by {SSHA256}
      */
     private function ssha256($pw, $salt)
-	{
-	    return '{SSHA256}'.base64_encode(hash('sha256',$pw.$salt,true).$salt);
-	}
+    {
+        return '{SSHA256}'.base64_encode(hash('sha256',$pw.$salt,true).$salt);
+    }
 
     /**
      * PostfixAdmin's hex2bin function
@@ -760,7 +890,8 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
      */
     private function to64($v, $n)
     {
-        $ITOA64 = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+           $ITOA64 =
+           "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         $ret = "";
         while(($n - 1) >= 0)
         {
@@ -771,52 +902,95 @@ class OC_USER_SQL extends \OC_User_Backend implements \OCP\IUserBackend, \OCP\Us
         return $ret;
     }
 
-	/**
-	 * Store a value in memcache or the session, if no memcache is available
-	 * @param string $key  The key
-	 * @param mixed $value The value to store
-	 * @param int $ttl (optional) defaults to 3600 seconds.
-	 */
-	private function setCache($key, $value, $ttl=3600)
-	{
-		if ($this -> cache === NULL)
-		{
-			$_SESSION[$this -> session_cache_name][$key] = array(
-				'value' => $value,
-				'time' => time(),
-				'ttl' => $ttl,
-			);
-		} else
-		{
-			$this -> cache -> set($key,$value,$ttl);
-		}
-	}
+    /**
+     * Store a value in memcache or the session, if no memcache is available
+     * @param string $key  The key
+     * @param mixed $value The value to store
+     * @param int $ttl (optional) defaults to 3600 seconds.
+     */
+    private function setCache($key, $value, $ttl=3600)
+    {
+        if ($this -> cache === NULL)
+        {
+            $_SESSION[$this -> session_cache_name][$key] = array(
+                'value' => $value,
+                'time' => time(),
+                'ttl' => $ttl,
+            );
+        } else
+        {
+            $this -> cache -> set($key,$value,$ttl);
+        }
+    }
 
-	/**
-	 * Fetch a value from memcache or session, if memcache is not available.
-	 * Returns NULL if there's no value stored or the value expired.
-	 * @param string $key
-	 * @return mixed|NULL
-	 */
-	private function getCache($key)
-	{
-		$retVal = NULL;
-		if ($this -> cache === NULL)
-		{
-			if (isset($_SESSION[$this -> session_cache_name],$_SESSION[$this -> session_cache_name][$key]))
-			{
-				$value = $_SESSION[$this -> session_cache_name][$key];
-				if (time() < $value['time'] + $value['ttl'])
-				{
-					$retVal = $value['value'];
-				}
-			}
-		} else
-		{
-			$retVal = $this -> cache -> get ($key);
-		}
-		return $retVal;
-	}
+    /**
+     * Fetch a value from memcache or session, if memcache is not available.
+     * Returns NULL if there's no value stored or the value expired.
+     * @param string $key
+     * @return mixed|NULL
+     */
+    private function getCache($key)
+    {
+        $retVal = NULL;
+        if ($this -> cache === NULL)
+        {
+            if (isset($_SESSION[$this -> session_cache_name],
+                        $_SESSION[$this -> session_cache_name][$key]))
+            {
+                $value = $_SESSION[$this -> session_cache_name][$key];
+                if (time() < $value['time'] + $value['ttl'])
+                {
+                    $retVal = $value['value'];
+                }
+            }
+        } else
+        {
+            $retVal = $this -> cache -> get ($key);
+        }
+        return $retVal;
+    }
+
+    private function create_systemsalt($length=20)
+    {
+        $fp = fopen('/dev/urandom', 'r');
+        $randomString = fread($fp, $length);
+        fclose($fp);
+        $salt = base64_encode($randomString);
+        return $salt;
+    }
+
+    private function pw_hash($password)
+    {
+        $options = [
+                    'cost' => 10,
+                   ];
+        return password_hash($password, PASSWORD_BCRYPT, $options);
+
+    }
+
+    function hash_equals( $a, $b ) {
+        $a_length = strlen( $a );
+
+        if ( $a_length !== strlen( $b ) ) {
+            return false;
+            }
+            $result = 0;
+
+        // Do not attempt to "optimize" this.
+        for ( $i = 0; $i < $a_length; $i++ ) {
+        $result |= ord( $a[ $i ] ) ^ ord( $b[ $i ] );
+        }
+
+            //Hide the length of the string
+        $additional_length=200-($a_length % 200);
+        $tmp=0;
+           $c="abCD";
+        for ( $i = 0; $i < $additional_length; $i++ ) {
+            $tmp |= ord( $c[ 0 ] ) ^ ord( $c[ 0 ] );
+        }
+
+        return $result === 0;
+}
 
 }
-?>
+

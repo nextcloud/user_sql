@@ -21,14 +21,11 @@
 *
 */
 
-require_once __DIR__ . '/../user_sql.php';
-require_once __DIR__ . '/../group_sql.php';
-\OCP\App::registerAdmin('user_sql','settings');
-
+require_once(__DIR__ . '/../lib/user_sql.php');
+require_once __DIR__ . '/../lib/group_sql.php';
 $backend = new \OCA\user_sql\OC_USER_SQL;
 $group_backend = new \OCA\user_sql\OC_GROUP_SQL;
 
-
-// register user backend
-\OC_User::useBackend($backend);
+\OC::$server->getUserManager()->registerBackend($backend);
 \OC::$server->getGroupManager()->addBackend($group_backend);
+?>

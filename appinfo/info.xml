@@ -1,22 +1,24 @@
 <?xml version="1.0"?>
 <info>
-       <id>user_sql</id>
-       <name>SQL user backend</name>
-       <summary>Authenticate users by SQL queries.</summary>
-       <description>Authenticate users by SQL queries.</description>
-       <version>2.4.0</version>
-       <licence>agpl</licence>
-       <author>Andreas Boehler &lt;dev (at) aboehler (dot) at &gt;</author>
-       <namespace>user_sql</namespace>
-       <bugs>https://github.com/nextcloud/user_sql/issues</bugs>
-       <repository>https://github.com/nextcloud/user_sql</repository>
-       <screenshot>https://raw.githubusercontent.com/nextcloud/user_sql/v2.4.0/screenshot.png</screenshot>
-       <types>
-       		<authentication/>
-       </types>
-       <category>auth</category>
-       <dependencies>
-           <nextcloud min-version="12" max-version="12"/>
-           <owncloud min-version="10" max-version="10"/>
-       </dependencies>
+	<id>user_sql</id>
+	<name>SQL user backend</name>
+	<summary>Authenticate Users by SQL</summary>
+	<description>Authenticate Users by SQL</description>
+	<version>3.1.0</version>
+	<licence>agpl</licence>
+	<author>Andreas Boehler &lt;dev (at) aboehler (dot) at &gt;</author>
+	<namespace>user_sql</namespace>
+	<types>
+		<authentication/>
+	</types>
+	<category>auth</category>
+	<dependencies>
+		<nextcloud min-version="12" max-version="13"/>
+		<database>mysql</database>
+		<database>pgsql</database>
+	</dependencies>
+	<settings>
+		<admin>\OCA\user_sql\Settings\Admin</admin>
+		<admin-section>OCA\user_sql\Settings\Section</admin-section>
+	</settings>
 </info>
