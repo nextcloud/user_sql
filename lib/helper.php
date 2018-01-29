@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ownCloud - user_sql
+ * nextCloud - user_sql
  *
  * @author Andreas Böhler and contributors
  * @copyright 2012-2015 Andreas Böhler <dev (at) aboehler (dot) at>
@@ -20,15 +20,17 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 
+
 namespace OCA\user_sql\lib;
+use OCP\IConfig;
+use OCP\Util;
 
 class Helper {
 
     protected $db;
     protected $db_conn;
     protected $settings;
-    
+
     /**
      * The default constructor initializes some parameters
      */
@@ -74,7 +76,7 @@ class Helper {
 
         return $params;
     }
-    
+
     /**
      * Load the settings for a given domain. If the domain is not found,
      * the settings for 'default' are returned instead.
@@ -83,7 +85,7 @@ class Helper {
      */
     public function loadSettingsForDomain($domain)
     {
-        \OCP\Util::writeLog('OC_USER_SQL', "Trying to load settings for domain: " . $domain, \OCP\Util::DEBUG);
+        Util::writeLog('OC_USER_SQL', "Trying to load settings for domain: " . $domain, Util::DEBUG);
         $settings = array();
         $sql_host = \OC::$server->getConfig()->getAppValue('user_sql', 'sql_hostname_'.$domain, '');
         if($sql_host === '')
@@ -95,10 +97,10 @@ class Helper {
         {
             $settings[$param] = \OC::$server->getConfig()->getAppValue('user_sql', $param.'_'.$domain, '');
         }
-        \OCP\Util::writeLog('OC_USER_SQL', "Loaded settings for domain: " . $domain, \OCP\Util::DEBUG);
+        Util::writeLog('OC_USER_SQL', "Loaded settings for domain: " . $domain, Util::DEBUG);
         return $settings;
-    }    
-    
+    }
+
     /**
      * Run a given query type and return the results
      * @param string $type The type of query to run
@@ -110,10 +112,10 @@ class Helper {
      */
     public function runQuery($type, $params, $execOnly = false, $fetchArray = false, $limits = array())
     {
-        \OCP\Util::writeLog('OC_USER_SQL', "Entering runQuery for type: " . $type, \OCP\Util::DEBUG);        
+        Util::writeLog('OC_USER_SQL', "Entering runQuery for type: " . $type, Util::DEBUG);
         if(!$this -> db_conn)
             return false;
-        
+
         switch($type)
         {
             case 'getHome':
@@ -152,7 +154,7 @@ class Helper {
                 $query .= " WHERE ".$this->settings['col_username']." LIKE :search";
                 if($this -> settings['col_active'] !== '')
                     $query .= " AND " .($this -> settings['set_active_invert'] === 'true' ? "NOT " : "" ) . $this -> settings['col_active'];
-                $query .= " ORDER BY ".$this->settings['col_username'];             
+                $query .= " ORDER BY ".$this->settings['col_username'];
             break;
 
             case 'userExists':
@@ -205,27 +207,27 @@ class Helper {
         if(isset($limits['offset']) && $limits['offset'] !== null)
         {
             $offset = intval($limits['offset']);
-            $query .= " OFFSET ".$offset; 
+            $query .= " OFFSET ".$offset;
         }
 
-        \OCP\Util::writeLog('OC_USER_SQL', "Preparing query: $query", \OCP\Util::DEBUG);
+        Util::writeLog('OC_USER_SQL', "Preparing query: $query", Util::DEBUG);
         $result = $this -> db -> prepare($query);
         foreach($params as $param => $value)
         {
             $result -> bindValue(":".$param, $value);
         }
-        \OCP\Util::writeLog('OC_USER_SQL', "Executing query...", \OCP\Util::DEBUG);
+        Util::writeLog('OC_USER_SQL', "Executing query...", Util::DEBUG);
         if(!$result -> execute())
         {
             $err = $result -> errorInfo();
-            \OCP\Util::writeLog('OC_USER_SQL', "Query failed: " . $err[2], \OCP\Util::DEBUG);            
+            Util::writeLog('OC_USER_SQL', "Query failed: " . $err[2], Util::DEBUG);
             return false;
         }
         if($execOnly === true)
         {
             return true;
         }
-        \OCP\Util::writeLog('OC_USER_SQL', "Fetching result...", \OCP\Util::DEBUG);
+        Util::writeLog('OC_USER_SQL', "Fetching result...", Util::DEBUG);
         if($fetchArray === true)
             $row = $result -> fetchAll();
         else
@@ -259,15 +261,15 @@ class Helper {
             $this -> db -> query("SET NAMES 'UTF8'");
             $this -> db_conn = true;
             return true;
-        } 
+        }
         catch (\Exception $e)
         {
-            \OCP\Util::writeLog('OC_USER_SQL', 'Failed to connect to the database: ' . $e -> getMessage(), \OCP\Util::ERROR);
+            Util::writeLog('OC_USER_SQL', 'Failed to connect to the database: ' . $e -> getMessage(), Util::ERROR);
             $this -> db_conn = false;
             return false;
         }
     }
-    
+
     /**
      * Check if all of the given columns exist
      * @param array $parameters The connection parameters
@@ -286,15 +288,15 @@ class Helper {
             if(!in_array($col, $columns, true))
             {
                 $res = false;
-                $err .= $table.'.'.$col.' ';
+                $err .= $col.' ';
             }
         }
         if($res)
             return true;
-        else 
+        else
             return $err;
     }
-    
+
     /**
      * Check if a given table exists
      * @param array $parameters The connection parameters
@@ -308,7 +310,7 @@ class Helper {
         $tablesWithoutSchema = $this->getTables($parameters, $sql_driver, false);
         return in_array($table, $tablesWithSchema, true) || in_array($table, $tablesWithoutSchema, true);
     }
-    
+
     /**
      * Retrieve a list of tables for the given connection parameters
      * @param array $parameters The connection parameters
@@ -428,7 +430,7 @@ class Helper {
         catch(\Exception $e)
         {
             return array();
-        } 
+        }
     }
 
 
