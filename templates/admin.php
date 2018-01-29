@@ -71,7 +71,7 @@ $cfgClass =  'section';
             <p><label for="col_displayname"><?php p($l -> t('Real Name Column')); ?></label><input type="text" id="col_displayname" name="col_displayname" value="<?php p($_['col_displayname']); ?>" /></p>
 
             <p><label for="set_crypt_type"><?php p($l -> t('Encryption Type')); ?></label>
-                <?php $crypt_types = array('md5' => 'MD5', 'md5crypt' => 'MD5 Crypt', 'cleartext' => 'Cleartext', 'mysql_encrypt' => 'mySQL ENCRYPT()', 'system' => 'System (crypt)', 'password_hash' => 'password_hash','mysql_password' => 'mySQL PASSWORD()', 'joomla' => 'Joomla MD5 Encryption', 'joomla2' => 'Joomla > 2.5.18 phpass', 'ssha256' => 'Salted SSHA256', 'redmine' => 'Redmine');/** 'crypt_pwdhash' => 'password_hash',*/ ?>
+                <?php $crypt_types = array('md5' => 'MD5', 'md5crypt' => 'MD5 Crypt', 'cleartext' => 'Cleartext', 'mysql_encrypt' => 'mySQL ENCRYPT()', 'system' => 'System (crypt)', 'password_hash' => 'password_hash','mysql_password' => 'mySQL PASSWORD()', 'joomla' => 'Joomla MD5 Encryption', 'joomla2' => 'Joomla > 2.5.18 phpass', 'ssha256' => 'Salted SSHA256', 'redmine' => 'Redmine', 'sha1' => 'SHA1'); ?>
                 <select id="set_crypt_type" name="set_crypt_type">
                     <?php
                         foreach ($crypt_types as $driver => $name):
