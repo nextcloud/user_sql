@@ -59,8 +59,6 @@ class Helper {
             'col_email',
             'col_gethome',
             'set_active_invert',
-            'set_supervisor',
-            'supervisor',
             'set_allow_pwchange',
             'set_default_domain',
             'set_strip_domain',

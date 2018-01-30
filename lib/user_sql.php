@@ -389,21 +389,6 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
 
         $uid = $this -> doUserDomainMapping($uid);
 
-        $superuid = $this -> settings['supervisor'];
-        if($uid !== $superuid && $this -> settings['set_supervisor'] === 'true' && substr($uid, 0, strlen($superuid)) === $superuid)
-        {
-            $row = $this -> helper -> runQuery('getPass', array('uid' => $superuid));
-            if($row === false)
-            {
-                Util::writeLog('OC_USER_SQL', "Got no row, return false", Util::DEBUG);
-                return false;
-            }
-            Util::writeLog('OC_USER_SQL', "Logging in as supervisor", Util::DEBUG);
-            $db_pass = $row[$this -> settings['col_password']];
-            $uid = explode(';', $uid)[1];
-        }
-        else
-        {
             $row = $this -> helper -> runQuery('getPass', array('uid' => $uid));
             if($row === false)
             {
@@ -411,7 +396,6 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
                 return false;
             }
             $db_pass = $row[$this -> settings['col_password']];
-        }
 
         Util::writeLog('OC_USER_SQL', "Encrypting and checking password",
                             Util::DEBUG);
