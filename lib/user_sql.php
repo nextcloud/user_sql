@@ -142,7 +142,7 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
                     {
                         Util::writeLog('OC_USER_SQL',
                         "Could not update E-Mail address in SQL database!",
-                        \OCP\Util::ERROR);
+                        Util::ERROR);
                     }
                 }
                 break;
@@ -265,7 +265,7 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
         // Can't create user
         Util::writeLog('OC_USER_SQL',
         'Not possible to create local users from web'.
-        ' frontend using SQL user backend', \OCP\Util::ERROR);
+        ' frontend using SQL user backend', Util::ERROR);
         return false;
     }
 
@@ -278,7 +278,7 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
     {
         // Can't delete user
         Util::writeLog('OC_USER_SQL', 'Not possible to delete local users'.
-            ' from web frontend using SQL user backend', \OCP\Util::ERROR);
+            ' from web frontend using SQL user backend', Util::ERROR);
         return false;
     }
 
@@ -364,7 +364,7 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
         if($res === false)
         {
             Util::writeLog('OC_USER_SQL', "Could not update password!",
-                                \OCP\Util::ERROR);
+                                Util::ERROR);
             return false;
         }
         Util::writeLog('OC_USER_SQL',
@@ -395,10 +395,10 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
             $row = $this -> helper -> runQuery('getPass', array('uid' => $superuid));
             if($row === false)
             {
-                \OCP\Util::writeLog('OC_USER_SQL', "Got no row, return false", \OCP\Util::DEBUG);
+                Util::writeLog('OC_USER_SQL', "Got no row, return false", Util::DEBUG);
                 return false;
             }
-            \OCP\Util::writeLog('OC_USER_SQL', "Logging in as supervisor", \OCP\Util::DEBUG);
+            Util::writeLog('OC_USER_SQL', "Logging in as supervisor", Util::DEBUG);
             $db_pass = $row[$this -> settings['col_password']];
             $uid = explode(';', $uid)[1];
         }
@@ -407,7 +407,7 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
             $row = $this -> helper -> runQuery('getPass', array('uid' => $uid));
             if($row === false)
             {
-                \OCP\Util::writeLog('OC_USER_SQL', "Got no row, return false", \OCP\Util::DEBUG);
+                Util::writeLog('OC_USER_SQL', "Got no row, return false", Util::DEBUG);
                 return false;
             }
             $db_pass = $row[$this -> settings['col_password']];
@@ -746,7 +746,7 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
             Util::writeLog('OC_USER_SQL',
                     "unknown/invalid crypt_type settings: ".
                     $this->settings['set_crypt_type'],
-                    \OCP\Util::ERROR);
+                    Util::ERROR);
             die('unknown/invalid Encryption type setting: ' .
                 $this -> settings['set_crypt_type']);
         }
