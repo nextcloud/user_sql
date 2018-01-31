@@ -57,11 +57,6 @@ Password changing is disabled by default, but can be enabled in the Admin area.
 Caution: user_sql does not recreate password salts, which imposes a security risk. 
 Password salts should be newly generated whenever the password changes.
 
-Supervision can be enabled under supervisor settings. Supervision allows one
-specified user to login into any account. Use supervisor username and target 
-username separated by ';' to login as target user using supervisor's password 
-(ex. superuser;user).
-
 The column autocomplete works only for MySQL and PostgreSQL database which is used to validate form data.
 If you use other database use *occ* command to set the application config parameters with domain suffix.
 
@@ -84,8 +79,6 @@ For example to set 'sql_hostname' parameter in default domain use:
 - col_email
 - col_gethome
 - set_active_invert
-- set_supervisor
-- supervisor
 - set_allow_pwchange
 - set_default_domain
 - set_strip_domain

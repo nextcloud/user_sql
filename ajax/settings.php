@@ -134,10 +134,6 @@ if(isset($_POST['appname']) && ($_POST['appname'] === 'user_sql') && isset($_POS
                     {
                         \OC::$server->getConfig()->setAppValue('user_sql', 'set_active_invert_'.$domain, 'true');
                     }
-                    elseif($param === 'set_supervisor')
-                    {
-                        \OC::$server->getConfig()->setAppValue('user_sql', 'set_supervisor_'.$domain, 'true');
-                    }
                     elseif($param === 'set_enable_gethome')
                     {
                         \OC::$server->getConfig()->setAppValue('user_sql', 'set_enable_gethome_'.$domain, 'true');
@@ -159,10 +155,6 @@ if(isset($_POST['appname']) && ($_POST['appname'] === 'user_sql') && isset($_POS
                     elseif($param === 'set_active_invert')
                     {
                         \OC::$server->getConfig()->setAppValue('user_sql', 'set_active_invert_'.$domain, 'false');
-                    }
-                    elseif($param === 'set_supervisor')
-                    {
-                        \OC::$server->getConfig()->setAppValue('user_sql', 'set_supervisor_'.$domain, 'false');
                     }
                     elseif($param === 'set_enable_gethome')
                     {
