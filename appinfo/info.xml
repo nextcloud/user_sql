@@ -8,6 +8,9 @@
 	<licence>agpl</licence>
 	<author>Andreas Boehler &lt;dev (at) aboehler (dot) at &gt;</author>
 	<namespace>user_sql</namespace>
+	<bugs>https://github.com/mlojewski-me/user_sql/issues</bugs>
+	<repository>https://github.com/mlojewski-me/user_sql</repository>
+	<screenshot>https://raw.githubusercontent.com/mlojewski-me/user_sql/v2.4.0/screenshot.png</screenshot>
 	<types>
 		<authentication/>
 	</types>
