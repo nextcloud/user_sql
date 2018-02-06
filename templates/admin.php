@@ -100,7 +100,7 @@ $cfgClass =  'section';
            <p><label for="col_email"><?php p($l -> t('E-Mail Column')); ?></label><input type="text" id="col_email" name="col_email" value="<?php p($_['col_email']); ?>" /></p>
 
             <p><label for="set_mail_sync_mode"><?php p($l -> t('E-Mail address sync mode')); ?></label>
-                <?php $mail_modes = array('none' => 'No Synchronisation', 'initial' => 'Synchronise only once', 'forceoc' => 'ownCloud always wins', 'forcesql' => 'SQL always wins'); ?>
+                <?php $mail_modes = array('none' => 'No Synchronisation', 'initial' => 'Synchronise only once', 'forceoc' => 'Nextcloud always wins', 'forcesql' => 'SQL always wins'); ?>
                 <select id="set_mail_sync_mode" name="set_mail_sync_mode">
                     <?php
                     foreach ($mail_modes as $mode => $name):
@@ -161,11 +161,11 @@ $cfgClass =  'section';
         </fieldset>
         <fieldset id="sql-6">
             <p><label for="sql_group_table"><?php p($l -> t('Table')); ?></label><input type="text" id="sql_group_table" name="sql_group_table" value="<?php p($_['sql_group_table']); ?>" /></p>
-            
+
             <p><label for="col_group_username"><?php p($l -> t('Username Column')); ?></label><input type="text" id="col_group_username" name="col_group_username" value="<?php p($_['col_group_username']); ?>" /></p>
-            
+
             <p><label for="col_group_name"><?php p($l -> t('Group Name Column')); ?></label><input type="text" id="col_group_name" name="col_group_name" value="<?php p($_['col_group_name']); ?>" /></p>
-            
+
         </fieldset>
 
         <input type="hidden" name="requesttoken" value="<?php p($_['requesttoken']); ?>" id="requesttoken" />
