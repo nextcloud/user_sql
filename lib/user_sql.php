@@ -354,6 +354,22 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
         {
                     $enc_password = $this->pw_hash($password);
         }
+        elseif($this -> settings['set_crypt_type'] === 'courier_md5')
+        {
+            $enc_password = '{MD5}'.OC_USER_SQL::hex_to_base64(md5($password));
+        }
+        elseif($this -> settings['set_crypt_type'] === 'courier_md5raw')
+        {
+            $enc_password = '{MD5RAW}'.md5($password);
+        }
+        elseif($this -> settings['set_crypt_type'] === 'courier_sha1')
+        {
+            $enc_password = '{SHA}'.OC_USER_SQL::hex_to_base64(sha1($password));
+        }
+        elseif($this -> settings['set_crypt_type'] === 'courier_sha256')
+        {
+            $enc_password = '{SHA256}'.OC_USER_SQL::hex_to_base64(hash('sha256', $password, false));
+        }
          else
         {
             $enc_password = $this -> pacrypt($password, $old_password);
@@ -422,10 +438,26 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
                 return false;
             $ret = sha1($salt['salt'].sha1($password)) === $db_pass;
         }
-        
+
         elseif($this -> settings['set_crypt_type'] == 'sha1')
         {
             $ret = $this->hash_equals(sha1($password) , $db_pass);
+        }
+        elseif($this -> settings['set_crypt_type'] === 'courier_md5')
+        {
+            $ret = '{MD5}'.OC_USER_SQL::hex_to_base64(md5($password)) === $db_pass;
+        }
+        elseif($this -> settings['set_crypt_type'] === 'courier_md5raw')
+        {
+            $ret = '{MD5RAW}'.md5($password) === $db_pass;
+        }
+        elseif($this -> settings['set_crypt_type'] === 'courier_sha1')
+        {
+            $ret = '{SHA}'.OC_USER_SQL::hex_to_base64(sha1($password)) === $db_pass;
+        }
+        elseif($this -> settings['set_crypt_type'] === 'courier_sha256')
+        {
+            $ret = '{SHA256}'.OC_USER_SQL::hex_to_base64(hash('sha256', $password, false)) === $db_pass;
         } else
 
         {
@@ -974,7 +1006,16 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
         }
 
         return $result === 0;
-}
+    }
+
+    private static function hex_to_base64($hex)
+    {
+        $hex_chr = '';
+        foreach(str_split($hex, 2) as $hexpair)
+        {
+            $hex_chr .= chr(hexdec($hexpair));
+        }
+        return base64_encode($hex_chr);
+    }
 
 }
-
