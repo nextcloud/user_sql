@@ -322,6 +322,13 @@ user_sql.loadDomainSettings = function(domain)
                         else
                             $('#' + key).prop('checked', false);
                     }
+                    else if(key == 'set_supervisor')
+                    {
+                        if(data.settings[key] == 'true')
+                            $('#' + key).prop('checked', true);
+                        else
+                            $('#' + key).prop('checked', false);
+                    }
                     else if(key == 'set_enable_gethome')
                     {
                         if(data.settings[key] == 'true')
