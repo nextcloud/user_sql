@@ -1,5 +1,10 @@
 user_sql
 ========
+Updates in order to support password verification with Drupal 7 database:
+- added crypt_type 'drupal' for Drupal 7 in templates/admin.php after line 72
+- added processing of crypt_type 'drupal' in lib/user_sql.php after lines 311 and 407
+- added file drupal.php to directory lib
+WD 2018-01-04 reapplied to to new app version on 2018-02-10
 
 **Nextcloud SQL user authentication.**
 
