@@ -308,7 +308,13 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
             return false;
         }
         $old_password = $row[$this -> settings['col_password']];
-        if($this -> settings['set_crypt_type'] === 'joomla2')
+
+        // Added and disabled updating passwords for Drupal 7 WD 2018-01-04
+        if($this -> settings['set_crypt_type'] === 'drupal')
+        {
+            return false;
+        }
+        elseif($this -> settings['set_crypt_type'] === 'joomla2')
         {
             if(!class_exists('\PasswordHash'))
                 require_once('PasswordHash.php');
@@ -415,9 +421,16 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
 
         Util::writeLog('OC_USER_SQL', "Encrypting and checking password",
                             Util::DEBUG);
+        // Added handling for Drupal 7 passwords WD 2018-01-04
+        if($this -> settings['set_crypt_type'] === 'drupal')
+        {
+            if(!function_exists('user_check_password'))
+                require_once('drupal.php');
+            $ret = user_check_password($password, $db_pass);
+        }
         // Joomla 2.5.18 switched to phPass, which doesn't play nice with the
         // way we check passwords
-        if($this -> settings['set_crypt_type'] === 'joomla2')
+        elseif($this -> settings['set_crypt_type'] === 'joomla2')
         {
             if(!class_exists('\PasswordHash'))
                 require_once('PasswordHash.php');

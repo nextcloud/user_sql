@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Added
 - Options for Courier authlib authentication: courier_md5, courier_md5raw, courier_sha1, courier_sha256
+- crypt_type 'drupal' for Drupal 7 authentication
 
 ## [3.1.0] - 2018-02-06
 ### Added
