@@ -20,34 +20,30 @@
 namespace OCA\user_sql\HashAlgorithm;
 
 /**
- * Cleartext password hash implementation.
+ * Singleton pattern trait.
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class Cleartext implements HashAlgorithm
+trait Singleton
 {
-    use Singleton;
+    private static $instance;
 
-    /**
-     * @inheritdoc
-     */
-    public function getVisibleName()
+    final private function __construct()
     {
-        return "Cleartext";
+        $this->init();
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getPasswordHash($password)
+    protected function init()
     {
-        return $password;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function checkPassword($password, $dbHash)
+    final public static function getInstance()
     {
-        return $password === $dbHash;
+        return isset(static::$instance)
+            ? static::$instance
+            : static::$instance = new static;
+    }
+
+    final private function __clone()
+    {
     }
 }

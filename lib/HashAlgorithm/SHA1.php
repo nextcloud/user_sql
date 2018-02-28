@@ -25,25 +25,7 @@ namespace OCA\user_sql\HashAlgorithm;
  */
 class SHA1 implements HashAlgorithm
 {
-    /**
-     * @var SHA1
-     */
-    private static $instance;
-
-    private function __construct()
-    {
-    }
-
-    /**
-     * @return SHA1
-     */
-    public static function getInstance()
-    {
-        if (self::$instance === null) {
-            self::$instance = new SHA1();
-        }
-        return self::$instance;
-    }
+    use Singleton;
 
     /**
      * @inheritdoc
@@ -67,9 +49,5 @@ class SHA1 implements HashAlgorithm
     public function checkPassword($password, $dbHash)
     {
         return sha1($password) === $dbHash;
-    }
-
-    private function __clone()
-    {
     }
 }

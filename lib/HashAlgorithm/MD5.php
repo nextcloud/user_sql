@@ -25,25 +25,7 @@ namespace OCA\user_sql\HashAlgorithm;
  */
 class MD5 implements HashAlgorithm
 {
-    /**
-     * @var MD5
-     */
-    private static $instance;
-
-    private function __construct()
-    {
-    }
-
-    /**
-     * @return MD5
-     */
-    public static function getInstance()
-    {
-        if (self::$instance === null) {
-            self::$instance = new MD5();
-        }
-        return self::$instance;
-    }
+    use Singleton;
 
     /**
      * @inheritdoc
@@ -67,9 +49,5 @@ class MD5 implements HashAlgorithm
     public function checkPassword($password, $dbHash)
     {
         return md5($password) === $dbHash;
-    }
-
-    private function __clone()
-    {
     }
 }
