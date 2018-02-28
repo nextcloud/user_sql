@@ -30,7 +30,7 @@
 namespace OCA\user_sql;
 
 use OC\User\Backend;
-
+use OCA\user_sql\HashAlgorithm\HashAlgorithm;
 use OCP\IConfig;
 use OCP\IUser;
 use OCP\IUserSession;
@@ -281,6 +281,15 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
     }
 
     /**
+     * @return HashAlgorithm|bool
+     */
+    private function getHashAlgorithmInstance() {
+        $cryptoType = $this->settings['set_crypt_type'];
+        require_once('HashAlgorithm/'. $cryptoType . '.php');
+        return call_user_func('OCA\\user_sql\\HashAlgorithm\\' . $cryptoType . "::getInstance");
+    }
+
+    /**
      * Set (change) a user password
      * This can be enabled/disabled in the settings (set_allow_pwchange)
      *
@@ -305,7 +314,20 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
         if ($row === false) {
             return false;
         }
-        $old_password = $row[$this->settings['col_password']];
+
+        $hashAlgorithm = $this->getHashAlgorithmInstance();
+
+        if ($hashAlgorithm === false) {
+            return false;
+        }
+
+        $enc_password = $hashAlgorithm->getPasswordHash($password);
+
+        if ($enc_password === false) {
+            return false;
+        }
+
+        /*$old_password = $row[$this->settings['col_password']];
 
         // Added and disabled updating passwords for Drupal 7 WD 2018-01-04
         if ($this->settings['set_crypt_type'] === 'drupal') {
@@ -356,7 +378,8 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
             $enc_password = '{SHA256}' . OC_USER_SQL::hex_to_base64(hash('sha256', $password, false));
         } else {
             $enc_password = $this->pacrypt($password, $old_password);
-        }
+        }*/
+
         $res = $this->helper->runQuery('setPass',
             array('uid' => $uid, 'enc_password' => $enc_password),
             true);
@@ -396,7 +419,16 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
 
         Util::writeLog('OC_USER_SQL', "Encrypting and checking password",
             Util::DEBUG);
-        // Added handling for Drupal 7 passwords WD 2018-01-04
+
+        $hashAlgorithm = $this->getHashAlgorithmInstance();
+
+        if ($hashAlgorithm === false) {
+            return false;
+        }
+
+        $ret = $hashAlgorithm->checkPassword($password, $db_pass);
+
+        /*// Added handling for Drupal 7 passwords WD 2018-01-04
         if ($this->settings['set_crypt_type'] === 'drupal') {
             if (!function_exists('user_check_password')) {
                 require_once('drupal.php');
@@ -437,7 +469,8 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
             // $ret = $this -> pacrypt($password, $db_pass) === $db_pass;
             $ret = $this->hash_equals($this->pacrypt($password, $db_pass),
                 $db_pass);
-        }
+        }*/
+
         if ($ret) {
             Util::writeLog('OC_USER_SQL',
                 "Passwords matching, return true",
@@ -620,7 +653,7 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
      */
     public function getBackendName()
     {
-        return 'SQL';
+        return 'user_sql';
     }
 
     /**
@@ -637,7 +670,7 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
      * @param string $pw_db encrypted password from database
      * @return string encrypted password.
      */
-    private function pacrypt($pw, $pw_db = "")
+    /*private function pacrypt($pw, $pw_db = "")
     {
         Util::writeLog('OC_USER_SQL', "Entering private pacrypt()",
             Util::DEBUG);
@@ -710,7 +743,7 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
         Util::writeLog('OC_USER_SQL', "pacrypt() done, return",
             Util::DEBUG);
         return $password;
-    }
+    }*/
 
     /**
      * md5crypt
@@ -721,7 +754,7 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
      * @return string The encrypted password
      */
 
-    private function md5crypt($pw, $salt = "", $magic = "")
+    /*private function md5crypt($pw, $salt = "", $magic = "")
     {
         $MAGIC = "$1$";
 
@@ -792,18 +825,18 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
             (ord($final[10]) << 8) | (ord($final[5]))), 4);
         $passwd .= $this->to64(ord($final[11]), 2);
         return "$magic$salt\$$passwd";
-    }
+    }*/
 
     /**
      * Create a new salte
      * @return string The salt
      */
-    private function create_md5salt()
+    /*private function create_md5salt()
     {
         srand((double)microtime() * 1000000);
         $salt = substr(md5(rand(0, 9999999)), 0, 8);
         return $salt;
-    }
+    }*/
 
     /**
      * Encrypt using SSHA256 algorithm
@@ -811,17 +844,17 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
      * @param string $salt The salt to use
      * @return string The hashed password, prefixed by {SSHA256}
      */
-    private function ssha256($pw, $salt)
+    /*private function ssha256($pw, $salt)
     {
         return '{SSHA256}' . base64_encode(hash('sha256', $pw . $salt, true) . $salt);
-    }
+    }*/
 
     /**
      * PostfixAdmin's hex2bin function
      * @param string $str The string to convert
      * @return string The converted string
      */
-    private function pahex2bin($str)
+    /*private function pahex2bin($str)
     {
         if (function_exists('hex2bin')) {
             return hex2bin($str);
@@ -834,12 +867,12 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
             }
             return $nstr;
         }
-    }
+    }*/
 
     /**
      * Convert to 64?
      */
-    private function to64($v, $n)
+    /*private function to64($v, $n)
     {
         $ITOA64 =
             "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -850,7 +883,7 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
             $v = $v >> 6;
         }
         return $ret;
-    }
+    }*/
 
     /**
      * Store a value in memcache or the session, if no memcache is available
@@ -894,25 +927,25 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
         return $retVal;
     }
 
-    private function create_systemsalt($length = 20)
+    /*private function create_systemsalt($length = 20)
     {
         $fp = fopen('/dev/urandom', 'r');
         $randomString = fread($fp, $length);
         fclose($fp);
         $salt = base64_encode($randomString);
         return $salt;
-    }
+    }*/
 
-    private function pw_hash($password)
+    /*private function pw_hash($password)
     {
         $options = [
             'cost' => 10,
         ];
         return password_hash($password, PASSWORD_BCRYPT, $options);
 
-    }
+    }*/
 
-    function hash_equals($a, $b)
+    /*function hash_equals($a, $b)
     {
         $a_length = strlen($a);
 
@@ -935,14 +968,14 @@ class OC_USER_SQL extends BackendUtility implements \OCP\IUserBackend,
         }
 
         return $result === 0;
-    }
+    }*/
 
-    private static function hex_to_base64($hex)
+    /*private static function hex_to_base64($hex)
     {
         $hex_chr = '';
         foreach (str_split($hex, 2) as $hexpair) {
             $hex_chr .= chr(hexdec($hexpair));
         }
         return base64_encode($hex_chr);
-    }
+    }*/
 }
