@@ -1,7 +1,7 @@
 <?php
 
 /**
- * nextCloud - user_sql
+ * Nextcloud - user_sql
  *
  * @author Andreas Böhler and contributors
  * @copyright 2012-2015 Andreas Böhler <dev (at) aboehler (dot) at>
@@ -22,10 +22,12 @@
  */
 
 namespace OCA\user_sql\lib;
+
 use OCP\IConfig;
 use OCP\Util;
 
-class Helper {
+class Helper
+{
 
     protected $db;
     protected $db_conn;
@@ -85,15 +87,13 @@ class Helper {
     {
         Util::writeLog('OC_USER_SQL', "Trying to load settings for domain: " . $domain, Util::DEBUG);
         $settings = array();
-        $sql_host = \OC::$server->getConfig()->getAppValue('user_sql', 'sql_hostname_'.$domain, '');
-        if($sql_host === '')
-        {
+        $sql_host = \OC::$server->getConfig()->getAppValue('user_sql', 'sql_hostname_' . $domain, '');
+        if ($sql_host === '') {
             $domain = 'default';
         }
-        $params = $this -> getParameterArray();
-        foreach($params as $param)
-        {
-            $settings[$param] = \OC::$server->getConfig()->getAppValue('user_sql', $param.'_'.$domain, '');
+        $params = $this->getParameterArray();
+        foreach ($params as $param) {
+            $settings[$param] = \OC::$server->getConfig()->getAppValue('user_sql', $param . '_' . $domain, '');
         }
         Util::writeLog('OC_USER_SQL', "Loaded settings for domain: " . $domain, Util::DEBUG);
         return $settings;
@@ -111,159 +111,157 @@ class Helper {
     public function runQuery($type, $params, $execOnly = false, $fetchArray = false, $limits = array())
     {
         Util::writeLog('OC_USER_SQL', "Entering runQuery for type: " . $type, Util::DEBUG);
-        if(!$this -> db_conn)
+        if (!$this->db_conn) {
             return false;
+        }
 
-        switch($type)
-        {
+        switch ($type) {
             case 'getHome':
-                $query = "SELECT ".$this->settings['col_gethome']." FROM ".$this->settings['sql_table']." WHERE ".$this->settings['col_username']." = :uid";
-            break;
+                $query = "SELECT " . $this->settings['col_gethome'] . " FROM " . $this->settings['sql_table'] . " WHERE " . $this->settings['col_username'] . " = :uid";
+                break;
             case 'getMail':
-                $query = "SELECT ".$this->settings['col_email']." FROM ".$this->settings['sql_table']." WHERE ".$this->settings['col_username']." = :uid";
-            break;
+                $query = "SELECT " . $this->settings['col_email'] . " FROM " . $this->settings['sql_table'] . " WHERE " . $this->settings['col_username'] . " = :uid";
+                break;
 
             case 'setMail':
-                $query = "UPDATE ".$this->settings['sql_table']." SET ".$this->settings['col_email']." = :currMail WHERE ".$this->settings['col_username']." = :uid";
-            break;
+                $query = "UPDATE " . $this->settings['sql_table'] . " SET " . $this->settings['col_email'] . " = :currMail WHERE " . $this->settings['col_username'] . " = :uid";
+                break;
 
             case 'getPass':
-                $query = "SELECT ".$this->settings['col_password']." FROM ".$this->settings['sql_table']." WHERE ".$this->settings['col_username']." = :uid";
-                if($this -> settings['col_active'] !== '')
-                    $query .= " AND " .($this -> settings['set_active_invert'] === 'true' ? "NOT " : "" ) . $this -> settings['col_active'];
-            break;
+                $query = "SELECT " . $this->settings['col_password'] . " FROM " . $this->settings['sql_table'] . " WHERE " . $this->settings['col_username'] . " = :uid";
+                if ($this->settings['col_active'] !== '') {
+                    $query .= " AND " . ($this->settings['set_active_invert'] === 'true' ? "NOT " : "") . $this->settings['col_active'];
+                }
+                break;
 
             case 'setPass':
-                $query = "UPDATE ".$this->settings['sql_table']." SET ".$this->settings['col_password']." = :enc_password WHERE ".$this->settings['col_username'] ." = :uid";
-            break;
+                $query = "UPDATE " . $this->settings['sql_table'] . " SET " . $this->settings['col_password'] . " = :enc_password WHERE " . $this->settings['col_username'] . " = :uid";
+                break;
 
             case 'getRedmineSalt':
-                $query = "SELECT salt FROM ".$this->settings['sql_table']." WHERE ".$this->settings['col_username'] ." = :uid;";
-            break;
+                $query = "SELECT salt FROM " . $this->settings['sql_table'] . " WHERE " . $this->settings['col_username'] . " = :uid;";
+                break;
 
             case 'countUsers':
-                $query = "SELECT COUNT(*) FROM ".$this->settings['sql_table']." WHERE ".$this->settings['col_username'] ." LIKE :search";
-                if($this -> settings['col_active'] !== '')
-                    $query .= " AND " .($this -> settings['set_active_invert'] === 'true' ? "NOT " : "" ) . $this -> settings['col_active'];
-            break;
+                $query = "SELECT COUNT(*) FROM " . $this->settings['sql_table'] . " WHERE " . $this->settings['col_username'] . " LIKE :search";
+                if ($this->settings['col_active'] !== '') {
+                    $query .= " AND " . ($this->settings['set_active_invert'] === 'true' ? "NOT " : "") . $this->settings['col_active'];
+                }
+                break;
 
             case 'getUsers':
-                $query = "SELECT ".$this->settings['col_username']." FROM ".$this->settings['sql_table'];
-                $query .= " WHERE ".$this->settings['col_username']." LIKE :search";
-                if($this -> settings['col_active'] !== '')
-                    $query .= " AND " .($this -> settings['set_active_invert'] === 'true' ? "NOT " : "" ) . $this -> settings['col_active'];
-                $query .= " ORDER BY ".$this->settings['col_username'];
-            break;
+                $query = "SELECT " . $this->settings['col_username'] . " FROM " . $this->settings['sql_table'];
+                $query .= " WHERE " . $this->settings['col_username'] . " LIKE :search";
+                if ($this->settings['col_active'] !== '') {
+                    $query .= " AND " . ($this->settings['set_active_invert'] === 'true' ? "NOT " : "") . $this->settings['col_active'];
+                }
+                $query .= " ORDER BY " . $this->settings['col_username'];
+                break;
 
             case 'userExists':
-                $query = "SELECT ".$this->settings['col_username']." FROM ".$this->settings['sql_table']." WHERE ".$this->settings['col_username']." = :uid";
-                if($this -> settings['col_active'] !== '')
-                    $query .= " AND " .($this -> settings['set_active_invert'] === 'true' ? "NOT " : "" ) . $this -> settings['col_active'];
-            break;
+                $query = "SELECT " . $this->settings['col_username'] . " FROM " . $this->settings['sql_table'] . " WHERE " . $this->settings['col_username'] . " = :uid";
+                if ($this->settings['col_active'] !== '') {
+                    $query .= " AND " . ($this->settings['set_active_invert'] === 'true' ? "NOT " : "") . $this->settings['col_active'];
+                }
+                break;
 
             case 'getDisplayName':
-                $query = "SELECT ".$this->settings['col_displayname']." FROM ".$this->settings['sql_table']." WHERE ".$this->settings['col_username']." = :uid";
-                if($this -> settings['col_active'] !== '')
-                    $query .= " AND " .($this -> settings['set_active_invert'] === 'true' ? "NOT " : "" ) . $this -> settings['col_active'];
-            break;
+                $query = "SELECT " . $this->settings['col_displayname'] . " FROM " . $this->settings['sql_table'] . " WHERE " . $this->settings['col_username'] . " = :uid";
+                if ($this->settings['col_active'] !== '') {
+                    $query .= " AND " . ($this->settings['set_active_invert'] === 'true' ? "NOT " : "") . $this->settings['col_active'];
+                }
+                break;
 
             case 'mysqlEncryptSalt':
                 $query = "SELECT ENCRYPT(:pw, :salt);";
-            break;
+                break;
 
             case 'mysqlEncrypt':
                 $query = "SELECT ENCRYPT(:pw);";
-            break;
+                break;
 
             case 'mysqlPassword':
                 $query = "SELECT PASSWORD(:pw);";
-            break;
+                break;
 
             case 'getUserGroups':
-                $query = "SELECT ".$this->settings['col_group_name']." FROM ".$this->settings['sql_group_table']." WHERE ".$this->settings['col_group_username']." = :uid";
-            break;
+                $query = "SELECT " . $this->settings['col_group_name'] . " FROM " . $this->settings['sql_group_table'] . " WHERE " . $this->settings['col_group_username'] . " = :uid";
+                break;
 
             case 'getGroups':
-                $query = "SELECT distinct ".$this->settings['col_group_name']." FROM ".$this->settings['sql_group_table']." WHERE ".$this->settings['col_group_name']." LIKE :search";
-            break;
+                $query = "SELECT distinct " . $this->settings['col_group_name'] . " FROM " . $this->settings['sql_group_table'] . " WHERE " . $this->settings['col_group_name'] . " LIKE :search";
+                break;
 
             case 'getGroupUsers':
-                $query = "SELECT distinct ".$this->settings['col_group_username']." FROM ".$this->settings['sql_group_table']." WHERE ".$this->settings['col_group_name']." = :gid";
-            break;
+                $query = "SELECT distinct " . $this->settings['col_group_username'] . " FROM " . $this->settings['sql_group_table'] . " WHERE " . $this->settings['col_group_name'] . " = :gid";
+                break;
 
             case 'countUsersInGroup':
-                $query = "SELECT count(".$this->settings['col_group_username'].") FROM ".$this->settings['sql_group_table']." WHERE ".$this->settings['col_group_name']." = :gid AND ".$this->settings['col_group_username']." LIKE :search";
-            break;
+                $query = "SELECT count(" . $this->settings['col_group_username'] . ") FROM " . $this->settings['sql_group_table'] . " WHERE " . $this->settings['col_group_name'] . " = :gid AND " . $this->settings['col_group_username'] . " LIKE :search";
+                break;
         }
 
-        if(isset($limits['limit']) && $limits['limit'] !== null)
-        {
+        if (isset($limits['limit']) && $limits['limit'] !== null) {
             $limit = intval($limits['limit']);
-            $query .= " LIMIT ".$limit;
+            $query .= " LIMIT " . $limit;
         }
 
-        if(isset($limits['offset']) && $limits['offset'] !== null)
-        {
+        if (isset($limits['offset']) && $limits['offset'] !== null) {
             $offset = intval($limits['offset']);
-            $query .= " OFFSET ".$offset;
+            $query .= " OFFSET " . $offset;
         }
 
         Util::writeLog('OC_USER_SQL', "Preparing query: $query", Util::DEBUG);
-        $result = $this -> db -> prepare($query);
-        foreach($params as $param => $value)
-        {
-            $result -> bindValue(":".$param, $value);
+        $result = $this->db->prepare($query);
+        foreach ($params as $param => $value) {
+            $result->bindValue(":" . $param, $value);
         }
         Util::writeLog('OC_USER_SQL', "Executing query...", Util::DEBUG);
-        if(!$result -> execute())
-        {
-            $err = $result -> errorInfo();
+        if (!$result->execute()) {
+            $err = $result->errorInfo();
             Util::writeLog('OC_USER_SQL', "Query failed: " . $err[2], Util::DEBUG);
             return false;
         }
-        if($execOnly === true)
-        {
+        if ($execOnly === true) {
             return true;
         }
         Util::writeLog('OC_USER_SQL', "Fetching result...", Util::DEBUG);
-        if($fetchArray === true)
-            $row = $result -> fetchAll();
-        else
-            $row = $result -> fetch();
+        if ($fetchArray === true) {
+            $row = $result->fetchAll();
+        } else {
+            $row = $result->fetch();
+        }
 
-        if(!$row)
-        {
+        if (!$row) {
             return false;
         }
         return $row;
     }
 
     /**
-     * Connect to the database using ownCloud's DBAL
+     * Connect to the database using Nextcloud's DBAL
      * @param array $settings The settings for the connection
      * @return bool
      */
     public function connectToDb($settings)
     {
-        $this -> settings = $settings;
+        $this->settings = $settings;
         $cm = new \OC\DB\ConnectionFactory(\OC::$server->getSystemConfig());
-        $parameters = array('host' => $this -> settings['sql_hostname'],
-                'password' => $this -> settings['sql_password'],
-                'user' => $this -> settings['sql_username'],
-                'dbname' => $this -> settings['sql_database'],
-                'tablePrefix' => ''
-            );
-        try
-        {
-            $this -> db = $cm -> getConnection($this -> settings['sql_driver'], $parameters);
-            $this -> db -> query("SET NAMES 'UTF8'");
-            $this -> db_conn = true;
+        $parameters = array(
+            'host' => $this->settings['sql_hostname'],
+            'password' => $this->settings['sql_password'],
+            'user' => $this->settings['sql_username'],
+            'dbname' => $this->settings['sql_database'],
+            'tablePrefix' => ''
+        );
+        try {
+            $this->db = $cm->getConnection($this->settings['sql_driver'], $parameters);
+            $this->db->query("SET NAMES 'UTF8'");
+            $this->db_conn = true;
             return true;
-        }
-        catch (\Exception $e)
-        {
-            Util::writeLog('OC_USER_SQL', 'Failed to connect to the database: ' . $e -> getMessage(), Util::ERROR);
-            $this -> db_conn = false;
+        } catch (\Exception $e) {
+            Util::writeLog('OC_USER_SQL', 'Failed to connect to the database: ' . $e->getMessage(), Util::ERROR);
+            $this->db_conn = false;
             return false;
         }
     }
@@ -275,24 +273,24 @@ class Helper {
      * @param string $table The table name to check
      * @param array $cols The columns to check
      * @param array True if found, otherwise false
+     * @return bool|string
      */
     public function verifyColumns($parameters, $sql_driver, $table, $cols)
     {
         $columns = $this->getColumns($parameters, $sql_driver, $table);
         $res = true;
         $err = '';
-        foreach($cols as $col)
-        {
-            if(!in_array($col, $columns, true))
-            {
+        foreach ($cols as $col) {
+            if (!in_array($col, $columns, true)) {
                 $res = false;
-                $err .= $col.' ';
+                $err .= $col . ' ';
             }
         }
-        if($res)
+        if ($res) {
             return true;
-        else
+        } else {
             return $err;
+        }
     }
 
     /**
@@ -301,6 +299,7 @@ class Helper {
      * @param string $sql_driver The SQL driver to use
      * @param string $table The table name to check
      * @param array True if found, otherwise false
+     * @return bool
      */
     public function verifyTable($parameters, $sql_driver, $table)
     {
@@ -320,8 +319,8 @@ class Helper {
     {
         $cm = new \OC\DB\ConnectionFactory(\OC::$server->getSystemConfig());
         try {
-            $conn = $cm -> getConnection($sql_driver, $parameters);
-            $platform = $conn -> getDatabasePlatform();
+            $conn = $cm->getConnection($sql_driver, $parameters);
+            $platform = $conn->getDatabasePlatform();
 
             $queryTables = $platform->getListTablesSQL();
             $queryViews = $platform->getListViewsSQL($parameters['dbname']);
@@ -339,9 +338,7 @@ class Helper {
                 $ret[] = $name;
             }
             return $ret;
-        }
-        catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             return array();
         }
     }
@@ -404,13 +401,12 @@ class Helper {
     {
         $cm = new \OC\DB\ConnectionFactory(\OC::$server->getSystemConfig());
         try {
-            $conn = $cm -> getConnection($sql_driver, $parameters);
-            $platform = $conn -> getDatabasePlatform();
-            $query = $platform -> getListTableColumnsSQL($table);
-            $result = $conn -> executeQuery($query);
+            $conn = $cm->getConnection($sql_driver, $parameters);
+            $platform = $conn->getDatabasePlatform();
+            $query = $platform->getListTableColumnsSQL($table);
+            $result = $conn->executeQuery($query);
             $ret = array();
-            while($row = $result -> fetch())
-            {
+            while ($row = $result->fetch()) {
                 switch ($sql_driver) {
                     case 'mysql':
                         $name = $row['Field'];
@@ -424,12 +420,8 @@ class Helper {
                 $ret[] = $name;
             }
             return $ret;
-        }
-        catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             return array();
         }
     }
-
-
 }

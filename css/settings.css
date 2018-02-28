@@ -1,15 +1,18 @@
 .statusmessage {
-        background-color: #DDDDFF;
+    background-color: #DDDDFF;
 }
+
 .errormessage {
-        background-color: #FFDDDD;
+    background-color: #FFDDDD;
 }
+
 .successmessage {
-        background-color: #DDFFDD;
+    background-color: #DDFFDD;
 }
-.statusmessage,.errormessage,.successmessage{
-        display:none;
-        padding: 1px;
+
+.statusmessage, .errormessage, .successmessage {
+    display: none;
+    padding: 1px;
 }
 
 #sql-1 p label:first-child,

@@ -2,63 +2,57 @@
 
 // declare namespace
 var user_sql = user_sql ||
-{
-};
+    {};
 
 /**
  * init admin settings view
  */
-user_sql.adminSettingsUI = function()
-{
+user_sql.adminSettingsUI = function () {
 
-    if($('#sqlDiv').length > 0)
-    {
+    if ($('#sqlDiv').length > 0) {
         // enable tabs on settings page
         $('#sqlDiv').tabs();
-        
+
         // Attach auto-completion to all column fields
         $('#col_username, #col_password, #col_displayname, #col_active, #col_email, #col_gethome').autocomplete({
-            source: function(request, response)
-            {
+            source: function (request, response) {
                 var post = $('#sqlForm').serializeArray();
                 var domain = $('#sql_domain_chooser option:selected').val();
-                
+
                 post.push({
                     name: 'function',
                     value: 'getColumnAutocomplete'
                 });
-                
+
                 post.push({
                     name: 'domain',
                     value: domain
                 });
-                
+
                 post.push({
                     name: 'request',
                     value: request.term
                 });
-    
+
                 // Ajax foobar
                 $.post(OC.filePath('user_sql', 'ajax', 'settings.php'), post, response, 'json');
             },
             minLength: 0,
-            open: function() {
+            open: function () {
                 $(this).attr('state', 'open');
             },
-            close: function() {
+            close: function () {
                 $(this).attr('state', 'closed');
             }
-        }).focus(function() {
-           if($(this).attr('state') != 'open')
-           {
-               $(this).autocomplete("search");
-           } 
+        }).focus(function () {
+            if ($(this).attr('state') != 'open') {
+                $(this).autocomplete("search");
+            }
         });
 
         // Attach auto-completion to all group column fields
         $('#col_group_name, #col_group_username').autocomplete({
-            source: function(request, response)
-            {
+            source: function (request, response) {
                 var post = $('#sqlForm').serializeArray();
                 var domain = $('#sql_domain_chooser option:selected').val();
 
@@ -86,71 +80,67 @@ user_sql.adminSettingsUI = function()
                 $.post(OC.filePath('user_sql', 'ajax', 'settings.php'), post, response, 'json');
             },
             minLength: 0,
-            open: function() {
+            open: function () {
                 $(this).attr('state', 'open');
             },
-            close: function() {
+            close: function () {
                 $(this).attr('state', 'closed');
             }
-        }).focus(function() {
-           if($(this).attr('state') != 'open')
-           {
-               $(this).autocomplete("search");
-           }
+        }).focus(function () {
+            if ($(this).attr('state') != 'open') {
+                $(this).autocomplete("search");
+            }
         });
-        
+
         // Attach auto-completion to all table fields
         $('#sql_table, #sql_group_table').autocomplete({
-            source: function(request, response)
-            {
+            source: function (request, response) {
                 var post = $('#sqlForm').serializeArray();
                 var domain = $('#sql_domain_chooser option:selected').val();
-                
+
                 post.push({
                     name: 'function',
                     value: 'getTableAutocomplete'
                 });
-                
+
                 post.push({
                     name: 'domain',
                     value: domain
                 });
-                
+
                 post.push({
                     name: 'request',
                     value: request.term
                 });
-    
+
                 // Ajax foobar
                 $.post(OC.filePath('user_sql', 'ajax', 'settings.php'), post, response, 'json');
             },
             minLength: 0,
-            open: function() {
+            open: function () {
                 $(this).attr('state', 'open');
             },
-            close: function() {
+            close: function () {
                 $(this).attr('state', 'closed');
             }
-        }).focus(function() {
-           if($(this).attr('state') != 'open')
-           {
-               $(this).autocomplete("search");
-           } 
+        }).focus(function () {
+            if ($(this).attr('state') != 'open') {
+                $(this).autocomplete("search");
+            }
         });
-        
+
         // Verify the SQL database settings
-        $('#sqlVerify').click(function(event)
-        {
+        $('#sqlVerify').click(function (event) {
             event.preventDefault();
 
             var post = $('#sqlForm').serializeArray();
             var domain = $('#sql_domain_chooser option:selected').val();
-            
+
             post.push({
                 name: 'function',
                 value: 'verifySettings'
             });
-            
+
             post.push({
                 name: 'domain',
                 value: domain
@@ -161,39 +151,34 @@ user_sql.adminSettingsUI = function()
             $('#sql_error_message').hide();
             $('#sql_update_message').hide();
             // Ajax foobar
-            $.post(OC.filePath('user_sql', 'ajax', 'settings.php'), post, function(data)
-            {
+            $.post(OC.filePath('user_sql', 'ajax', 'settings.php'), post, function (data) {
                 $('#sql_verify_message').hide();
-                if(data.status == 'success')
-                {
+                if (data.status == 'success') {
                     $('#sql_success_message').html(data.data.message);
                     $('#sql_success_message').show();
-                    window.setTimeout(function()
-                    {
+                    window.setTimeout(function () {
                         $('#sql_success_message').hide();
                     }, 10000);
-                } else
-                {
+                } else {
                     $('#sql_error_message').html(data.data.message);
                     $('#sql_error_message').show();
                 }
             }, 'json');
             return false;
-        });            
+        });
 
         // Save the settings for a domain
-        $('#sqlSubmit').click(function(event)
-        {
+        $('#sqlSubmit').click(function (event) {
             event.preventDefault();
 
             var post = $('#sqlForm').serializeArray();
             var domain = $('#sql_domain_chooser option:selected').val();
-            
+
             post.push({
                 name: 'function',
                 value: 'saveSettings'
             });
-            
+
             post.push({
                 name: 'domain',
                 value: domain
@@ -204,19 +189,15 @@ user_sql.adminSettingsUI = function()
             $('#sql_verify_message').hide();
             $('#sql_error_message').hide();
             // Ajax foobar
-            $.post(OC.filePath('user_sql', 'ajax', 'settings.php'), post, function(data)
-            {
+            $.post(OC.filePath('user_sql', 'ajax', 'settings.php'), post, function (data) {
                 $('#sql_update_message').hide();
-                if(data.status == 'success')
-                {
+                if (data.status == 'success') {
                     $('#sql_success_message').html(data.data.message);
                     $('#sql_success_message').show();
-                    window.setTimeout(function()
-                    {
+                    window.setTimeout(function () {
                         $('#sql_success_message').hide();
                     }, 10000);
-                } else
-                {
+                } else {
                     $('#sql_error_message').html(data.data.message);
                     $('#sql_error_message').show();
                 }
@@ -225,45 +206,39 @@ user_sql.adminSettingsUI = function()
         });
 
         // Attach event handler to the domain chooser
-        $('#sql_domain_chooser').change(function() {
-           user_sql.loadDomainSettings($('#sql_domain_chooser option:selected').val());
+        $('#sql_domain_chooser').change(function () {
+            user_sql.loadDomainSettings($('#sql_domain_chooser option:selected').val());
         });
-        
-        $('#set_gethome_mode').change(function() {
-           user_sql.setGethomeMode();
+
+        $('#set_gethome_mode').change(function () {
+            user_sql.setGethomeMode();
         });
-        
-        $('#set_enable_gethome').change(function() {
+
+        $('#set_enable_gethome').change(function () {
             user_sql.setGethomeMode();
         });
     }
 };
 
-user_sql.setGethomeMode = function()
-{
+user_sql.setGethomeMode = function () {
     var enabled = $('#set_enable_gethome').prop('checked');
-    if(enabled)
-    {
+    if (enabled) {
         $('#set_gethome_mode').prop('disabled', false);
         var val = $('#set_gethome_mode option:selected').val();
-        if(val === 'query')
-        {
+        if (val === 'query') {
             $('#set_gethome').prop('disabled', true);
             $('#col_gethome').prop('disabled', false);
         }
-        else if(val === 'static')
-        {
+        else if (val === 'static') {
             $('#set_gethome').prop('disabled', false);
             $('#col_gethome').prop('disabled', true);
         }
-        else
-        {
+        else {
             $('#set_gethome').prop('disabled', true);
             $('#col_gethome').prop('disabled', true);
         }
     }
-    else
-    {
+    else {
         $('#set_gethome_mode').prop('disabled', true);
         $('#set_gethome').prop('disabled', true);
         $('#col_gethome').prop('disabled', true);
@@ -274,8 +249,7 @@ user_sql.setGethomeMode = function()
  * Load the settings for the selected domain
  * @param string domain The domain to load
  */
-user_sql.loadDomainSettings = function(domain)
-{
+user_sql.loadDomainSettings = function (domain) {
     $('#sql_success_message').hide();
     $('#sql_error_message').hide();
     $('#sql_verify_message').hide();
@@ -294,49 +268,40 @@ user_sql.loadDomainSettings = function(domain)
             value: domain
         }
     ];
-    $.post(OC.filePath('user_sql', 'ajax', 'settings.php'), post, function(data)
-        {
+    $.post(OC.filePath('user_sql', 'ajax', 'settings.php'), post, function (data) {
             $('#sql_loading_message').hide();
-            if(data.status == 'success')
-            {
-                for(key in data.settings)
-                {
-                    if(key == 'set_strip_domain')
-                    {
-                        if(data.settings[key] == 'true')
+            if (data.status == 'success') {
+                for (key in data.settings) {
+                    if (key == 'set_strip_domain') {
+                        if (data.settings[key] == 'true')
                             $('#' + key).prop('checked', true);
                         else
                             $('#' + key).prop('checked', false);
                     }
-                    else if(key == 'set_allow_pwchange')
-                    {
-                        if(data.settings[key] == 'true')
+                    else if (key == 'set_allow_pwchange') {
+                        if (data.settings[key] == 'true')
                             $('#' + key).prop('checked', true);
                         else
                             $('#' + key).prop('checked', false);
                     }
-                    else if(key == 'set_active_invert')
-                    {
-                        if(data.settings[key] == 'true')
+                    else if (key == 'set_active_invert') {
+                        if (data.settings[key] == 'true')
                             $('#' + key).prop('checked', true);
                         else
                             $('#' + key).prop('checked', false);
                     }
-                    else if(key == 'set_enable_gethome')
-                    {
-                        if(data.settings[key] == 'true')
+                    else if (key == 'set_enable_gethome') {
+                        if (data.settings[key] == 'true')
                             $('#' + key).prop('checked', true);
                         else
                             $('#' + key).prop('checked', false);
                     }
-                    else
-                    {
+                    else {
                         $('#' + key).val(data.settings[key]);
                     }
                 }
             }
-            else
-            {
+            else {
                 $('#sql_error_message').html(data.data.message);
                 $('#sql_error_message').show();
             }
@@ -346,10 +311,8 @@ user_sql.loadDomainSettings = function(domain)
 };
 
 // Run our JS if the SQL settings are present
-$(document).ready(function()
-{
-    if($('#sqlDiv'))
-    {
+$(document).ready(function () {
+    if ($('#sqlDiv')) {
         user_sql.adminSettingsUI();
         user_sql.loadDomainSettings($('#sql_domain_chooser option:selected').val());
         user_sql.setGethomeMode();

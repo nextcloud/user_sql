@@ -28,73 +28,76 @@ use OCP\Defaults;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\Settings\ISettings;
-use OCA\user_sql\lib\Helper;
 
-class Admin implements ISettings {
-	/** @var IL10N */
-	private $l10n;
-	/** @var Defaults */
-	private $defaults;
-	/** @var IConfig */
-	private $config;
+class Admin implements ISettings
+{
+    /** @var IL10N */
+    private $l10n;
+    /** @var Defaults */
+    private $defaults;
+    /** @var IConfig */
+    private $config;
 
-	/**
-	 * @param IL10N $l10n
-	 * @param Defaults $defaults
-	 * @param IConfig $config
-	 */
-	public function __construct(IL10N $l10n,
-								Defaults $defaults,
-								IConfig $config) {
-		$this->l10n = $l10n;
-		$this->defaults = $defaults;
-		$this->config = $config;
-		$this->helper = new \OCA\user_sql\lib\Helper();
-		$this->params = $this->helper->getParameterArray();
-		$this->settings = $this->helper -> loadSettingsForDomain('default');
-	}
+    /**
+     * @param IL10N $l10n
+     * @param Defaults $defaults
+     * @param IConfig $config
+     */
+    public function __construct(
+        IL10N $l10n,
+        Defaults $defaults,
+        IConfig $config
+    ) {
+        $this->l10n = $l10n;
+        $this->defaults = $defaults;
+        $this->config = $config;
+        $this->helper = new \OCA\user_sql\lib\Helper();
+        $this->params = $this->helper->getParameterArray();
+        $this->settings = $this->helper->loadSettingsForDomain('default');
+    }
 
-	/**
-	 * @return TemplateResponse
-	 */
-	public function getForm() {
+    /**
+     * @return TemplateResponse
+     */
+    public function getForm()
+    {
 
-		$type = $this->config->getAppValue('user_sql', 'type');
-		$trusted_domains = \OC::$server->getConfig()->getSystemValue('trusted_domains');
-		$inserted = array('default');
-		array_splice($trusted_domains, 0, 0, $inserted);
+        $type = $this->config->getAppValue('user_sql', 'type');
+        $trusted_domains = \OC::$server->getConfig()->getSystemValue('trusted_domains');
+        $inserted = array('default');
+        array_splice($trusted_domains, 0, 0, $inserted);
 
-		$params = [
-			'type' => $type,
-		];
-		$params['allowed_domains']= array_unique($trusted_domains);
+        $params = [
+            'type' => $type,
+        ];
+        $params['allowed_domains'] = array_unique($trusted_domains);
 
-		foreach($this->params as $key)
-			{
-			    $value = $this->settings[$key];
-			    $params[$key]=$value;
-			}
+        foreach ($this->params as $key) {
+            $value = $this->settings[$key];
+            $params[$key] = $value;
+        }
 
-		$params["config"]=$this->config;
-		return new TemplateResponse('user_sql', 'admin', $params);
-	}
+        $params["config"] = $this->config;
+        return new TemplateResponse('user_sql', 'admin', $params);
+    }
 
-	/**
-	 * @return string the section ID, e.g. 'sharing'
-	 */
-	public function getSection() {
-		return 'usersql';
-	}
+    /**
+     * @return string the section ID, e.g. 'sharing'
+     */
+    public function getSection()
+    {
+        return 'user_sql';
+    }
 
-	/**
-	 * @return int whether the form should be rather on the top or bottom of
-	 * the admin section. The forms are arranged in ascending order of the
-	 * priority values. It is required to return a value between 0 and 100.
-	 *
-	 * keep the server setting at the top, right after "server settings"
-	 */
-	public function getPriority() {
-		return 0;
-	}
-
+    /**
+     * @return int whether the form should be rather on the top or bottom of
+     * the admin section. The forms are arranged in ascending order of the
+     * priority values. It is required to return a value between 0 and 100.
+     *
+     * keep the server setting at the top, right after "server settings"
+     */
+    public function getPriority()
+    {
+        return 0;
+    }
 }
