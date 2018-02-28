@@ -42,7 +42,7 @@ class CourierMD5Raw implements HashAlgorithm
      */
     public function checkPassword($password, $dbHash)
     {
-        return $this->getPasswordHash($password) === $dbHash;
+        return hash_equals($dbHash, $this->getPasswordHash($password));
     }
 
     /**

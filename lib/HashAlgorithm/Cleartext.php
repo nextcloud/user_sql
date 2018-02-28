@@ -50,6 +50,6 @@ class Cleartext implements HashAlgorithm
      */
     public function checkPassword($password, $dbHash)
     {
-        return $password === $dbHash;
+        return hash_equals($dbHash, $password);
     }
 }
