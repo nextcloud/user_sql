@@ -19,6 +19,8 @@
 
 namespace OCA\user_sql\HashAlgorithm;
 
+use OCA\user_sql\HashAlgorithm\Base\Singleton;
+
 /**
  * Cleartext password hash implementation.
  * @author Marcin Łojewski <dev@mlojewski.me>

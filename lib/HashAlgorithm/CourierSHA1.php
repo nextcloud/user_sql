@@ -19,31 +19,39 @@
 
 namespace OCA\user_sql\HashAlgorithm;
 
+use OCA\user_sql\HashAlgorithm\Base\Base64;
+use OCA\user_sql\HashAlgorithm\Base\Singleton;
+
 /**
- * Singleton pattern trait.
+ * Courier SHA1 password hash implementation.
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-trait Singleton
+class CourierSHA1 implements HashAlgorithm
 {
-    private static $instance;
+    use Base64;
+    use Singleton;
 
-    final private function __construct()
+    /**
+     * @inheritdoc
+     */
+    public function getVisibleName()
     {
-        $this->init();
+        return "Courier base64-encoded SHA1";
     }
 
-    protected function init()
+    /**
+     * @inheritdoc
+     */
+    public function checkPassword($password, $dbHash)
     {
+        return $this->getPasswordHash($password) === $dbHash;
     }
 
-    final public static function getInstance()
+    /**
+     * @inheritdoc
+     */
+    public function getPasswordHash($password)
     {
-        return isset(static::$instance)
-            ? static::$instance
-            : static::$instance = new static;
-    }
-
-    final private function __clone()
-    {
+        return '{SHA}' . self::hexToBase64(sha1($password));
     }
 }

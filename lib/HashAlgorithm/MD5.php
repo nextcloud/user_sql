@@ -19,6 +19,8 @@
 
 namespace OCA\user_sql\HashAlgorithm;
 
+use OCA\user_sql\HashAlgorithm\Base\Singleton;
+
 /**
  * MD5 password hash implementation.
  * @author Marcin Łojewski <dev@mlojewski.me>
@@ -38,16 +40,16 @@ class MD5 implements HashAlgorithm
     /**
      * @inheritdoc
      */
-    public function getPasswordHash($password)
+    public function checkPassword($password, $dbHash)
     {
-        return md5($password);
+        return $this->getPasswordHash($password) === $dbHash;
     }
 
     /**
      * @inheritdoc
      */
-    public function checkPassword($password, $dbHash)
+    public function getPasswordHash($password)
     {
-        return md5($password) === $dbHash;
+        return md5($password);
     }
 }

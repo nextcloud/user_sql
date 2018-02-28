@@ -19,14 +19,16 @@
 
 namespace OCA\user_sql\HashAlgorithm;
 
+use OCA\user_sql\HashAlgorithm\Base\Base64;
 use OCA\user_sql\HashAlgorithm\Base\Singleton;
 
 /**
- * SHA1 password hash implementation.
+ * Courier MD5 password hash implementation.
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class SHA1 implements HashAlgorithm
+class CourierMD5 implements HashAlgorithm
 {
+    use Base64;
     use Singleton;
 
     /**
@@ -34,7 +36,7 @@ class SHA1 implements HashAlgorithm
      */
     public function getVisibleName()
     {
-        return "SHA1";
+        return "Courier base64-encoded MD5";
     }
 
     /**
@@ -50,6 +52,6 @@ class SHA1 implements HashAlgorithm
      */
     public function getPasswordHash($password)
     {
-        return sha1($password);
+        return '{MD5}' . self::hexToBase64(md5($password));
     }
 }

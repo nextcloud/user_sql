@@ -17,39 +17,33 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace OCA\user_sql\HashAlgorithm;
-
-use OCA\user_sql\HashAlgorithm\Base\Singleton;
+namespace OCA\user_sql\HashAlgorithm\Base;
 
 /**
- * SHA1 password hash implementation.
+ * Singleton pattern trait.
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class SHA1 implements HashAlgorithm
+trait Singleton
 {
-    use Singleton;
+    private static $instance;
 
-    /**
-     * @inheritdoc
-     */
-    public function getVisibleName()
+    final private function __construct()
     {
-        return "SHA1";
+        $this->init();
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function checkPassword($password, $dbHash)
+    protected function init()
     {
-        return $this->getPasswordHash($password) === $dbHash;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getPasswordHash($password)
+    final public static function getInstance()
     {
-        return sha1($password);
+        return isset(static::$instance)
+            ? static::$instance
+            : static::$instance = new static;
+    }
+
+    final private function __clone()
+    {
     }
 }

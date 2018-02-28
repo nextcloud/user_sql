@@ -17,39 +17,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace OCA\user_sql\HashAlgorithm;
-
-use OCA\user_sql\HashAlgorithm\Base\Singleton;
+namespace OCA\user_sql\HashAlgorithm\Base;
 
 /**
- * SHA1 password hash implementation.
+ * Base64 utilities trait.
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class SHA1 implements HashAlgorithm
+trait Base64
 {
-    use Singleton;
-
     /**
-     * @inheritdoc
+     * Convert hexadecimal message to its base64 form.
+     * @param $hex string Hexadecimal encoded message.
+     * @return string Same message encoded in base64.
      */
-    public function getVisibleName()
+    private static function hexToBase64($hex)
     {
-        return "SHA1";
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function checkPassword($password, $dbHash)
-    {
-        return $this->getPasswordHash($password) === $dbHash;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getPasswordHash($password)
-    {
-        return sha1($password);
+        $hexChr = '';
+        foreach (str_split($hex, 2) as $hexPair) {
+            $hexChr .= chr(hexdec($hexPair));
+        }
+        return base64_encode($hexChr);
     }
 }
