@@ -1,7 +1,7 @@
 <?php
 /**
  * Nextcloud - user_sql
- * Copyright (C) 2012-2018 Andreas Böhler <dev (at) aboehler (dot) at>
+ * Copyright (C) 2018 Marcin Łojewski <dev@mlojewski.me>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -17,19 +17,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace OCA\user_sql\HashAlgorithm;
+namespace OCA\UserSQL\HashAlgorithm;
 
-use OCA\user_sql\HashAlgorithm\Base\Base64;
-use OCA\user_sql\HashAlgorithm\Base\Singleton;
+use OCA\UserSQL\HashAlgorithm\Base\HashAlgorithm;
+use OCA\UserSQL\HashAlgorithm\Base\Singleton;
+use OCA\UserSQL\HashAlgorithm\Base\Utils;
 
 /**
- * Courier SHA1 password hash implementation.
+ * Courier SHA1 hashing implementation.
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
 class CourierSHA1 implements HashAlgorithm
 {
-    use Base64;
     use Singleton;
+    use Utils;
 
     /**
      * @inheritdoc

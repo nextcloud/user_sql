@@ -1,7 +1,7 @@
 <?php
 /**
  * Nextcloud - user_sql
- * Copyright (C) 2012-2018 Andreas Böhler <dev (at) aboehler (dot) at>
+ * Copyright (C) 2018 Marcin Łojewski <dev@mlojewski.me>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -17,25 +17,41 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace OCA\user_sql\HashAlgorithm\Base;
+namespace OCA\UserSQL\HashAlgorithm;
+
+use OCA\UserSQL\HashAlgorithm\Base\HashAlgorithm;
+use OCA\UserSQL\HashAlgorithm\Base\Singleton;
 
 /**
- * Base64 utilities trait.
+ * Blowfish Crypt hashing implementation.
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-trait Base64
+class CryptBlowfish implements HashAlgorithm
 {
+    use Singleton;
+
     /**
-     * Convert hexadecimal message to its base64 form.
-     * @param $hex string Hexadecimal encoded message.
-     * @return string Same message encoded in base64.
+     * @inheritdoc
      */
-    private static function hexToBase64($hex)
+    public function getVisibleName()
     {
-        $hexChr = '';
-        foreach (str_split($hex, 2) as $hexPair) {
-            $hexChr .= chr(hexdec($hexPair));
-        }
-        return base64_encode($hexChr);
+        return "Blowfish (Crypt)";
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function checkPassword($password, $dbHash)
+    {
+        return password_verify($password, $dbHash);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getPasswordHash($password)
+    {
+        // TODO - add support for options: cost.
+        return password_hash($password, PASSWORD_BCRYPT);
     }
 }

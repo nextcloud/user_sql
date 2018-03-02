@@ -19,17 +19,15 @@
 
 namespace OCA\UserSQL\HashAlgorithm;
 
-use OCA\UserSQL\HashAlgorithm\Base\HashAlgorithm;
-use OCA\UserSQL\HashAlgorithm\Base\Singleton;
+use OCA\UserSQL\HashAlgorithm\Base\BaseCrypt;
 use OCA\UserSQL\HashAlgorithm\Base\Utils;
 
 /**
- * Courier MD5 hashing implementation.
+ * Extended DES Crypt hashing implementation.
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class CourierMD5 implements HashAlgorithm
+class CryptExtendedDES extends BaseCrypt
 {
-    use Singleton;
     use Utils;
 
     /**
@@ -37,22 +35,29 @@ class CourierMD5 implements HashAlgorithm
      */
     public function getVisibleName()
     {
-        return "Courier base64-encoded MD5";
+        return "Extended DES (Crypt)";
     }
 
     /**
      * @inheritdoc
      */
-    public function checkPassword($password, $dbHash)
+    protected function getSalt()
     {
-        return hash_equals($dbHash, $this->getPasswordHash($password));
+        // TODO - add support for options: iteration_count.
+        return self::base64IntEncode(1000) . self::randomString(4, self::SALT_ALPHABET);
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getPasswordHash($password)
+    private static function base64IntEncode($number)
     {
-        return '{MD5}' . self::hexToBase64(md5($password));
+        $alphabet = str_split(self::SALT_ALPHABET);
+        $chars = array();
+        $base = sizeof($alphabet);
+        while ($number) {
+            $rem = $number % $base;
+            $number = (int)($number / $base);
+            $arr[] = $alphabet[$rem];
+        }
+        $string = implode($chars);
+        return str_pad($string, 4, '.', STR_PAD_RIGHT);
     }
 }

@@ -21,23 +21,21 @@ namespace OCA\UserSQL\HashAlgorithm;
 
 use OCA\UserSQL\HashAlgorithm\Base\HashAlgorithm;
 use OCA\UserSQL\HashAlgorithm\Base\Singleton;
-use OCA\UserSQL\HashAlgorithm\Base\Utils;
 
 /**
- * Courier MD5 hashing implementation.
+ * Argon2 Crypt hashing implementation.
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class CourierMD5 implements HashAlgorithm
+class CryptArgon2 implements HashAlgorithm
 {
     use Singleton;
-    use Utils;
 
     /**
      * @inheritdoc
      */
     public function getVisibleName()
     {
-        return "Courier base64-encoded MD5";
+        return "Argon2 (Crypt)";
     }
 
     /**
@@ -45,7 +43,7 @@ class CourierMD5 implements HashAlgorithm
      */
     public function checkPassword($password, $dbHash)
     {
-        return hash_equals($dbHash, $this->getPasswordHash($password));
+        return password_verify($password, $dbHash);
     }
 
     /**
@@ -53,6 +51,7 @@ class CourierMD5 implements HashAlgorithm
      */
     public function getPasswordHash($password)
     {
-        return '{MD5}' . self::hexToBase64(md5($password));
+        // TODO - add support for options: memory_cost, time_cost, threads.
+        return password_hash($password, PASSWORD_ARGON2I);
     }
 }

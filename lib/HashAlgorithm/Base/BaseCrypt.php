@@ -17,35 +17,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace OCA\UserSQL\HashAlgorithm;
-
-use OCA\UserSQL\HashAlgorithm\Base\HashAlgorithm;
-use OCA\UserSQL\HashAlgorithm\Base\Singleton;
-use OCA\UserSQL\HashAlgorithm\Base\Utils;
+namespace OCA\UserSQL\HashAlgorithm\Base;
 
 /**
- * Courier MD5 hashing implementation.
+ * Implements standard Unix DES-based algorithm or
+ * alternative algorithms that may be available on the system.
+ * @see crypt()
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class CourierMD5 implements HashAlgorithm
+abstract class BaseCrypt implements HashAlgorithm
 {
     use Singleton;
-    use Utils;
+
+    const SALT_ALPHABET = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
     /**
      * @inheritdoc
      */
-    public function getVisibleName()
-    {
-        return "Courier base64-encoded MD5";
-    }
+    abstract public function getVisibleName();
 
     /**
      * @inheritdoc
      */
     public function checkPassword($password, $dbHash)
     {
-        return hash_equals($dbHash, $this->getPasswordHash($password));
+        return hash_equals($dbHash, crypt($password, $dbHash));
     }
 
     /**
@@ -53,6 +49,12 @@ class CourierMD5 implements HashAlgorithm
      */
     public function getPasswordHash($password)
     {
-        return '{MD5}' . self::hexToBase64(md5($password));
+        return crypt($password, self::getSalt());
     }
+
+    /**
+     * Generate salt for hashing algorithm.
+     * @return string
+     */
+    protected abstract function getSalt();
 }

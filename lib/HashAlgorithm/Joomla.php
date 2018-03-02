@@ -24,10 +24,10 @@ use OCA\UserSQL\HashAlgorithm\Base\Singleton;
 use OCA\UserSQL\HashAlgorithm\Base\Utils;
 
 /**
- * Courier MD5 hashing implementation.
+ * Joomla hashing implementation.
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class CourierMD5 implements HashAlgorithm
+class Joomla implements HashAlgorithm
 {
     use Singleton;
     use Utils;
@@ -37,15 +37,7 @@ class CourierMD5 implements HashAlgorithm
      */
     public function getVisibleName()
     {
-        return "Courier base64-encoded MD5";
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function checkPassword($password, $dbHash)
-    {
-        return hash_equals($dbHash, $this->getPasswordHash($password));
+        return "Joomla MD5 Encryption";
     }
 
     /**
@@ -53,6 +45,27 @@ class CourierMD5 implements HashAlgorithm
      */
     public function getPasswordHash($password)
     {
-        return '{MD5}' . self::hexToBase64(md5($password));
+        return md5($password . ":" . self::randomString(32,
+                "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"));
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function checkPassword($password, $dbHash)
+    {
+        return hash_equals($dbHash, self::generateHash($password, $dbHash));
+    }
+
+    private static function generateHash($password, $dbHash)
+    {
+        $split_salt = preg_split("/:/", $dbHash);
+        $salt = false;
+        if (isset($split_salt[1])) {
+            $salt = $split_salt[1];
+        }
+        $pwHash = ($salt) ? md5($password . $salt) : md5($password);
+        $pwHash .= ":" . $salt;
+        return $pwHash;
     }
 }

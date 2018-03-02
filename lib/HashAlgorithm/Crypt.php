@@ -21,23 +21,24 @@ namespace OCA\UserSQL\HashAlgorithm;
 
 use OCA\UserSQL\HashAlgorithm\Base\HashAlgorithm;
 use OCA\UserSQL\HashAlgorithm\Base\Singleton;
-use OCA\UserSQL\HashAlgorithm\Base\Utils;
 
 /**
- * Courier MD5 hashing implementation.
+ * Implements standard Unix DES-based algorithm or
+ * alternative algorithms that may be available on the system.
+ * This implementation does not support password changing.
+ * @see crypt()
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class CourierMD5 implements HashAlgorithm
+class Crypt implements HashAlgorithm
 {
     use Singleton;
-    use Utils;
 
     /**
      * @inheritdoc
      */
     public function getVisibleName()
     {
-        return "Courier base64-encoded MD5";
+        return "Crypt (Unix)";
     }
 
     /**
@@ -45,7 +46,7 @@ class CourierMD5 implements HashAlgorithm
      */
     public function checkPassword($password, $dbHash)
     {
-        return hash_equals($dbHash, $this->getPasswordHash($password));
+        return hash_equals($dbHash, crypt($password, $dbHash));
     }
 
     /**
@@ -53,6 +54,6 @@ class CourierMD5 implements HashAlgorithm
      */
     public function getPasswordHash($password)
     {
-        return '{MD5}' . self::hexToBase64(md5($password));
+        return password_hash($password, PASSWORD_DEFAULT);
     }
 }

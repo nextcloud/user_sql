@@ -19,40 +19,35 @@
 
 namespace OCA\UserSQL\HashAlgorithm;
 
-use OCA\UserSQL\HashAlgorithm\Base\HashAlgorithm;
-use OCA\UserSQL\HashAlgorithm\Base\Singleton;
-use OCA\UserSQL\HashAlgorithm\Base\Utils;
+use OCA\UserSQL\HashAlgorithm\Base\SSHA;
 
 /**
- * Courier MD5 hashing implementation.
+ * SSHA256 hashing implementation.
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class CourierMD5 implements HashAlgorithm
+class SSHA256 extends SSHA
 {
-    use Singleton;
-    use Utils;
-
     /**
      * @inheritdoc
      */
     public function getVisibleName()
     {
-        return "Courier base64-encoded MD5";
+        return "SSHA256";
     }
 
     /**
      * @inheritdoc
      */
-    public function checkPassword($password, $dbHash)
+    public function getPrefix()
     {
-        return hash_equals($dbHash, $this->getPasswordHash($password));
+        return "{SSHA256}";
     }
 
     /**
      * @inheritdoc
      */
-    public function getPasswordHash($password)
+    public function getAlgorithm()
     {
-        return '{MD5}' . self::hexToBase64(md5($password));
+        return "sha256";
     }
 }
