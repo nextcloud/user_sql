@@ -102,25 +102,25 @@ $cfgClass = 'section';
                 </p>
 
                 <p><label for="set_crypt_type"><?php p($l->t('Encryption Type')); ?></label>
-                    <?php $crypt_types = array(
-                        'drupal' => 'Drupal 7',
-                        'MD5' => 'MD5',
-                        'md5crypt' => 'MD5 Crypt',
-                        'Cleartext' => 'Cleartext',
-                        'mysql_encrypt' => 'mySQL ENCRYPT()',
-                        'system' => 'System (crypt)',
-                        'password_hash' => 'password_hash',
-                        'mysql_password' => 'mySQL PASSWORD()',
-                        'joomla' => 'Joomla MD5 Encryption',
-                        'joomla2' => 'Joomla > 2.5.18 phpass',
-                        'ssha256' => 'Salted SSHA256',
-                        'redmine' => 'Redmine',
-                        'SHA1' => 'SHA1',
-                        'courier_md5' => 'Courier base64-encoded MD5',
-                        'courier_md5raw' => 'Courier hexadecimal MD5',
-                        'courier_sha1' => 'Courier base64-encoded SHA1',
-                        'courier_sha256' => 'Courier base64-encoded SHA256'
-                    ); ?>
+                    <?php
+                    $crypt_types = array();
+
+                    require_once __DIR__ . "/../lib/HashAlgorithm/Base/Singleton.php";
+                    require_once __DIR__ . "/../lib/HashAlgorithm/Base/Utils.php";
+                    require_once __DIR__ . "/../lib/HashAlgorithm/Base/HashAlgorithm.php";
+                    require_once __DIR__ . "/../lib/HashAlgorithm/Base/BaseCrypt.php";
+                    require_once __DIR__ . "/../lib/HashAlgorithm/Base/SSHA.php";
+
+                    foreach (glob(__DIR__ . "/../lib/HashAlgorithm/*.php") as $filename) {
+                        include_once "$filename";
+                        /**
+                         * @var $clazz \OCA\UserSQL\HashAlgorithm\Base\HashAlgorithm
+                         */
+                        $clazz = call_user_func('OCA\\UserSQL\\HashAlgorithm\\' . basename(substr($filename, 0,
+                                -4)) . "::getInstance");
+                        $crypt_types[basename(substr($filename, 0, -4))] = $clazz->getVisibleName();
+                    }
+                    ?>
                     <select id="set_crypt_type" name="set_crypt_type">
                         <?php
                         foreach ($crypt_types as $driver => $name):

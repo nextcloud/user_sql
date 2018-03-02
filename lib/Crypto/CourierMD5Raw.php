@@ -2,7 +2,6 @@
 /**
  * Nextcloud - user_sql
  *
- * @copyright 2012-2015 Andreas Böhler <dev (at) aboehler (dot) at>
  * @copyright 2018 Marcin Łojewski <dev@mlojewski.me>
  * @author    Marcin Łojewski <dev@mlojewski.me>
  *
@@ -20,12 +19,40 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use OCA\UserSQL\AppInfo\Application;
-use OCP\AppFramework\QueryException;
+namespace OCA\UserSQL\Crypto;
 
-try {
-    $app = new Application();
-    $app->registerBackends();
-} catch (QueryException $queryException) {
-    OC::$server->getLogger()->logException($queryException);
+use OCP\IL10N;
+
+/**
+ * Courier MD5 RAW hashing implementation.
+ *
+ * @author Marcin Łojewski <dev@mlojewski.me>
+ */
+class CourierMD5Raw extends AbstractAlgorithm
+{
+    /**
+     * The class constructor.
+     *
+     * @param IL10N $localization The localization service.
+     */
+    public function __construct(IL10N $localization)
+    {
+        parent::__construct($localization);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getPasswordHash($password)
+    {
+        return '{MD5RAW}' . md5($password);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function getAlgorithmName()
+    {
+        return "Courier hexadecimal MD5";
+    }
 }

@@ -1,28 +1,31 @@
 <?xml version="1.0"?>
 <info>
     <id>user_sql</id>
-    <name>SQL User Backend</name>
-    <summary>Authenticate Users by SQL</summary>
-    <description>Authenticate users and retrieve their groups from external database by native SQL queries.</description>
+    <name>User and Group SQL Backends</name>
+    <summary>Control users and groups by SQL queries</summary>
+    <description>
+        Use external database as a source for Nextcloud users and groups.
+        Retrieve the users and groups info. Allow the users to change their passwords.
+        Sync the users' email addresses with the addresses stored by Nextcloud.
+    </description>
     <version>4.0.0-dev</version>
     <licence>agpl</licence>
-    <author>Andreas Boehler &lt;dev (at) aboehler (dot) at &gt;</author>
-    <namespace>user_sql</namespace>
+    <author>Andreas Böhler &lt;dev (at) aboehler (dot) at&gt;</author>
+    <author>Marcin Łojewski &lt;dev (at) mlojewski (dot) me&gt;</author>
+    <namespace>UserSQL</namespace>
     <bugs>https://github.com/nextcloud/user_sql/issues</bugs>
     <repository>https://github.com/nextcloud/user_sql</repository>
-    <screenshot>https://raw.githubusercontent.com/nextcloud/user_sql/v4.0.0/img/screenshot.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/nextcloud/user_sql/master/img/screenshot.png</screenshot>
     <types>
         <authentication/>
     </types>
     <category>auth</category>
     <dependencies>
-        <php min-version="5.4"/>
-        <nextcloud min-version="12" max-version="13"/>
-        <database>mysql</database>
-        <database>pgsql</database>
+        <php min-version="5.6"/>
+        <nextcloud min-version="13" max-version="13"/>
     </dependencies>
     <settings>
-        <admin>\OCA\user_sql\Settings\Admin</admin>
-        <admin-section>OCA\user_sql\Settings\Section</admin-section>
+        <admin>\OCA\UserSQL\Settings\Admin</admin>
+        <admin-section>OCA\UserSQL\Settings\Section</admin-section>
     </settings>
 </info>

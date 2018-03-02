@@ -19,61 +19,50 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace OCA\UserSQL\Settings;
+namespace OCA\UserSQL\Platform;
 
-use OCA\UserSQL\Properties;
-use OCP\AppFramework\Http\TemplateResponse;
-use OCP\Settings\ISettings;
+use OC\DB\Connection;
 
 /**
- * The administrator's settings page.
+ * PostgreSQL database platform.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class Admin implements ISettings
+class PostgreSQLPlatform extends AbstractPlatform
 {
     /**
-     * @var string The application name.
-     */
-    private $appName;
-    /**
-     * @var Properties The properties array.
-     */
-    private $properties;
-
-    /**
-     * The class constructor,
+     * The class constructor.
      *
-     * @param string     $AppName    The application name.
-     * @param Properties $properties The properties array.
+     * @param Connection $connection The database connection.
      */
-    public function __construct($AppName, Properties $properties)
+    public function __construct(Connection $connection)
     {
-        $this->appName = $AppName;
-        $this->properties = $properties;
+        parent::__construct($connection);
     }
 
     /**
      * @inheritdoc
      */
-    public function getForm()
+    protected function getViewName($row, $schema)
     {
-        return new TemplateResponse($this->appName, "admin", $this->properties->getArray());
+        $schema ? ($row["schemaname"] . "." . $row["viewname"])
+            : $row["viewname"];
     }
 
     /**
      * @inheritdoc
      */
-    public function getSection()
+    protected function getTableName($row, $schema)
     {
-        return $this->appName;
+        $schema ? ($row["schema_name"] . "." . $row["table_name"])
+            : $row["table_name"];
     }
 
     /**
      * @inheritdoc
      */
-    public function getPriority()
+    protected function getColumnName($row)
     {
-        return 25;
+        return $row["field"];
     }
 }

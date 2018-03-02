@@ -2,7 +2,6 @@
 /**
  * Nextcloud - user_sql
  *
- * @copyright 2012-2015 Andreas Böhler <dev (at) aboehler (dot) at>
  * @copyright 2018 Marcin Łojewski <dev@mlojewski.me>
  * @author    Marcin Łojewski <dev@mlojewski.me>
  *
@@ -20,12 +19,40 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use OCA\UserSQL\AppInfo\Application;
-use OCP\AppFramework\QueryException;
+namespace OCA\UserSQL\Crypto;
 
-try {
-    $app = new Application();
-    $app->registerBackends();
-} catch (QueryException $queryException) {
-    OC::$server->getLogger()->logException($queryException);
+use OCP\IL10N;
+
+/**
+ * Standard DES Crypt hashing implementation.
+ *
+ * @author Marcin Łojewski <dev@mlojewski.me>
+ */
+class CryptStandardDES extends AbstractCrypt
+{
+    /**
+     * The class constructor.
+     *
+     * @param IL10N $localization The localization service.
+     */
+    public function __construct(IL10N $localization)
+    {
+        parent::__construct($localization);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function getSalt()
+    {
+        return Utils::randomString(2, self::SALT_ALPHABET);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function getAlgorithmName()
+    {
+        return "Standard DES (Crypt)";
+    }
 }

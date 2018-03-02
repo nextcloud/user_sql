@@ -19,61 +19,51 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace OCA\UserSQL\Settings;
+namespace OCA\UserSQL\Crypto;
 
-use OCA\UserSQL\Properties;
-use OCP\AppFramework\Http\TemplateResponse;
-use OCP\Settings\ISettings;
+use OCP\IL10N;
 
 /**
- * The administrator's settings page.
+ * SHA256 Crypt hashing implementation.
  *
+ * @see    crypt()
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class Admin implements ISettings
+class CryptSHA256 extends AbstractCrypt
 {
     /**
-     * @var string The application name.
+     * @var int The number of rounds.
      */
-    private $appName;
-    /**
-     * @var Properties The properties array.
-     */
-    private $properties;
+    private $rounds;
 
     /**
-     * The class constructor,
+     * The class constructor.
      *
-     * @param string     $AppName    The application name.
-     * @param Properties $properties The properties array.
+     * @param IL10N $localization The localization service.
+     * @param   int $rounds       The number of rounds.
+     *                            This value must be between 1000 and 999999999.
      */
-    public function __construct($AppName, Properties $properties)
+    public function __construct(IL10N $localization, $rounds = 5000)
     {
-        $this->appName = $AppName;
-        $this->properties = $properties;
+        parent::__construct($localization);
+        $this->rounds = $rounds;
     }
 
     /**
      * @inheritdoc
      */
-    public function getForm()
+    protected function getSalt()
     {
-        return new TemplateResponse($this->appName, "admin", $this->properties->getArray());
+        return "$5\$rounds=" . $this->rounds . "$" . Utils::randomString(
+                16, self::SALT_ALPHABET
+            ) . "$";
     }
 
     /**
      * @inheritdoc
      */
-    public function getSection()
+    protected function getAlgorithmName()
     {
-        return $this->appName;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getPriority()
-    {
-        return 25;
+        return "SHA256 (Crypt)";
     }
 }

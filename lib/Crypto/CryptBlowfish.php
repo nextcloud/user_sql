@@ -19,61 +19,61 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace OCA\UserSQL\Settings;
+namespace OCA\UserSQL\Crypto;
 
-use OCA\UserSQL\Properties;
-use OCP\AppFramework\Http\TemplateResponse;
-use OCP\Settings\ISettings;
+use OCP\IL10N;
 
 /**
- * The administrator's settings page.
+ * Blowfish Crypt hashing implementation.
  *
+ * @see    crypt()
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class Admin implements ISettings
+class CryptBlowfish extends AbstractAlgorithm
 {
     /**
-     * @var string The application name.
+     * @var int Denotes the algorithmic cost that should be used.
      */
-    private $appName;
-    /**
-     * @var Properties The properties array.
-     */
-    private $properties;
+    private $cost;
 
     /**
-     * The class constructor,
+     * The class constructor.
      *
-     * @param string     $AppName    The application name.
-     * @param Properties $properties The properties array.
+     * @param IL10N $localization The localization service.
+     * @param int   $cost         Denotes the algorithmic cost that should
+     *                            be used.
      */
-    public function __construct($AppName, Properties $properties)
+    public function __construct(IL10N $localization, $cost = 10)
     {
-        $this->appName = $AppName;
-        $this->properties = $properties;
+        parent::__construct($localization);
+        $this->cost = $cost;
     }
 
     /**
      * @inheritdoc
      */
-    public function getForm()
+    public function checkPassword($password, $dbHash)
     {
-        return new TemplateResponse($this->appName, "admin", $this->properties->getArray());
+        return password_verify($password, $dbHash);
     }
 
     /**
      * @inheritdoc
      */
-    public function getSection()
+    public function getPasswordHash($password)
     {
-        return $this->appName;
+        return password_hash(
+            $password, PASSWORD_BCRYPT, ["cost" => $this->cost]
+        );
     }
 
     /**
-     * @inheritdoc
+     * Get the algorithm name.
+     *
+     * @return string The algorithm name.
      */
-    public function getPriority()
+    protected function getAlgorithmName()
     {
-        return 25;
+        return "Blowfish (Crypt)";
     }
 }

@@ -2,7 +2,6 @@
 /**
  * Nextcloud - user_sql
  *
- * @copyright 2012-2015 Andreas Böhler <dev (at) aboehler (dot) at>
  * @copyright 2018 Marcin Łojewski <dev@mlojewski.me>
  * @author    Marcin Łojewski <dev@mlojewski.me>
  *
@@ -20,12 +19,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use OCA\UserSQL\AppInfo\Application;
-use OCP\AppFramework\QueryException;
+namespace OCA\UserSQL\Constant;
 
-try {
-    $app = new Application();
-    $app->registerBackends();
-} catch (QueryException $queryException) {
-    OC::$server->getLogger()->logException($queryException);
+/**
+ * The option properties names.
+ *
+ * @author Marcin Łojewski <dev@mlojewski.me>
+ */
+final class Opt
+{
+    const CRYPTO_CLASS = "opt.crypto_class";
+    const EMAIL_SYNC = "opt.email_sync";
+    const HOME_LOCATION = "opt.home_location";
+    const HOME_MODE = "opt.home_mode";
+    const NAME_CHANGE = "opt.name_change";
+    const PASSWORD_CHANGE = "opt.password_change";
+    const USE_CACHE = "opt.use_cache";
 }
