@@ -64,7 +64,7 @@ class OC_GROUP_SQL extends \OC_Group_Backend implements \OCP\GroupInterface
             Util::writeLog('OC_USER_SQL', "Group table not configured", Util::DEBUG);
             return [];
         }
-        $rows = $this -> helper -> runQuery('getGroupUsers', array('gid' => $gid), false, true);
+        $rows = $this -> helper -> runQuery('getGroupUsers', array('gid' => $gid), false, true, ['limit' => $limit, 'offset' => $offset]);
         if($rows === false)
         {
             Util::writeLog('OC_USER_SQL', "Found no users for group", Util::DEBUG);
