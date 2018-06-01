@@ -31,7 +31,9 @@ In the Nextcloud Column Settings of SQL User Backend, configure it as
 Table: wp_users
 Username Column: user_login
 Password Column: user_pass
+Real Name Column: display_name
 Encryption Type: Joomla > 2.5.18 phppass
+User Active Column: user_status
 ```
 
 ### JHipster
