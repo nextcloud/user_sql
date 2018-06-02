@@ -175,6 +175,24 @@ class SettingsController extends Controller
 
         $properties = $this->properties->getArray();
 
+        try {
+            $this->getConnection();
+        } catch (Exception $exception) {
+            $this->logger->debug(
+                "Returning saveProperties(): error",
+                ["app" => $this->appName]
+            );
+
+            return [
+                "status" => "error",
+                "data" => [
+                    "message" => $this->localization->t(
+                            "Error connecting to the database: "
+                        ) . $exception->getMessage()
+                ]
+            ];
+        }
+
         foreach ($properties as $key => $value) {
             $reqValue = $this->request->getParam(str_replace(".", "-", $key));
             $appValue = $this->properties[$key];

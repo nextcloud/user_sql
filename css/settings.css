@@ -1,29 +1,58 @@
-.statusmessage {
-    background-color: #DDDDFF;
+#user_sql .main {
+    overflow: auto;
 }
 
-.errormessage {
-    background-color: #FFDDDD;
+#user_sql .main > div {
+    float: left;
+    width: 380px;
 }
 
-.successmessage {
-    background-color: #DDFFDD;
-}
-
-.statusmessage, .errormessage, .successmessage {
-    display: none;
-    padding: 1px;
-}
-
-#sql-1 p label:first-child,
-#sql-2 p label:first-child,
-#sql-3 p label:first-child,
-#sql-4 p label:first-child,
-#sql-5 p label:first-child,
-#sql-6 p label:first-child,
-#sql-7 p label:first-child {
+#user_sql .main div > label > span {
     display: inline-block;
-    text-align: right;
-    width: 300px;
-    padding-right: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    white-space: nowrap;
+    width: 120px;
+}
+
+#user_sql .main div > label > input,
+#user_sql .main div > label > select {
+    width: 257px;
+}
+
+#user_sql .main div > input[type="checkbox"] {
+    min-height: auto;
+}
+
+#user_sql .main .button-right {
+    overflow: auto;
+}
+
+#user_sql .main .button-right > input[type="submit"] {
+    float: right;
+}
+
+#user_sql .msg {
+    left: 0;
+    padding: 3px;
+    position: fixed;
+    text-align: center;
+    width: 100%;
+    z-index: 100;
+}
+
+#user_sql .msg.error {
+    background-color: #d2322d;
+    color: #fff;
+}
+
+#user_sql .msg.success {
+    background-color: #47a447;
+    color: #fff;
+}
+
+#user_sql .msg.waiting {
+    background-color: #ff8f00;
+    color: #fff;
 }
