@@ -19,45 +19,38 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace OCA\UserSQL\Crypto;
+namespace Tests\UserSQL\Crypto;
+
+use OCA\UserSQL\Crypto\SSHA256;
+use OCA\UserSQL\Crypto\IPasswordAlgorithm;
+use OCP\IL10N;
+use Test\TestCase;
 
 /**
- * Abstract Unix Crypt hashing implementation.
- * The hashing algorithm depends on the chosen salt.
+ * Unit tests for class <code>SSHA256</code>.
  *
- * @see    crypt()
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-abstract class AbstractCrypt extends AbstractAlgorithm
+class SSHA256Test extends TestCase
 {
     /**
-     * The chars used in the salt.
+     * @var IPasswordAlgorithm
      */
-    const SALT_ALPHABET = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    private $crypto;
 
-    /**
-     * @inheritdoc
-     */
-    public function checkPassword($password, $dbHash)
+    public function testCheckPassword()
     {
-        return hash_equals($dbHash, crypt($password, $dbHash));
+        $this->assertTrue(
+            $this->crypto->checkPassword(
+                "password",
+                "{SSHA256}+WxTB3JxprNteeovsuSYtgI+UkVPA9lfwGoYkz3Ff7hjd1FSdmlTMkNsSExyR21KM3NvNTZ5V0p4WXJMUjFzUg=="
+            )
+        );
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getPasswordHash($password)
+    protected function setUp()
     {
-        return crypt($password, $this->getSalt());
-    }
-
-    /**
-     * Generate a salt string for the hashing algorithm.
-     *
-     * @return string The salt string.
-     */
-    protected function getSalt()
-    {
-        return "";
+        parent::setUp();
+        $this->crypto = new SSHA256($this->createMock(IL10N::class));
     }
 }

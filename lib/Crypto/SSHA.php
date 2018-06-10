@@ -48,7 +48,7 @@ abstract class SSHA extends AbstractAlgorithm
         $saltedPassword = base64_decode(
             preg_replace("/" . $this->getPrefix() . "/i", "", $dbHash)
         );
-        $salt = substr($saltedPassword, -(strlen($saltedPassword) - 32));
+        $salt = substr($saltedPassword, -32);
         $hash = self::ssha($password, $salt);
 
         return hash_equals($dbHash, $hash);

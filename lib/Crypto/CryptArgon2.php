@@ -59,6 +59,12 @@ class CryptArgon2 extends AbstractAlgorithm
         $timeCost = PASSWORD_ARGON2_DEFAULT_TIME_COST,
         $threads = PASSWORD_ARGON2_DEFAULT_THREADS
     ) {
+        if (version_compare(PHP_VERSION, "7.2.0") === -1) {
+            throw new \RuntimeException(
+                "PASSWORD_ARGON2I requires PHP 7.2.0 or above."
+            );
+        }
+
         parent::__construct($localization);
         $this->memoryCost = $memoryCost;
         $this->timeCost = $timeCost;

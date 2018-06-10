@@ -45,12 +45,11 @@ class Joomla extends AbstractAlgorithm
      */
     public function getPasswordHash($password)
     {
-        return md5(
-            $password . ":" . Utils::randomString(
-                32,
-                "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-            )
+        $salt = Utils::randomString(
+            32, "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
         );
+
+        return md5($password . $salt) . ":" . $salt;
     }
 
     /**

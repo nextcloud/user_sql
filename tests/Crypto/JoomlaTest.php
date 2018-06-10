@@ -19,45 +19,38 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace OCA\UserSQL\Crypto;
+namespace Tests\UserSQL\Crypto;
+
+use OCA\UserSQL\Crypto\IPasswordAlgorithm;
+use OCA\UserSQL\Crypto\Joomla;
+use OCP\IL10N;
+use Test\TestCase;
 
 /**
- * Abstract Unix Crypt hashing implementation.
- * The hashing algorithm depends on the chosen salt.
+ * Unit tests for class <code>Joomla</code>.
  *
- * @see    crypt()
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-abstract class AbstractCrypt extends AbstractAlgorithm
+class JoomlaTest extends TestCase
 {
     /**
-     * The chars used in the salt.
+     * @var IPasswordAlgorithm
      */
-    const SALT_ALPHABET = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    private $crypto;
 
-    /**
-     * @inheritdoc
-     */
-    public function checkPassword($password, $dbHash)
+    public function testCheckPassword()
     {
-        return hash_equals($dbHash, crypt($password, $dbHash));
+        $this->assertTrue(
+            $this->crypto->checkPassword(
+                "password",
+                "14d21b49b0f13e2acba962b6b0039edd:haJK0yTvBXTNMh76xwEw5RYEVpJsN8us"
+            )
+        );
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getPasswordHash($password)
+    protected function setUp()
     {
-        return crypt($password, $this->getSalt());
-    }
-
-    /**
-     * Generate a salt string for the hashing algorithm.
-     *
-     * @return string The salt string.
-     */
-    protected function getSalt()
-    {
-        return "";
+        parent::setUp();
+        $this->crypto = new Joomla($this->createMock(IL10N::class));
     }
 }
