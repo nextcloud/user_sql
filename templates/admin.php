@@ -24,11 +24,11 @@ use OCP\IL10N;
 script('user_sql', 'settings');
 style('user_sql', 'settings');
 
-function print_text_input(IL10N $l, $id, $label, $value = "")
+function print_text_input(IL10N $l, $id, $label, $value = "", $type = "text")
 {
     echo "<div><label for=\"$id\"><span>";
     echo p($l->t($label));
-    echo "</span><input type=\"text\" id=\"$id\" name=\"$id\" value=\"";
+    echo "</span><input type=\"$type\" id=\"$id\" name=\"$id\" value=\"";
     echo p($value);
     echo "\">";
     echo "</label></div>";
@@ -98,7 +98,7 @@ function print_select_options(
                 print_text_input($l, "db-hostname", "Hostname", $_['db.hostname']);
                 print_text_input($l, "db-database", "Database", $_['db.database']);
                 print_text_input($l, "db-username", "Username", $_['db.username']);
-                print_text_input($l, "db-password", "Password", $_['db.password']); ?>
+                print_text_input($l, "db-password", "Password", $_['db.password'], "password"); ?>
                 <div class="button-right">
                     <input type="submit" id="user_sql-db_connection_verify" value="<?php p($l->t("Verify settings")); ?>">
                 </div>
