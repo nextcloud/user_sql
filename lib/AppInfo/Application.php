@@ -39,7 +39,7 @@ class Application extends App
      */
     public function __construct(array $urlParams = array())
     {
-        parent::__construct('user_sql', $urlParams);
+        parent::__construct("user_sql", $urlParams);
     }
 
     /**

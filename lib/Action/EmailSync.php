@@ -79,6 +79,7 @@ class EmailSync implements IUserAction
 
     /**
      * @inheritdoc
+     * @throws \OCP\PreConditionNotMetException
      */
     public function doAction(User $user)
     {
