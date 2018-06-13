@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - User active column
 
+### Changed
+- Fixed "Use of undefined constant" error for Argon2 Crypt with PHP below 7.2.
+
 ## [4.0.0-rc1]
 ### Added
 - New hashing algorithms: Argon2 Crypt (PHP 7.2 and above), Blowfish Crypt, Courier base64-encoded MD5, Courier base64-encoded SHA1,
