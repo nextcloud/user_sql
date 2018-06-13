@@ -59,6 +59,14 @@ class SSHA512 extends SSHA
     /**
      * @inheritdoc
      */
+    public function getHashLength()
+    {
+        return 64;
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected function getAlgorithmName()
     {
         return "SSHA512";

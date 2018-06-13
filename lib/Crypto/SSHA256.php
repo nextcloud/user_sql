@@ -59,6 +59,14 @@ class SSHA256 extends SSHA
     /**
      * @inheritdoc
      */
+    public function getHashLength()
+    {
+        return 32;
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected function getAlgorithmName()
     {
         return "SSHA256";
