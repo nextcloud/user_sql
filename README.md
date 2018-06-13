@@ -38,8 +38,8 @@ Name | Description | Details
 **SQL driver** | The database driver to use. Currently supported drivers are: mysql, pgsql. | Mandatory.
 **Hostname** | The hostname on which the database server resides. | Mandatory.
 **Database** | The name of the database. | Mandatory.
-**Username** | The name of the user for the connection.   | Optional.
-**Password** | The password of the user for the connection.  | Optional.
+**Username** | The name of the user for the connection. | Optional.
+**Password** | The password of the user for the connection. | Optional.
 
 ### Options
 
@@ -137,29 +137,29 @@ CREATE TABLE sql_user_group
 ```
 
 ### WordPress
-Thanks to this app, Nextcloud can easily integrate with Wordpress.
 
-In the Nextcloud Column Settings of SQL User Backend, configure it as
+Thanks to this app, Nextcloud can easily integrate with Wordpress.
+In the Nextcloud user table settings of SQL Backends, configure it as:
 ```
-Table: wp_users
-Username Column: user_login
-Password Column: user_pass
-Encryption Type: Joomla > 2.5.18 phppass
+User table: wp_users
+Username column: user_login
+Password column: user_pass
+
+Hashing algorithm: Unix (Crypt)
 ```
 
 ### JHipster
+
 It is very easy to integrate Nextcloud with JHipster.
-
 Follow the Using the Database instructions in [Using Jhipster in development](http://www.jhipster.tech/development/) to configure your database. Assume you chose MySQL as JHipster database.
-
-In the Nextcloud Column Settings of SQL User Backend, configure it as
+In the Nextcloud user table settings of SQL Backends, configure it as:
 ```
-Table: jhi_users
-Username Column: login
-Password Column: password_hash
-Encryption Type: Joomla > 2.5.18 phppass
-User Activate Column: activated
-Email Column: email
+User table: jhi_users
+Username column: login
+Password column: password_hash
+Email column: email
+
+Hashing algorithm: Unix (Crypt)
 ```
 
 ## Features
