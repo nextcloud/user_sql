@@ -47,19 +47,12 @@ Here are all currently supported options.
 
 Name | Description | Details
 --- | --- | ---
-**Allow display name change** | With this option enabled user can change its display name. The display name change is propagated to the database. | Optional. Default: false.
-**Allow password change** | Can user change its password. The password change is propagated to the database. See [Hash algorithms](#Hash algorithms). | Optional. Default: false.
-**Use cache** | Use database query results cache. The cache can be cleared any time with the *Clear cache* button click. | Optional. Default: false.
+**Allow display name change** | With this option enabled user can change its display name. The display name change is propagated to the database. | Optional.<br/>Default: false.<br/>Requires user's *Display name* column.
+**Allow password change** | Can user change its password. The password change is propagated to the database. See [Hash algorithms](#Hash algorithms). | Optional.<br/>Default: false.
+**Use cache** | Use database query results cache. The cache can be cleared any time with the *Clear cache* button click. | Optional.<br/>Default: false.
 **Hashing algorithm** | How users passwords are stored in the database. See [Hash algorithms](#Hash algorithms). | Mandatory.
-**Email sync** | Sync e-mail address with the Nextcloud. | Optional, default: *None*.
-- | - *None* - Disables this feature. This is the default option.
-- | - *Synchronise only once* - Copy the e-mail address to the Nextcloud storage if its not set.
-- | - *Nextcloud always wins* - Always copy the e-mail address to the database. This updates the user table.
-- | - *SQL always wins* - Always copy the e-mail address to the Nextcloud storage.
-**Home mode** | User storage path. | Optional, default: *Default*.
-- | - *Default* - Let the Nextcloud manage this. The default option.
-- | - *Query* - Use location from the user table pointed by the *home* column.
-- | - *Static* - Use static location. The `%u` variable is replaced with the username of the user.
+**Email sync** | Sync e-mail address with the Nextcloud.<br/>- *None* - Disables this feature. This is the default option.<br/>- *Synchronise only once* - Copy the e-mail address to the Nextcloud storage if its not set.<br/>- *Nextcloud always wins* - Always copy the e-mail address to the database. This updates the user table.<br/>- *SQL always wins* - Always copy the e-mail address to the Nextcloud storage. | Optional.<br/>Default: *None*. Requires user's *Email* column.
+**Home mode** | User storage path.<br/>- *Default* - Let the Nextcloud manage this. The default option.<br/>- *Query* - Use location from the user table pointed by the *home* column.<br/>- *Static* - Use static location. The `%u` variable is replaced with the username of the user. | Optional<br/>Default: *Default*.
 **Home Location** | User storage path for the `static` *home mode*. | Mandatory if the *Home mode* is set to `Static`.
 
 ## User table
@@ -74,7 +67,7 @@ Name | Description | Details
 **Home** | Home path column. | Mandatory for `Query` *Home sync* option.
 **Password** | Password hash column. | Mandatory for user backend.
 **Display name** | Display name column. | Optional.
-**Can change avatar** | Flag indicating if user can change its avatar. | Optional. Default: false.
+**Can change avatar** | Flag indicating if user can change its avatar. | Optional.<br/>Default: false.
 
 ## Group table
 
