@@ -3,7 +3,7 @@ user_sql
 
 **Nextcloud SQL user authentication.**
 
-![](https://github.com/nextcloud/user_sql/blob/master/screenshot.png)
+![screenshot](https://github.com/nextcloud/user_sql/blob/develop/img/screenshot.png)
 
 Use external database as a source for Nextcloud users and groups.
 Retrieve the users and groups info. Allow the users to change their passwords.
@@ -15,7 +15,7 @@ Sync the users' email addresses with the addresses stored by Nextcloud.
 
 2. Get into the apps folder of your Nextcloud installation, for example */var/www/nextcloud/apps*.
 
-3. Git clone this project: `git clone https://github.com/nextcloud/user_sql.git`
+3. Git clone this project: `git clone https://github.com/nextcloud/user_sql.git`.
 
 4. Login to your Nextcloud instance as admin.
 
@@ -23,48 +23,93 @@ Sync the users' email addresses with the addresses stored by Nextcloud.
 
 6. Navigate to Admin from menu and switch to Additional Settings, scroll down the page and you will see *SQL Backends* settings.
 
-*You can skip the first three steps as this app is available in the official Nextcloud App Store.*
+*You can skip the first three steps as this app is available in the official [Nextcloud App Store](https://apps.nextcloud.com/apps/user_sql).*
 
 ## Configuration
 
-Below are detailed descriptions of all available options. The options are mandatory if not said differently.
+Below are detailed descriptions of all available options.
 
 ### Database connection
 
-This section contains database connection parameters. 
+This section contains the database connection parameters.
 
-**SQL driver** - The database driver to use. Currently supported drivers are: mysql, pgsql.
+Name | Description | Details
+--- | --- | ---
+**SQL driver** | The database driver to use. Currently supported drivers are: mysql, pgsql. | Mandatory.
+**Hostname** | The hostname on which the database server resides. | Mandatory.
+**Database** | The name of the database. | Mandatory.
+**Username** | The name of the user for the connection.   | Optional.
+**Password** | The password of the user for the connection.  | Optional.
 
-**Hostname** - The hostname on which the database server resides.
- 
-**Database** - The name of the database.
+### Options
 
-**Username** - The name of the user for the connection. (optional) 
+Here are all currently supported options.
 
-**Password** - The password of the user for the connection. (optional)
+Name | Description | Details
+--- | --- | ---
+**Allow display name change** | With this option enabled user can change its display name. The display name change is propagated to the database. | Optional. Default: false.
+**Allow password change** | Can user change its password. The password change is propagated to the database. See [Hash algorithms](#Hash algorithms). | Optional. Default: false.
+**Use cache** | Use database query results cache. The cache can be cleared any time with the *Clear cache* button click. | Optional. Default: false.
+**Hashing algorithm** | How users passwords are stored in the database. See [Hash algorithms](#Hash algorithms). | Mandatory.
+**Email sync** | Sync e-mail address with the Nextcloud. | Optional, default: *None*.
+- | - *None* - Disables this feature. This is the default option.
+- | - *Synchronise only once* - Copy the e-mail address to the Nextcloud storage if its not set.
+- | - *Nextcloud always wins* - Always copy the e-mail address to the database. This updates the user table.
+- | - *SQL always wins* - Always copy the e-mail address to the Nextcloud storage.
+**Home mode** | User storage path. | Optional, default: *Default*.
+- | - *Default* - Let the Nextcloud manage this. The default option.
+- | - *Query* - Use location from the user table pointed by the *home* column.
+- | - *Static* - Use static location. The `%u` variable is replaced with the username of the user.
+**Home Location** | User storage path for the `static` *home mode*. | Mandatory if the *Home mode* is set to `Static`.
 
-#### Options
+## User table
 
-**Allow display name change** - With this option enabled user can change its display name. The change is propagated to the database. (optional, default: 0)
+The definition of user table. The table containing user accounts.
 
-**Allow password change** - Can user change its password. The password hash is propagated to the database. See [Hash algorithms](#Hash algorithms). (optional, default: 0)
- 
-**Use cache** - Use database query results cache. The cache can be cleared any time with the *Clear cache* button click. (optional, default: 0)
+Name | Description | Details
+--- | --- | ---
+**Table name** | The table name. | Mandatory for user backend.
+**Username** | Username column. | Mandatory for user backend.
+**Email** | E-mail column. | Mandatory for *Email sync* option.
+**Home** | Home path column. | Mandatory for `Query` *Home sync* option.
+**Password** | Password hash column. | Mandatory for user backend.
+**Display name** | Display name column. | Optional.
+**Can change avatar** | Flag indicating if user can change its avatar. | Optional. Default: false.
 
-**Hashing algorithm** - How users passwords are store in the database. See [Hash algorithms](#Hash algorithms).
+## Group table
 
-**Email sync** - Sync e-mail address with the Nextcloud.
- - *None* - Disables this feature. This is the default option.
- - *Synchronise only once* - Copy the e-mail address to the Nextcloud storage if its not set.
- - *Nextcloud always wins* - Always copy the e-mail address to the database. This updates the user table.
- - *SQL always wins* - Always copy the e-mail address to the Nextcloud storage.
+Group definitions table.
 
-**Home mode** - User's storage path.
- - *Default* - Let the Nextcloud manage this. The default option.
- - *Query* - Use location from the database pointed by the home column.
- - *Static* - Use static location. The `%u` variable by replaced with the username of the user.
+Name | Description | Details
+--- | --- | ---
+**Table name** | The table name. | Mandatory for group backend.
+**Is admin** | Flag indicating if its the admin group | Optional.
+**Display name** | Display name column. | Optional.
+**Group name** | Group name column. | Mandatory for group backend.
 
-**Home Location** - User storage location for the static home mode. Mandatory if the *Home mode* is set to `Static`.
+## User group table
+
+Associative table which maps users to groups.
+
+Name | Description | Details
+--- | --- | ---
+**Table name** | The table name. | Mandatory for group backend.
+**Username** | Username column. | Mandatory for group backend.
+**Group name** | Group name column. | Mandatory for group backend.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Integrations
 
