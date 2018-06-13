@@ -29,7 +29,7 @@ Sync the users' email addresses with the addresses stored by Nextcloud.
 
 Below are detailed descriptions of all available options.
 
-### Database connection
+#### Database connection
 
 This section contains the database connection parameters.
 
@@ -41,7 +41,7 @@ Name | Description | Details
 **Username** | The name of the user for the connection. | Optional.
 **Password** | The password of the user for the connection. | Optional.
 
-### Options
+#### Options
 
 Here are all currently supported options.
 
@@ -55,7 +55,7 @@ Name | Description | Details
 **Home mode** | User storage path.<br/>- *Default* - Let the Nextcloud manage this. The default option.<br/>- *Query* - Use location from the user table pointed by the *home* column.<br/>- *Static* - Use static location. The `%u` variable is replaced with the username of the user. | Optional<br/>Default: *Default*.
 **Home Location** | User storage path for the `static` *home mode*. | Mandatory if the *Home mode* is set to `Static`.
 
-### User table
+#### User table
 
 The definition of user table. The table containing user accounts.
 
@@ -69,7 +69,7 @@ Name | Description | Details
 **Display name** | Display name column. | Optional.
 **Can change avatar** | Flag indicating if user can change its avatar. | Optional.<br/>Default: false.
 
-### Group table
+#### Group table
 
 Group definitions table.
 
@@ -80,7 +80,7 @@ Name | Description | Details
 **Display name** | Display name column. | Optional.
 **Group name** | Group name column. | Mandatory for group backend.
 
-### User group table
+#### User group table
 
 Associative table which maps users to groups.
 
@@ -136,7 +136,7 @@ CREATE TABLE sql_user_group
 );
 ```
 
-### WordPress
+#### WordPress
 
 Thanks to this app, Nextcloud can easily integrate with Wordpress.
 
@@ -149,7 +149,7 @@ Password column: user_pass
 Hashing algorithm: Unix (Crypt)
 ```
 
-### JHipster
+#### JHipster
 
 It is very easy to integrate Nextcloud with JHipster.
 
@@ -164,28 +164,28 @@ Email column: email
 Hashing algorithm: Unix (Crypt)
 ```
 
-# Hash algorithms
+## Hash algorithms
 
 TODO
 
-# Development
+## Development
 
-## Add new database support
+#### Add new database support
 
 TODO
  
-## Add new hashing algorithm
+#### Add new hashing algorithm
 
 TODO
 
-# Acknowledgments
+### Acknowledgments
 
 This repository contains continuation of work done in [this repo](https://www.aboehler.at/hg/user_sql/).
 This plugin was heavily based on user_imap, user_pwauth, user_ldap and user_redmine!
 
 Since version 4.0.0 the whole core implementation has been rewritten.
 
-# Credits
+### Credits
 
   * Andreas Boehler for releasing the first version of this application
   * Johan Hendriks provided his user_postfixadmin
