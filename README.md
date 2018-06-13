@@ -170,26 +170,26 @@ Hashing algorithm: Unix (Crypt)
 Below is a table containing all of the supported hash implementations with example hashes.
 The hashed password is "password", the salt if required have been generated randomly.
 
-Name | Hash | Details
+Hash name | Details | Hash example value
 --- | --- | ---
-Cleartext | password | Never use this. Only for development.
-Courier base64-encoded MD5 | {MD5RAW}5f4dcc3b5aa765d61d8327deb882cf99 | No salt supported.
-Courier hexadecimal MD5 | {MD5}X03MO1qnZdYdgyfeuILPmQ== | No salt supported.
-Courier base64-encoded SHA1 | {SHA}W6ph5Mm5Pz8GgiULbPgzG37mj9g= | No salt supported.
-Courier base64-encoded SHA256 | {SHA256}XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg= | No salt supported.
-Unix (Crypt) | $2y$10$5rsN1fmoSkaRy9bqhozAXOr0mn0QiVIfd2L04Bbk1Go9MjdvotwBq | See [crypt](http://php.net/manual/en/function.crypt.php).
-Argon2 (Crypt) | $argon2i$v=19$m=1024,t=2,p=2$NnpSNlRNLlZobnJHUDh0Sw$oW5E1cfdPzLWfkTvQFUyzTR00R0aLwEdYwldcqW6Pmo | Requires PHP >= 7.2.<br/>Uses default parameters. See [password_hash](http://php.net/manual/en/function.password-hash.php). 
-Blowfish (Crypt) | $2y$10$5rsN1fmoSkaRy9bqhozAXOr0mn0QiVIfd2L04Bbk1Go9MjdvotwBq | Uses default parameters. See [password_hash](http://php.net/manual/en/function.password-hash.php).
-Extended DES (Crypt) | ..UZoIyj/Hy/c |
-MD5 (Crypt) | $1$RzaFbNcU$u9adfTY/Q6za6nu0Ogrl1/ |
-SHA256 (Crypt) | $5$rounds=5000$VIYD0iHkg7uY9SRc$v2XLS/9dvfFN84mzGvW9wxnVt9Xd/urXaaTkpW8EwD1 | Generates hash with 5000 rounds.
-SHA512 (Crypt) | $6$rounds=5000$yH.Q0OL4qbCOUJ3q$Xry5EVFva3wKnfo8/ktrugmBd8tcl34NK6rXInv1HhmdSUNLEm0La9JnA57rqwQ.9/Bz513MD4tvmmISLUIHs/ | Generates hash with 5000 rounds.
-Standard DES (Crypt) | yTBnb7ab/N072 |
-Joomla MD5 Encryption | 14d21b49b0f13e2acba962b6b0039edd:haJK0yTvBXTNMh76xwEw5RYEVpJsN8us | Generates 32 chars salt.
-MD5 | 5f4dcc3b5aa765d61d8327deb882cf99 | No salt supported.
-SHA1 | 5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8 | No salt supported.
-SSHA256 | {SSHA256}+WxTB3JxprNteeovsuSYtgI+UkVPA9lfwGoYkz3Ff7hjd1FSdmlTMkNsSExyR21KM3NvNTZ5V0p4WXJMUjFzUg== | Generates 32 chars salt.
-SSHA512 | {SSHA512}It+v1kAEUBbhMJYJ2swAtz+RLE6ispv/FB6G/ALhK/YWwEmrloY+0jzrWIfmu+rWUXp8u0Tg4jLXypC5oXAW00IyYnRVdEZJbE9wak96bkNRVWFCYmlJNWxrdTA0QmhL | Generates 32 chars salt.
+Cleartext | Never use this. Only for development. | password
+Courier base64-encoded MD5 | No salt supported. | {MD5RAW}5f4dcc3b5aa765d61d8327deb882cf99
+Courier hexadecimal MD5 | No salt supported. | {MD5}X03MO1qnZdYdgyfeuILPmQ==
+Courier base64-encoded SHA1 | No salt supported. | {SHA}W6ph5Mm5Pz8GgiULbPgzG37mj9g=
+Courier base64-encoded SHA256 | No salt supported. | {SHA256}XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=
+Unix (Crypt) | See [crypt](http://php.net/manual/en/function.crypt.php). | $2y$10$5rsN1fmoSkaRy9bqhozAXOr0mn0QiVIfd2L04Bbk1Go9MjdvotwBq
+Argon2 (Crypt) | Requires PHP >= 7.2.<br/>Uses default parameters. See [password_hash](http://php.net/manual/en/function.password-hash.php). | $argon2i$v=19$m=1024,t=2,p=2$NnpSNlRNLlZobnJHUDh0Sw$oW5E1cfdPzLWfkTvQFUyzTR00R0aLwEdYwldcqW6Pmo
+Blowfish (Crypt) | Uses default parameters. See [password_hash](http://php.net/manual/en/function.password-hash.php). | $2y$10$5rsN1fmoSkaRy9bqhozAXOr0mn0QiVIfd2L04Bbk1Go9MjdvotwBq
+Extended DES (Crypt) | | ..UZoIyj/Hy/c
+MD5 (Crypt) | | $1$RzaFbNcU$u9adfTY/Q6za6nu0Ogrl1/
+SHA256 (Crypt) | Generates hash with 5000 rounds. | $5$rounds=5000$VIYD0iHkg7uY9SRc$v2XLS/9dvfFN84mzGvW9wxnVt9Xd/urXaaTkpW8EwD1
+SHA512 (Crypt) | Generates hash with 5000 rounds. | $6$rounds=5000$yH.Q0OL4qbCOUJ3q$Xry5EVFva3wKnfo8/ktrugmBd8tcl34NK6rXInv1HhmdSUNLEm0La9JnA57rqwQ.9/Bz513MD4tvmmISLUIHs/
+Standard DES (Crypt) | | yTBnb7ab/N072
+Joomla MD5 Encryption | Generates 32 chars salt. | 14d21b49b0f13e2acba962b6b0039edd:haJK0yTvBXTNMh76xwEw5RYEVpJsN8us
+MD5 | No salt supported. | 5f4dcc3b5aa765d61d8327deb882cf99
+SHA1 | No salt supported. | 5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8
+SSHA256 | Generates 32 chars salt. | {SSHA256}+WxTB3JxprNteeovsuSYtgI+UkVPA9lfwGoYkz3Ff7hjd1FSdmlTMkNsSExyR21KM3NvNTZ5V0p4WXJMUjFzUg==
+SSHA512 | Generates 32 chars salt. | {SSHA512}It+v1kAEUBbhMJYJ2swAtz+RLE6ispv/FB6G/ALhK/YWwEmrloY+0jzrWIfmu+rWUXp8u0Tg4jLXypC5oXAW00IyYnRVdEZJbE9wak96bkNRVWFCYmlJNWxrdTA0QmhL
 
 ## Development
 
