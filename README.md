@@ -47,11 +47,11 @@ Here are all currently supported options.
 
 Name | Description | Details
 --- | --- | ---
-**Allow display name change** | With this option enabled user can change its display name. The display name change is propagated to the database. | Optional.<br/>Default: false.<br/>Requires user's *Display name* column.
+**Allow display name change** | With this option enabled user can change its display name. The display name change is propagated to the database. | Optional.<br/>Default: false.<br/>Requires: user *Display name* column.
 **Allow password change** | Can user change its password. The password change is propagated to the database. See [Hash algorithms](#hash-algorithms). | Optional.<br/>Default: false.
 **Use cache** | Use database query results cache. The cache can be cleared any time with the *Clear cache* button click. | Optional.<br/>Default: false.
 **Hashing algorithm** | How users passwords are stored in the database. See [Hash algorithms](#hash-algorithms). | Mandatory.
-**Email sync** | Sync e-mail address with the Nextcloud.<br/>- *None* - Disables this feature. This is the default option.<br/>- *Synchronise only once* - Copy the e-mail address to the Nextcloud storage if its not set.<br/>- *Nextcloud always wins* - Always copy the e-mail address to the database. This updates the user table.<br/>- *SQL always wins* - Always copy the e-mail address to the Nextcloud storage. | Optional.<br/>Default: *None*.<br/>Requires user's *Email* column.
+**Email sync** | Sync e-mail address with the Nextcloud.<br/>- *None* - Disables this feature. This is the default option.<br/>- *Synchronise only once* - Copy the e-mail address to the Nextcloud storage if its not set.<br/>- *Nextcloud always wins* - Always copy the e-mail address to the database. This updates the user table.<br/>- *SQL always wins* - Always copy the e-mail address to the Nextcloud storage. | Optional.<br/>Default: *None*.<br/>Requires: user *Email* column.
 **Home mode** | User storage path.<br/>- *Default* - Let the Nextcloud manage this. The default option.<br/>- *Query* - Use location from the user table pointed by the *home* column.<br/>- *Static* - Use static location. The `%u` variable is replaced with the username of the user. | Optional<br/>Default: *Default*.
 **Home Location** | User storage path for the `static` *home mode*. | Mandatory if the *Home mode* is set to `Static`.
 
@@ -71,7 +71,7 @@ Name | Description | Details
 
 #### Group table
 
-Group definitions table.
+The group definitions table.
 
 Name | Description | Details
 --- | --- | ---
@@ -153,7 +153,8 @@ Hashing algorithm: Unix (Crypt)
 
 It is very easy to integrate Nextcloud with JHipster.
 
-Follow the Using the Database instructions in [Using Jhipster in development](http://www.jhipster.tech/development/) to configure your database. Assume you chose MySQL as JHipster database.
+Follow the Using the Database instructions in [Using Jhipster in development](http://www.jhipster.tech/development/)
+to configure your database. Assume you chose MySQL as JHipster database.
 In the Nextcloud user table settings of SQL Backends, configure it as:
 ```
 User table: jhi_users
@@ -170,13 +171,16 @@ TODO
 
 ## Development
 
-#### Add new database support
+#### New database driver support
 
-TODO
- 
-#### Add new hashing algorithm
+Add a new class in the `OCA\UserSQL\Platform` namespace which extends the `AbstractPlatform` class.
+Add this driver in `admin.php` template  to `$drivers` variable and in method `getPlatform(Connection $connection)`
+of `PlatformFactory` class.
 
-TODO
+#### New hashing algorithm support
+
+Create a new class in `OCA\UserSQL\Crypto` namespace which implements `IPasswordAlgorithm` interface.
+Do not forget to write unit tests.
 
 ### Acknowledgments
 
