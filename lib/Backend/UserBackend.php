@@ -560,6 +560,7 @@ final class UserBackend extends Backend
             && !empty($this->properties[DB::HOSTNAME])
             && !empty($this->properties[DB::USERNAME])
             && !empty($this->properties[DB::USER_TABLE])
+            && !empty($this->properties[DB::USER_UID_COLUMN])
             && !empty($this->properties[DB::USER_PASSWORD_COLUMN])
             && !empty($this->properties[Opt::CRYPTO_CLASS]);
     }

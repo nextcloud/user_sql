@@ -83,14 +83,14 @@ class QueryProvider implements \ArrayAccess
 
         $groupColumns
             = "$gGID AS gid, " .
-            "$gName AS name, " .
-            "$gAdmin AS admin";
+            (empty($gName) ? "null" : $gName) . " AS name, " .
+            (empty($gAdmin) ? "false" : $gAdmin) . " AS admin";
         $userColumns
             = "$uUID AS uid, " .
-            "$uName AS name, " .
-            "$uEmail AS email, " .
-            "$uHome AS home, " .
-            "$uAvatar AS avatar";
+            (empty($uName) ? "null" : $uName) . " AS name, " .
+            (empty($uEmail) ? "null" : $uEmail) . " AS email, " .
+            (empty($uHome) ? "null" : $uHome) . " AS home, " .
+            (empty($uAvatar) ? "false" : $uAvatar) . " AS avatar";
 
         $this->queries = [
             Query::BELONGS_TO_ADMIN =>
