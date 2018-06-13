@@ -278,6 +278,14 @@ final class UserBackend extends Backend
             $password, $user->password
         );
 
+        if ($user->active == false) {
+            $this->logger->info(
+                "User account is inactive for user: $uid",
+                ["app" => $this->appName]
+            );
+            return false;
+        }
+
         if ($isCorrect !== true) {
             $this->logger->info(
                 "Invalid password attempt for user: $uid",

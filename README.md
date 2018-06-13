@@ -67,6 +67,7 @@ Name | Description | Details
 **Home** | Home path column. | Mandatory for `Query` *Home sync* option.
 **Password** | Password hash column. | Mandatory for user backend.
 **Display name** | Display name column. | Optional.
+**Active** | Flag indicating if user can log in. | Optional.<br/>Default: true.
 **Can change avatar** | Flag indicating if user can change its avatar. | Optional.<br/>Default: false.
 
 #### Group table
@@ -161,6 +162,7 @@ User table: jhi_users
 Username column: login
 Password column: password_hash
 Email column: email
+Active column: activated
 
 Hashing algorithm: Unix (Crypt)
 ```
