@@ -2,7 +2,6 @@
 /**
  * Nextcloud - user_sql
  *
- * @copyright 2012-2015 Andreas Böhler <dev (at) aboehler (dot) at>
  * @copyright 2018 Marcin Łojewski <dev@mlojewski.me>
  * @author    Marcin Łojewski <dev@mlojewski.me>
  *
@@ -20,12 +19,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use OCA\UserSQL\AppInfo\Application;
-use OCP\AppFramework\QueryException;
+namespace OCA\UserSQL\Model;
 
-try {
-    $app = new Application();
-    $app->registerBackends();
-} catch (QueryException $queryException) {
-    OC::$server->getLogger()->logException($queryException);
+/**
+ * The group entity.
+ *
+ * @author Marcin Łojewski <dev@mlojewski.me>
+ */
+class Group
+{
+    /**
+     * @var string The GID (group name).
+     */
+    public $gid;
+    /**
+     * @var string The group's display name.
+     */
+    public $name;
+    /**
+     * @var bool Whether it is an admin group.
+     */
+    public $admin;
 }

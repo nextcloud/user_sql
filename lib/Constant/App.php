@@ -2,7 +2,6 @@
 /**
  * Nextcloud - user_sql
  *
- * @copyright 2012-2015 Andreas Böhler <dev (at) aboehler (dot) at>
  * @copyright 2018 Marcin Łojewski <dev@mlojewski.me>
  * @author    Marcin Łojewski <dev@mlojewski.me>
  *
@@ -20,12 +19,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use OCA\UserSQL\AppInfo\Application;
-use OCP\AppFramework\QueryException;
+namespace OCA\UserSQL\Constant;
 
-try {
-    $app = new Application();
-    $app->registerBackends();
-} catch (QueryException $queryException) {
-    OC::$server->getLogger()->logException($queryException);
+/**
+ * The application constants.
+ *
+ * @author Marcin Łojewski <dev@mlojewski.me>
+ */
+final class App
+{
+    const FALSE_VALUE = "0";
+    const TRUE_VALUE = "1";
+
+    const HOME_QUERY = "query";
+    const HOME_STATIC = "static";
+
+    const EMAIL_FORCE_NC = "force_nc";
+    const EMAIL_FORCE_SQL = "force_sql";
+    const EMAIL_INITIAL = "initial";
 }

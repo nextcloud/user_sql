@@ -2,7 +2,6 @@
 /**
  * Nextcloud - user_sql
  *
- * @copyright 2012-2015 Andreas Böhler <dev (at) aboehler (dot) at>
  * @copyright 2018 Marcin Łojewski <dev@mlojewski.me>
  * @author    Marcin Łojewski <dev@mlojewski.me>
  *
@@ -20,12 +19,37 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use OCA\UserSQL\AppInfo\Application;
-use OCP\AppFramework\QueryException;
+namespace Tests\UserSQL\Crypto;
 
-try {
-    $app = new Application();
-    $app->registerBackends();
-} catch (QueryException $queryException) {
-    OC::$server->getLogger()->logException($queryException);
+use OCA\UserSQL\Crypto\MD5;
+use OCA\UserSQL\Crypto\IPasswordAlgorithm;
+use OCP\IL10N;
+use Test\TestCase;
+
+/**
+ * Unit tests for class <code>MD5</code>.
+ *
+ * @author Marcin Łojewski <dev@mlojewski.me>
+ */
+class MD5Test extends TestCase
+{
+    /**
+     * @var IPasswordAlgorithm
+     */
+    private $crypto;
+
+    public function testCheckPassword()
+    {
+        $this->assertTrue(
+            $this->crypto->checkPassword(
+                "password", "5f4dcc3b5aa765d61d8327deb882cf99"
+            )
+        );
+    }
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->crypto = new MD5($this->createMock(IL10N::class));
+    }
 }

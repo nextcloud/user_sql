@@ -19,76 +19,56 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace OCA\UserSQL\Settings;
+namespace OCA\UserSQL\Crypto;
 
 use OCP\IL10N;
-use OCP\IURLGenerator;
-use OCP\Settings\IIconSection;
 
 /**
- * The section item.
+ * SSHA256 hashing implementation.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class Section implements IIconSection
+class SSHA256 extends SSHA
 {
-    /**
-     * @var string The application name.
-     */
-    private $appName;
-    /**
-     * @var IURLGenerator The URL generator.
-     */
-    private $urlGenerator;
-    /**
-     * @var IL10N The localization service.
-     */
-    private $localization;
-
     /**
      * The class constructor.
      *
-     * @param string        $AppName      The application name.
-     * @param IURLGenerator $urlGenerator The URL generator.
-     * @param IL10N         $localization The localization service.
+     * @param IL10N $localization The localization service.
      */
-    public function __construct(
-        $AppName, IURLGenerator $urlGenerator, IL10N $localization
-    ) {
-        $this->appName = $AppName;
-        $this->urlGenerator = $urlGenerator;
-        $this->localization = $localization;
+    public function __construct(IL10N $localization)
+    {
+        parent::__construct($localization);
     }
 
     /**
      * @inheritdoc
      */
-    public function getID()
+    public function getPrefix()
     {
-        return $this->appName;
+        return "{SSHA256}";
     }
 
     /**
      * @inheritdoc
      */
-    public function getName()
+    public function getAlgorithm()
     {
-        return $this->localization->t("SQL Backends");
+        return "sha256";
     }
 
     /**
      * @inheritdoc
      */
-    public function getPriority()
+    public function getHashLength()
     {
-        return 25;
+        return 32;
     }
 
     /**
      * @inheritdoc
      */
-    public function getIcon()
+    protected function getAlgorithmName()
     {
-        return $this->urlGenerator->imagePath($this->appName, "app-dark.svg");
+        return "SSHA256";
     }
 }

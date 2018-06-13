@@ -2,7 +2,6 @@
 /**
  * Nextcloud - user_sql
  *
- * @copyright 2012-2015 Andreas Böhler <dev (at) aboehler (dot) at>
  * @copyright 2018 Marcin Łojewski <dev@mlojewski.me>
  * @author    Marcin Łojewski <dev@mlojewski.me>
  *
@@ -20,12 +19,37 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use OCA\UserSQL\AppInfo\Application;
-use OCP\AppFramework\QueryException;
+namespace OCA\UserSQL\Model;
 
-try {
-    $app = new Application();
-    $app->registerBackends();
-} catch (QueryException $queryException) {
-    OC::$server->getLogger()->logException($queryException);
+/**
+ * The user entity.
+ *
+ * @author Marcin Łojewski <dev@mlojewski.me>
+ */
+class User
+{
+    /**
+     * @var string The UID (username).
+     */
+    public $uid;
+    /**
+     * @var string The user's email address.
+     */
+    public $email;
+    /**
+     * @var string The user's display name.
+     */
+    public $name;
+    /**
+     * @var string The user's password (hash).
+     */
+    public $password;
+    /**
+     * @var string The user's home location.
+     */
+    public $home;
+    /**
+     * @var bool Can user change its avatar.
+     */
+    public $avatar;
 }

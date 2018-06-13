@@ -19,27 +19,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace OCA\UserSQL\Settings;
+namespace OCA\UserSQL\Crypto;
 
 use OCP\IL10N;
-use OCP\IURLGenerator;
-use OCP\Settings\IIconSection;
 
 /**
- * The section item.
+ * The abstract password algorithm class.
+ * Each algorithm should extend this class, as it provides very base
+ * functionality which seems to be necessary for every implementation.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class Section implements IIconSection
+abstract class AbstractAlgorithm implements IPasswordAlgorithm
 {
-    /**
-     * @var string The application name.
-     */
-    private $appName;
-    /**
-     * @var IURLGenerator The URL generator.
-     */
-    private $urlGenerator;
     /**
      * @var IL10N The localization service.
      */
@@ -48,47 +40,38 @@ class Section implements IIconSection
     /**
      * The class constructor.
      *
-     * @param string        $AppName      The application name.
-     * @param IURLGenerator $urlGenerator The URL generator.
-     * @param IL10N         $localization The localization service.
+     * @param IL10N $localization The localization service.
      */
-    public function __construct(
-        $AppName, IURLGenerator $urlGenerator, IL10N $localization
-    ) {
-        $this->appName = $AppName;
-        $this->urlGenerator = $urlGenerator;
+    public function __construct(IL10N $localization)
+    {
         $this->localization = $localization;
     }
 
     /**
      * @inheritdoc
      */
-    public function getID()
+    public function getVisibleName()
     {
-        return $this->appName;
+        return $this->localization->t($this->getAlgorithmName());
+    }
+
+    /**
+     * Get the algorithm name.
+     *
+     * @return string The algorithm name.
+     */
+    protected abstract function getAlgorithmName();
+
+    /**
+     * @inheritdoc
+     */
+    public function checkPassword($password, $dbHash)
+    {
+        return hash_equals($dbHash, $this->getPasswordHash($password));
     }
 
     /**
      * @inheritdoc
      */
-    public function getName()
-    {
-        return $this->localization->t("SQL Backends");
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getPriority()
-    {
-        return 25;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getIcon()
-    {
-        return $this->urlGenerator->imagePath($this->appName, "app-dark.svg");
-    }
+    public abstract function getPasswordHash($password);
 }

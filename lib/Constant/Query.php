@@ -2,7 +2,6 @@
 /**
  * Nextcloud - user_sql
  *
- * @copyright 2012-2015 Andreas Böhler <dev (at) aboehler (dot) at>
  * @copyright 2018 Marcin Łojewski <dev@mlojewski.me>
  * @author    Marcin Łojewski <dev@mlojewski.me>
  *
@@ -20,12 +19,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use OCA\UserSQL\AppInfo\Application;
-use OCP\AppFramework\QueryException;
+namespace OCA\UserSQL\Constant;
 
-try {
-    $app = new Application();
-    $app->registerBackends();
-} catch (QueryException $queryException) {
-    OC::$server->getLogger()->logException($queryException);
+/**
+ * The database query constants.
+ *
+ * @author Marcin Łojewski <dev@mlojewski.me>
+ */
+final class Query
+{
+    const BELONGS_TO_ADMIN = "belongs_to_admin";
+    const COUNT_GROUPS = "count_groups";
+    const COUNT_USERS = "count_users";
+    const FIND_GROUP = "find_group";
+    const FIND_GROUP_USERS = "find_group_users";
+    const FIND_GROUPS = "find_groups";
+    const FIND_USER = "find_user";
+    const FIND_USER_GROUPS = "find_user_groups";
+    const FIND_USERS = "find_users";
+    const SAVE_USER = "save_user";
+
+    const GID_PARAM = "gid";
+    const NAME_PARAM = "name";
+    const PASSWORD_PARAM = "password";
+    const SEARCH_PARAM = "search";
+    const UID_PARAM = "uid";
 }

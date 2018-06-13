@@ -19,61 +19,45 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace OCA\UserSQL\Settings;
-
-use OCA\UserSQL\Properties;
-use OCP\AppFramework\Http\TemplateResponse;
-use OCP\Settings\ISettings;
+namespace OCA\UserSQL\Crypto;
 
 /**
- * The administrator's settings page.
+ * Abstract Unix Crypt hashing implementation.
+ * The hashing algorithm depends on the chosen salt.
  *
+ * @see    crypt()
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class Admin implements ISettings
+abstract class AbstractCrypt extends AbstractAlgorithm
 {
     /**
-     * @var string The application name.
+     * The chars used in the salt.
      */
-    private $appName;
-    /**
-     * @var Properties The properties array.
-     */
-    private $properties;
+    const SALT_ALPHABET = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
     /**
-     * The class constructor,
+     * @inheritdoc
+     */
+    public function checkPassword($password, $dbHash)
+    {
+        return hash_equals($dbHash, crypt($password, $dbHash));
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getPasswordHash($password)
+    {
+        return crypt($password, $this->getSalt());
+    }
+
+    /**
+     * Generate a salt string for the hashing algorithm.
      *
-     * @param string     $AppName    The application name.
-     * @param Properties $properties The properties array.
+     * @return string The salt string.
      */
-    public function __construct($AppName, Properties $properties)
+    protected function getSalt()
     {
-        $this->appName = $AppName;
-        $this->properties = $properties;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getForm()
-    {
-        return new TemplateResponse($this->appName, "admin", $this->properties->getArray());
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getSection()
-    {
-        return $this->appName;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getPriority()
-    {
-        return 25;
+        return "";
     }
 }

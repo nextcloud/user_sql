@@ -2,7 +2,6 @@
 /**
  * Nextcloud - user_sql
  *
- * @copyright 2012-2015 Andreas Böhler <dev (at) aboehler (dot) at>
  * @copyright 2018 Marcin Łojewski <dev@mlojewski.me>
  * @author    Marcin Łojewski <dev@mlojewski.me>
  *
@@ -20,12 +19,38 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use OCA\UserSQL\AppInfo\Application;
-use OCP\AppFramework\QueryException;
+namespace Tests\UserSQL\Crypto;
 
-try {
-    $app = new Application();
-    $app->registerBackends();
-} catch (QueryException $queryException) {
-    OC::$server->getLogger()->logException($queryException);
+use OCA\UserSQL\Crypto\CryptArgon2;
+use OCA\UserSQL\Crypto\IPasswordAlgorithm;
+use OCP\IL10N;
+use Test\TestCase;
+
+/**
+ * Unit tests for class <code>CryptArgon2</code>.
+ *
+ * @author Marcin Łojewski <dev@mlojewski.me>
+ */
+class CryptArgon2Test extends TestCase
+{
+    /**
+     * @var IPasswordAlgorithm
+     */
+    private $crypto;
+
+    public function testCheckPassword()
+    {
+        $this->assertTrue(
+            $this->crypto->checkPassword(
+                "password",
+                "\$argon2i\$v=19\$m=1024,t=2,p=2\$NnpSNlRNLlZobnJHUDh0Sw\$oW5E1cfdPzLWfkTvQFUyzTR00R0aLwEdYwldcqW6Pmo"
+            )
+        );
+    }
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->crypto = new CryptArgon2($this->createMock(IL10N::class));
+    }
 }
