@@ -113,6 +113,7 @@ CREATE TABLE sql_users
   email             TEXT        NULL,
   home              TEXT        NULL,
   password          TEXT        NOT NULL,
+  active            TINYINT(1)  NOT NULL DEFAULT '1',
   can_change_avatar BOOLEAN     NOT NULL DEFAULT FALSE,
   CONSTRAINT users_username_uindex UNIQUE (username)
 );
