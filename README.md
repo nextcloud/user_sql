@@ -51,11 +51,11 @@ Name | Description | Details
 **Allow password change** | Can user change its password. The password change is propagated to the database. See [Hash algorithms](#Hash algorithms). | Optional.<br/>Default: false.
 **Use cache** | Use database query results cache. The cache can be cleared any time with the *Clear cache* button click. | Optional.<br/>Default: false.
 **Hashing algorithm** | How users passwords are stored in the database. See [Hash algorithms](#Hash algorithms). | Mandatory.
-**Email sync** | Sync e-mail address with the Nextcloud.<br/>- *None* - Disables this feature. This is the default option.<br/>- *Synchronise only once* - Copy the e-mail address to the Nextcloud storage if its not set.<br/>- *Nextcloud always wins* - Always copy the e-mail address to the database. This updates the user table.<br/>- *SQL always wins* - Always copy the e-mail address to the Nextcloud storage. | Optional.<br/>Default: *None*. Requires user's *Email* column.
+**Email sync** | Sync e-mail address with the Nextcloud.<br/>- *None* - Disables this feature. This is the default option.<br/>- *Synchronise only once* - Copy the e-mail address to the Nextcloud storage if its not set.<br/>- *Nextcloud always wins* - Always copy the e-mail address to the database. This updates the user table.<br/>- *SQL always wins* - Always copy the e-mail address to the Nextcloud storage. | Optional.<br/>Default: *None*.<br/>Requires user's *Email* column.
 **Home mode** | User storage path.<br/>- *Default* - Let the Nextcloud manage this. The default option.<br/>- *Query* - Use location from the user table pointed by the *home* column.<br/>- *Static* - Use static location. The `%u` variable is replaced with the username of the user. | Optional<br/>Default: *Default*.
 **Home Location** | User storage path for the `static` *home mode*. | Mandatory if the *Home mode* is set to `Static`.
 
-## User table
+### User table
 
 The definition of user table. The table containing user accounts.
 
@@ -69,7 +69,7 @@ Name | Description | Details
 **Display name** | Display name column. | Optional.
 **Can change avatar** | Flag indicating if user can change its avatar. | Optional.<br/>Default: false.
 
-## Group table
+### Group table
 
 Group definitions table.
 
@@ -80,7 +80,7 @@ Name | Description | Details
 **Display name** | Display name column. | Optional.
 **Group name** | Group name column. | Mandatory for group backend.
 
-## User group table
+### User group table
 
 Associative table which maps users to groups.
 
@@ -90,21 +90,51 @@ Name | Description | Details
 **Username** | Username column. | Mandatory for group backend.
 **Group name** | Group name column. | Mandatory for group backend.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Integrations
+
+The basic functionality requires only one database table: [User table](#User table).
+
+For all options to work three tables are required:
+ - [User table](#User table),
+ - [Group table](#Group table),
+ - [User group table](#User group table).
+
+If you already have an existing database you can always create database views which fits this model,
+but be aware that some functionalities requires data changes (update queries).
+
+If you don't have any database model yet you can use below tables (MySQL):
+```
+CREATE TABLE sql_users
+(
+  id                INT         AUTO_INCREMENT PRIMARY KEY,
+  username          VARCHAR(16) NOT NULL,
+  display_name      TEXT        NULL,
+  email             TEXT        NULL,
+  home              TEXT        NULL,
+  password          TEXT        NOT NULL,
+  can_change_avatar BOOLEAN     NOT NULL DEFAULT FALSE,
+  CONSTRAINT users_username_uindex UNIQUE (username)
+);
+
+CREATE TABLE sql_group
+(
+  id           INT         AUTO_INCREMENT PRIMARY KEY,
+  name         VARCHAR(16) NOT NULL,
+  display_name TEXT        NULL,
+  admin        BOOLEAN     NOT NULL DEFAULT FALSE,
+  CONSTRAINT group_name_uindex UNIQUE (name)
+);
+
+CREATE TABLE sql_user_group
+(
+  id         INT         AUTO_INCREMENT PRIMARY KEY,
+  group_name VARCHAR(16) NOT NULL,
+  username   VARCHAR(16) NOT NULL,
+  CONSTRAINT user_group_group_name_username_uindex UNIQUE (group_name, username),
+  INDEX user_group_group_name_index (group_name),
+  INDEX user_group_username_index (username)
+);
+```
 
 ### WordPress
 Thanks to this app, Nextcloud can easily integrate with Wordpress.
