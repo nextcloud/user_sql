@@ -49,6 +49,10 @@ class User
      */
     public $home;
     /**
+     * @var bool Is user account active.
+     */
+    public $active;
+    /**
      * @var bool Can user change its avatar.
      */
     public $avatar;

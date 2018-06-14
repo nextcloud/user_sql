@@ -8,7 +8,7 @@
         Retrieve the users and groups info. Allow the users to change their passwords.
         Sync the users' email addresses with the addresses stored by Nextcloud.
     </description>
-    <version>4.0.0-rc1</version>
+    <version>4.0.0-rc2</version>
     <licence>agpl</licence>
     <author>Andreas Böhler &lt;dev (at) aboehler (dot) at&gt;</author>
     <author>Marcin Łojewski &lt;dev@mlojewski.me&gt;</author>
