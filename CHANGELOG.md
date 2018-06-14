@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [v4.0.0-rc2]
 ### Added
 - User active column
 
@@ -65,6 +65,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Supported version of ownCloud, Nextcloud: ownCloud 10, Nextcloud 12
 
-[Unreleased]: https://github.com/nextcloud/user_sql/compare/v4.0.0-rc1...develop
+[v4.0.0-rc2]: https://github.com/nextcloud/user_sql/compare/v4.0.0-rc1...v4.0.0-rc2
 [4.0.0-rc1]: https://github.com/nextcloud/user_sql/compare/v3.1.0...v4.0.0-rc1
 [3.1.0]: https://github.com/nextcloud/user_sql/compare/v2.4.0...v3.1.0
