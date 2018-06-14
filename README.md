@@ -67,6 +67,7 @@ Name | Description | Details
 **Home** | Home path column. | Mandatory for `Query` *Home sync* option.
 **Password** | Password hash column. | Mandatory for user backend.
 **Display name** | Display name column. | Optional.
+**Active** | Flag indicating if user can log in. | Optional.<br/>Default: true.
 **Can change avatar** | Flag indicating if user can change its avatar. | Optional.<br/>Default: false.
 
 #### Group table
@@ -112,6 +113,7 @@ CREATE TABLE sql_users
   email             TEXT        NULL,
   home              TEXT        NULL,
   password          TEXT        NOT NULL,
+  active            TINYINT(1)  NOT NULL DEFAULT '1',
   can_change_avatar BOOLEAN     NOT NULL DEFAULT FALSE,
   CONSTRAINT users_username_uindex UNIQUE (username)
 );
@@ -161,6 +163,7 @@ User table: jhi_users
 Username column: login
 Password column: password_hash
 Email column: email
+Active column: activated
 
 Hashing algorithm: Unix (Crypt)
 ```

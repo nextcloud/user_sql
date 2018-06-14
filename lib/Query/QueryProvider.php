@@ -65,6 +65,7 @@ class QueryProvider implements \ArrayAccess
         $gGID = $this->properties[DB::GROUP_GID_COLUMN];
         $gName = $this->properties[DB::GROUP_NAME_COLUMN];
 
+        $uActive = $this->properties[DB::USER_ACTIVE_COLUMN];
         $uAvatar = $this->properties[DB::USER_AVATAR_COLUMN];
         $uEmail = $this->properties[DB::USER_EMAIL_COLUMN];
         $uHome = $this->properties[DB::USER_HOME_COLUMN];
@@ -90,6 +91,7 @@ class QueryProvider implements \ArrayAccess
             (empty($uName) ? "null" : $uName) . " AS name, " .
             (empty($uEmail) ? "null" : $uEmail) . " AS email, " .
             (empty($uHome) ? "null" : $uHome) . " AS home, " .
+            (empty($uActive) ? "true" : $uActive) . " AS active, " .
             (empty($uAvatar) ? "false" : $uAvatar) . " AS avatar";
 
         $this->queries = [
