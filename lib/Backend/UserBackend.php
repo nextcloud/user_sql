@@ -277,10 +277,14 @@ final class UserBackend extends Backend
 	// Adding Salt Info
         $salt = $this->getSalt($uid);
         $password .= $salt;
-
+	
         $isCorrect = $passwordAlgorithm->checkPassword(
             $password, $user->password
         );
+
+	 $this->logger->error(
+                $user->password,["app" => $this->appName]
+            );
 
         if ($user->active == false) {
             $this->logger->info(

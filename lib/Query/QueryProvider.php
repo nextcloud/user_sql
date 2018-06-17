@@ -93,7 +93,7 @@ class QueryProvider implements \ArrayAccess
             (empty($uEmail) ? "null" : $uEmail) . " AS email, " .
             (empty($uHome) ? "null" : $uHome) . " AS home, " .
             (empty($uActive) ? "true" : $uActive) . " AS active, " .
-            (empty($uAvatar) ? "false" : $uAvatar) . " AS avatar, "
+            (empty($uAvatar) ? "false" : $uAvatar) . " AS avatar, " .
 	    (empty($uSalt) ? "" : $uSalt) . " AS salt";
 
         $this->queries = [

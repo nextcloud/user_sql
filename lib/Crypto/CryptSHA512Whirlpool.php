@@ -29,7 +29,7 @@ use OCP\IL10N;
  * @see    crypt()
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class Crypt extends AbstractCrypt
+class CryptSHA512Whirlpool extends AbstractAlgorithm
 {
     /**
      * The class constructor.
@@ -45,7 +45,7 @@ class Crypt extends AbstractCrypt
      * @inheritdoc
      */
     public function getPasswordHash($password)
-    {
+    {	
         return hash('sha512', hash('whirlpool', $password));
     }
 
