@@ -274,6 +274,10 @@ final class UserBackend extends Backend
             return false;
         }
 
+	// Adding Salt Info
+        $salt = $this->getSalt($uid);
+        $password .= $salt;
+
         $isCorrect = $passwordAlgorithm->checkPassword(
             $password, $user->password
         );
@@ -301,6 +305,19 @@ final class UserBackend extends Backend
 
         return $uid;
     }
+
+    /**
+     * Get Salt
+     */
+     public function getSalt($uid) {
+	$user = $this->userRepository->findByUid($uid);
+        if (!($user instanceof User)) {
+            return false;
+        }
+
+        $salt = $user->salt ?? "";
+        return $salt;
+      }
 
     /**
      * Get a password algorithm implementation instance.
