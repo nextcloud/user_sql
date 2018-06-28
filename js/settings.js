@@ -41,6 +41,7 @@ user_sql.adminSettingsUI = function () {
             $(ids).autocomplete({
                 source: function (request, response) {
                     var post = $(form_id).serializeArray();
+                    post.push({name: "input", value: request["term"]});
                     $.post(OC.generateUrl(path), post, response, "json");
                 },
                 minLength: 0,
