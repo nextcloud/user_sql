@@ -108,12 +108,13 @@ abstract class AbstractPlatform
     /**
      * Get all the columns defined in the table.
      *
-     * @param string $table The table name.
+     * @param string $table  The table name.
+     * @param string $phrase Show only columns containing given phrase.
      *
      * @return array Array with column names.
      * @throws DBALException On a database exception.
      */
-    public function getColumns($table)
+    public function getColumns($table, $phrase = "")
     {
         $platform = $this->connection->getDatabasePlatform();
         $query = $platform->getListTableColumnsSQL($table);
@@ -123,7 +124,9 @@ abstract class AbstractPlatform
 
         while ($row = $result->fetch()) {
             $name = $this->getColumnName($row);
-            $columns[] = $name;
+            if (preg_match("/.*$phrase.*/i", $name)) {
+                $columns[] = $name;
+            }
         }
 
         return $columns;
