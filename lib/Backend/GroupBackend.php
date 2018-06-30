@@ -27,14 +27,9 @@ use OCA\UserSQL\Model\Group;
 use OCA\UserSQL\Properties;
 use OCA\UserSQL\Repository\GroupRepository;
 use OCP\Group\Backend\ABackend;
-use OCP\Group\Backend\IAddToGroupBackend;
-use OCP\Group\Backend\ICountDisabledInGroup;
 use OCP\Group\Backend\ICountUsersBackend;
-use OCP\Group\Backend\ICreateGroupBackend;
-use OCP\Group\Backend\IDeleteGroupBackend;
 use OCP\Group\Backend\IGroupDetailsBackend;
 use OCP\Group\Backend\IIsAdminBackend;
-use OCP\Group\Backend\IRemoveFromGroupBackend;
 use OCP\ILogger;
 
 /**
@@ -43,14 +38,9 @@ use OCP\ILogger;
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
 final class GroupBackend extends ABackend implements
-    IAddToGroupBackend,
-    ICountDisabledInGroup,
     ICountUsersBackend,
-    ICreateGroupBackend,
-    IDeleteGroupBackend,
     IGroupDetailsBackend,
-    IIsAdminBackend,
-    IRemoveFromGroupBackend
+    IIsAdminBackend
 {
     /**
      * @var string The application name.
@@ -449,50 +439,5 @@ final class GroupBackend extends ABackend implements
             && !empty($this->properties[DB::GROUP_GID_COLUMN])
             && !empty($this->properties[DB::USER_GROUP_GID_COLUMN])
             && !empty($this->properties[DB::USER_GROUP_UID_COLUMN]);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function addToGroup(string $uid, string $gid): bool
-    {
-        // TODO: Implement addToGroup() method.
-        return false;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function countDisabledInGroup(string $gid): int
-    {
-        // TODO: Implement countDisabledInGroup() method.
-        return 0;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function createGroup(string $gid): bool
-    {
-        // TODO: Implement createGroup() method.
-        return false;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function deleteGroup(string $gid): bool
-    {
-        // TODO: Implement deleteGroup() method.
-        return false;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function removeFromGroup(string $uid, string $gid)
-    {
-        // TODO: Implement removeFromGroup() method.
-        return false;
     }
 }
