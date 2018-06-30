@@ -148,7 +148,8 @@ function print_select_options(
                 print_text_input($l, "db-table-user-column-password", "Password", $_['db.table.user.column.password']);
                 print_text_input($l, "db-table-user-column-name", "Display name", $_['db.table.user.column.name']);
                 print_text_input($l, "db-table-user-column-active", "Active", $_['db.table.user.column.active']);
-                print_text_input($l, "db-table-user-column-avatar", "Can change avatar", $_['db.table.user.column.avatar']); ?>
+                print_text_input($l, "db-table-user-column-avatar", "Can change avatar", $_['db.table.user.column.avatar']);
+                print_text_input($l, "db-table-user-column-salt", "Salt", $_['db.table.user.column.salt']); ?>
             </fieldset>
         </div>
         <div class="section">

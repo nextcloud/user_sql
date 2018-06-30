@@ -71,6 +71,7 @@ class QueryProvider implements \ArrayAccess
         $uHome = $this->properties[DB::USER_HOME_COLUMN];
         $uName = $this->properties[DB::USER_NAME_COLUMN];
         $uPassword = $this->properties[DB::USER_PASSWORD_COLUMN];
+        $uSalt = $this->properties[DB::USER_SALT_COLUMN];
         $uUID = $this->properties[DB::USER_UID_COLUMN];
 
         $ugGID = $this->properties[DB::USER_GROUP_GID_COLUMN];
@@ -92,7 +93,8 @@ class QueryProvider implements \ArrayAccess
             (empty($uEmail) ? "null" : $uEmail) . " AS email, " .
             (empty($uHome) ? "null" : $uHome) . " AS home, " .
             (empty($uActive) ? "true" : $uActive) . " AS active, " .
-            (empty($uAvatar) ? "false" : $uAvatar) . " AS avatar";
+            (empty($uAvatar) ? "false" : $uAvatar) . " AS avatar, " .
+            (empty($uSalt) ? "null" : $uSalt) . " AS salt";
 
         $this->queries = [
             Query::BELONGS_TO_ADMIN =>

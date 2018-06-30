@@ -274,6 +274,10 @@ final class UserBackend extends Backend
             return false;
         }
 
+        if ($user->salt !== null) {
+            $password .= $user->salt;
+        }
+
         $isCorrect = $passwordAlgorithm->checkPassword(
             $password, $user->password
         );
@@ -417,13 +421,17 @@ final class UserBackend extends Backend
             return false;
         }
 
-        $passwordHash = $passwordAlgorithm->getPasswordHash($password);
-        if ($passwordHash === false) {
+        $user = $this->userRepository->findByUid($uid);
+        if (!($user instanceof User)) {
             return false;
         }
 
-        $user = $this->userRepository->findByUid($uid);
-        if (!($user instanceof User)) {
+        if ($user->salt !== null) {
+            $password .= $user->salt;
+        }
+
+        $passwordHash = $passwordAlgorithm->getPasswordHash($password);
+        if ($passwordHash === false) {
             return false;
         }
 

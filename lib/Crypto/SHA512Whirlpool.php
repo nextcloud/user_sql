@@ -19,45 +19,40 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace OCA\UserSQL\Model;
+namespace OCA\UserSQL\Crypto;
+
+use OCP\IL10N;
 
 /**
- * The user entity.
+ * SHA512 Whirlpool hashing implementation.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class User
+class SHA512Whirlpool extends AbstractAlgorithm
 {
     /**
-     * @var string The UID (username).
+     * The class constructor.
+     *
+     * @param IL10N $localization The localization service.
      */
-    public $uid;
+    public function __construct(IL10N $localization)
+    {
+        parent::__construct($localization);
+    }
+
     /**
-     * @var string The user's email address.
+     * @inheritdoc
      */
-    public $email;
+    public function getPasswordHash($password)
+    {
+        return hash('sha512', hash('whirlpool', $password));
+    }
+
     /**
-     * @var string The user's display name.
+     * @inheritdoc
      */
-    public $name;
-    /**
-     * @var string The user's password (hash).
-     */
-    public $password;
-    /**
-     * @var string The user's home location.
-     */
-    public $home;
-    /**
-     * @var bool Is user account active.
-     */
-    public $active;
-    /**
-     * @var bool Can user change its avatar.
-     */
-    public $avatar;
-    /**
-     * @var string The password's salt.
-     */
-    public $salt;
+    protected function getAlgorithmName()
+    {
+        return "SHA512 Whirlpool";
+    }
 }

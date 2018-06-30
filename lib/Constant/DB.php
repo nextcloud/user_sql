@@ -51,5 +51,6 @@ final class DB
     const USER_HOME_COLUMN = "db.table.user.column.home";
     const USER_NAME_COLUMN = "db.table.user.column.name";
     const USER_PASSWORD_COLUMN = "db.table.user.column.password";
+    const USER_SALT_COLUMN = "db.table.user.column.salt";
     const USER_UID_COLUMN = "db.table.user.column.uid";
 }

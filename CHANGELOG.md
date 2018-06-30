@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [v4.0.0-rc2]
 ### Added
 - User active column
+- SHA512 Whirlpool hashing algorithm
+- Support for salt column
 
 ### Changed
 - Fixed "Use of undefined constant" error for Argon2 Crypt with PHP below 7.2.
