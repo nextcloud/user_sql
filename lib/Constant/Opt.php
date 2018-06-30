@@ -32,6 +32,9 @@ final class Opt
     const EMAIL_SYNC = "opt.email_sync";
     const HOME_LOCATION = "opt.home_location";
     const HOME_MODE = "opt.home_mode";
+    const MODIFY_GROUP = "opt.modify_group";
+    const MODIFY_USER = "opt.modify_user";
+    const MODIFY_USER_GROUP = "opt.modify_user_group";
     const NAME_CHANGE = "opt.name_change";
     const PASSWORD_CHANGE = "opt.password_change";
     const USE_CACHE = "opt.use_cache";

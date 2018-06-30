@@ -21,8 +21,8 @@
 
 use OCP\IL10N;
 
-script('user_sql', 'settings');
-style('user_sql', 'settings');
+script("user_sql", "settings");
+style("user_sql", "settings");
 
 function print_text_input(IL10N $l, $id, $label, $value = "", $type = "text")
 {
@@ -94,11 +94,11 @@ function print_select_options(
             <p class="settings-hint"><?php p($l->t("Define your database connection parameters.")); ?></p>
             <fieldset><?php
                 $drivers = ["mysql" => "MySQL", "pgsql" => "PostgreSQL"];
-                print_select_options($l, "db-driver", "SQL driver", $drivers, $_['db.driver']);
-                print_text_input($l, "db-hostname", "Hostname", $_['db.hostname']);
-                print_text_input($l, "db-database", "Database", $_['db.database']);
-                print_text_input($l, "db-username", "Username", $_['db.username']);
-                print_text_input($l, "db-password", "Password", $_['db.password'], "password"); ?>
+                print_select_options($l, "db-driver", "SQL driver", $drivers, $_["db.driver"]);
+                print_text_input($l, "db-hostname", "Hostname", $_["db.hostname"]);
+                print_text_input($l, "db-database", "Database", $_["db.database"]);
+                print_text_input($l, "db-username", "Username", $_["db.username"]);
+                print_text_input($l, "db-password", "Password", $_["db.password"], "password"); ?>
                 <div class="button-right">
                     <input type="submit" id="user_sql-db_connection_verify" value="<?php p($l->t("Verify settings")); ?>">
                 </div>
@@ -108,16 +108,16 @@ function print_select_options(
             <h2><?php p($l->t("Options")); ?></h2>
             <p class="settings-hint"><?php p($l->t("Here are all currently supported options.")); ?></p>
             <fieldset><?php
-                print_checkbox_input($l, "opt-name_change", "Allow display name change", $_['opt.name_change']);
-                print_checkbox_input($l, "opt-password_change", "Allow password change", $_['opt.password_change']); ?>
+                print_checkbox_input($l, "opt-name_change", "Allow display name change", $_["opt.name_change"]);
+                print_checkbox_input($l, "opt-password_change", "Allow password change", $_["opt.password_change"]); ?>
                 <div class="button-right"><?php
-                    print_checkbox_input($l, "opt-use_cache", "Use cache", $_['opt.use_cache'], false); ?>
+                    print_checkbox_input($l, "opt-use_cache", "Use cache", $_["opt.use_cache"], false); ?>
                     <input type="submit" id="user_sql-clear_cache" value="<?php p($l->t("Clear cache")); ?>">
                 </div>
                 <?php
                 $hashing = [];
                 foreach (glob(__DIR__ . "/../lib/Crypto/*.php") as $filename) {
-                    $class = 'OCA\\UserSQL\\Crypto\\' . basename(substr($filename, 0, -4));
+                    $class = "OCA\\UserSQL\\Crypto\\" . basename(substr($filename, 0, -4));
                     try {
                         $passwordAlgorithm = new $class($l);
                         if ($passwordAlgorithm instanceof
@@ -129,56 +129,59 @@ function print_select_options(
                     }
                 }
 
-                print_select_options($l, "opt-crypto_class", "Hashing algorithm", $hashing, $_['opt.crypto_class']);
-                print_select_options($l, "opt-email_sync", "Email sync", ["" => "None", "initial" => "Synchronise only once", "force_nc"=>"Nextcloud always wins", "force_sql"=>"SQL always wins"], $_['opt.email_sync']);
-                print_select_options($l, "opt-home_mode", "Home mode", ["" => "Default", "query" => "Query", "static" => "Static"], $_['opt.home_mode']);
-                print_text_input($l, "opt-home_location", "Home Location", $_['opt.home_location']); ?>
+                print_select_options($l, "opt-crypto_class", "Hashing algorithm", $hashing, $_["opt.crypto_class"]);
+                print_select_options($l, "opt-email_sync", "Email sync", ["" => "None", "initial" => "Synchronise only once", "force_nc"=>"Nextcloud always wins", "force_sql"=>"SQL always wins"], $_["opt.email_sync"]);
+                print_select_options($l, "opt-home_mode", "Home mode", ["" => "Default", "query" => "Query", "static" => "Static"], $_["opt.home_mode"]);
+                print_text_input($l, "opt-home_location", "Home Location", $_["opt.home_location"]); ?>
             </fieldset>
         </div>
         <div class="section clear-left">
             <h2><?php p($l->t("User table")); ?></h2>
             <p class="settings-hint"><?php p($l->t("Table containing user accounts.")); ?></p>
             <fieldset><?php
-                print_text_input($l, "db-table-user", "Table name", $_['db.table.user']) ;?>
+                print_text_input($l, "db-table-user", "Table name", $_["db.table.user"]);
+                print_checkbox_input($l, "opt-modify_user", "Allow DML statements on table", $_["opt.modify_user"]); ?>
                 <h3><?php p($l->t("Columns")); ?></h3>
                 <?php
-                print_text_input($l, "db-table-user-column-uid", "Username", $_['db.table.user.column.uid']);
-                print_text_input($l, "db-table-user-column-email", "Email", $_['db.table.user.column.email']);
-                print_text_input($l, "db-table-user-column-home", "Home", $_['db.table.user.column.home']);
-                print_text_input($l, "db-table-user-column-password", "Password", $_['db.table.user.column.password']);
-                print_text_input($l, "db-table-user-column-name", "Display name", $_['db.table.user.column.name']);
-                print_text_input($l, "db-table-user-column-active", "Active", $_['db.table.user.column.active']);
-                print_text_input($l, "db-table-user-column-avatar", "Can change avatar", $_['db.table.user.column.avatar']);
-                print_text_input($l, "db-table-user-column-salt", "Salt", $_['db.table.user.column.salt']); ?>
+                print_text_input($l, "db-table-user-column-uid", "Username", $_["db.table.user.column.uid"]);
+                print_text_input($l, "db-table-user-column-email", "Email", $_["db.table.user.column.email"]);
+                print_text_input($l, "db-table-user-column-home", "Home", $_["db.table.user.column.home"]);
+                print_text_input($l, "db-table-user-column-password", "Password", $_["db.table.user.column.password"]);
+                print_text_input($l, "db-table-user-column-name", "Display name", $_["db.table.user.column.name"]);
+                print_text_input($l, "db-table-user-column-active", "Active", $_["db.table.user.column.active"]);
+                print_text_input($l, "db-table-user-column-avatar", "Can change avatar", $_["db.table.user.column.avatar"]);
+                print_text_input($l, "db-table-user-column-salt", "Salt", $_["db.table.user.column.salt"]); ?>
             </fieldset>
         </div>
         <div class="section">
             <h2><?php p($l->t("Group table")); ?></h2>
             <p class="settings-hint"><?php p($l->t("Group definitions table.")); ?></p>
             <fieldset><?php
-                print_text_input($l, "db-table-group", "Table name", $_['db.table.group']); ?>
+                print_text_input($l, "db-table-group", "Table name", $_["db.table.group"]);
+                print_checkbox_input($l, "opt-modify_group", "Allow DML statements on table", $_["opt.modify_group"]); ?>
                 <h3><?php p($l->t("Columns")); ?></h3>
                 <?php
-                print_text_input($l, "db-table-group-column-admin", "Is admin", $_['db.table.group.column.admin']);
-                print_text_input($l, "db-table-group-column-name", "Display name", $_['db.table.group.column.name']);
-                print_text_input($l, "db-table-group-column-gid", "Group name", $_['db.table.group.column.gid']); ?>
+                print_text_input($l, "db-table-group-column-admin", "Is admin", $_["db.table.group.column.admin"]);
+                print_text_input($l, "db-table-group-column-name", "Display name", $_["db.table.group.column.name"]);
+                print_text_input($l, "db-table-group-column-gid", "Group name", $_["db.table.group.column.gid"]); ?>
             </fieldset>
         </div>
         <div class="section">
             <h2><?php p($l->t("User group table")); ?></h2>
             <p class="settings-hint"><?php p($l->t("Associative table which maps users to groups.")); ?></p>
             <fieldset><?php
-                print_text_input($l, "db-table-user_group", "Table name", $_['db.table.user_group']); ?>
+                print_text_input($l, "db-table-user_group", "Table name", $_["db.table.user_group"]);
+                print_checkbox_input($l, "opt-modify_user_group", "Allow DML statements on table", $_["opt.modify_user_group"]); ?>
                 <h3><?php p($l->t("Columns")); ?></h3>
                 <?php
-                print_text_input($l, "db-table-user_group-column-uid", "Username", $_['db.table.user_group.column.uid']);
-                print_text_input($l, "db-table-user_group-column-gid", "Group name", $_['db.table.user_group.column.gid']); ?>
+                print_text_input($l, "db-table-user_group-column-uid", "Username", $_["db.table.user_group.column.uid"]);
+                print_text_input($l, "db-table-user_group-column-gid", "Group name", $_["db.table.user_group.column.gid"]); ?>
             </fieldset>
         </div>
     </div>
     <div class="section">
         <input type="hidden" name="appname" value="user_sql"/>
-        <input type="hidden" name="requesttoken" value="<?php p($_['requesttoken']); ?>" id="requesttoken"/>
-        <input id="user_sql-save" type="submit" value="<?php p($l->t('Save')); ?>"/>
+        <input type="hidden" name="requesttoken" value="<?php p($_["requesttoken"]); ?>" id="requesttoken"/>
+        <input id="user_sql-save" type="submit" value="<?php p($l->t("Save")); ?>"/>
     </div>
 </form>
