@@ -5,14 +5,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- SHA512 Whirlpool hashing algorithm
+- phpass hashing implementation
+- Support for salt column
+
 ### Fixed
 - Table and column autocomplete in settings panel
 
 ## [v4.0.0-rc2]
 ### Added
 - User active column
-- SHA512 Whirlpool hashing algorithm
-- Support for salt column
 
 ### Changed
 - Fixed "Use of undefined constant" error for Argon2 Crypt with PHP below 7.2.

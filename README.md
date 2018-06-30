@@ -149,7 +149,7 @@ User table: wp_users
 Username column: user_login
 Password column: user_pass
 
-Hashing algorithm: Unix (Crypt)
+Hashing algorithm: Unix (Crypt) or Portable PHP password
 ```
 
 #### JHipster
@@ -191,6 +191,7 @@ SHA512 (Crypt) | Generates hash with 5000 rounds. | $6$rounds=5000$yH.Q0OL4qbCOU
 Standard DES (Crypt) | | yTBnb7ab/N072
 Joomla MD5 Encryption | Generates 32 chars salt. | 14d21b49b0f13e2acba962b6b0039edd:haJK0yTvBXTNMh76xwEw5RYEVpJsN8us
 MD5 | No salt supported. | 5f4dcc3b5aa765d61d8327deb882cf99
+Portable PHP password | See [phpass](http://www.openwall.com/phpass/). | $P$BxrwraqNTi4as0EI.IpiA/K.muk9ke/
 SHA1 | No salt supported. | 5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8
 SHA512 Whirlpool | No salt supported. | a96b16ebb691dbe968b0d66d0d924cff5cf5de5e0885181d00761d87f295b2bf3d3c66187c050fc01c196ff3acaa48d3561ffd170413346e934a32280d632f2e
 SSHA256 | Generates 32 chars salt. | {SSHA256}+WxTB3JxprNteeovsuSYtgI+UkVPA9lfwGoYkz3Ff7hjd1FSdmlTMkNsSExyR21KM3NvNTZ5V0p4WXJMUjFzUg==
