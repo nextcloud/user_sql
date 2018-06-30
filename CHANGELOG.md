@@ -10,10 +10,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - phpass hashing implementation
 - Support for salt column
 
+### Changed
+- Support for Nextcloud 14 only
+- Group backend implementation
+
 ### Fixed
 - Table and column autocomplete in settings panel
 
-## [v4.0.0-rc2]
+## [4.0.0-rc2]
 ### Added
 - User active column
 
@@ -75,6 +79,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Supported version of ownCloud, Nextcloud: ownCloud 10, Nextcloud 12
 
 [Unreleased]: https://github.com/nextcloud/user_sql/compare/v4.0.0-rc2...develop
-[v4.0.0-rc2]: https://github.com/nextcloud/user_sql/compare/v4.0.0-rc1...v4.0.0-rc2
+[4.0.0-rc2]: https://github.com/nextcloud/user_sql/compare/v4.0.0-rc1...v4.0.0-rc2
 [4.0.0-rc1]: https://github.com/nextcloud/user_sql/compare/v3.1.0...v4.0.0-rc1
 [3.1.0]: https://github.com/nextcloud/user_sql/compare/v2.4.0...v3.1.0
