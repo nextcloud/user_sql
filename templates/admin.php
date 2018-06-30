@@ -139,8 +139,7 @@ function print_select_options(
             <h2><?php p($l->t("User table")); ?></h2>
             <p class="settings-hint"><?php p($l->t("Table containing user accounts.")); ?></p>
             <fieldset><?php
-                print_text_input($l, "db-table-user", "Table name", $_["db.table.user"]);
-                print_checkbox_input($l, "opt-modify_user", "Allow DML statements on table", $_["opt.modify_user"]); ?>
+                print_text_input($l, "db-table-user", "Table name", $_["db.table.user"]); ?>
                 <h3><?php p($l->t("Columns")); ?></h3>
                 <?php
                 print_text_input($l, "db-table-user-column-uid", "Username", $_["db.table.user.column.uid"]);
@@ -157,8 +156,7 @@ function print_select_options(
             <h2><?php p($l->t("Group table")); ?></h2>
             <p class="settings-hint"><?php p($l->t("Group definitions table.")); ?></p>
             <fieldset><?php
-                print_text_input($l, "db-table-group", "Table name", $_["db.table.group"]);
-                print_checkbox_input($l, "opt-modify_group", "Allow DML statements on table", $_["opt.modify_group"]); ?>
+                print_text_input($l, "db-table-group", "Table name", $_["db.table.group"]); ?>
                 <h3><?php p($l->t("Columns")); ?></h3>
                 <?php
                 print_text_input($l, "db-table-group-column-admin", "Is admin", $_["db.table.group.column.admin"]);
@@ -170,8 +168,7 @@ function print_select_options(
             <h2><?php p($l->t("User group table")); ?></h2>
             <p class="settings-hint"><?php p($l->t("Associative table which maps users to groups.")); ?></p>
             <fieldset><?php
-                print_text_input($l, "db-table-user_group", "Table name", $_["db.table.user_group"]);
-                print_checkbox_input($l, "opt-modify_user_group", "Allow DML statements on table", $_["opt.modify_user_group"]); ?>
+                print_text_input($l, "db-table-user_group", "Table name", $_["db.table.user_group"]); ?>
                 <h3><?php p($l->t("Columns")); ?></h3>
                 <?php
                 print_text_input($l, "db-table-user_group-column-uid", "Username", $_["db.table.user_group.column.uid"]);
