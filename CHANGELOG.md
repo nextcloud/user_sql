@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Support for Nextcloud 14 only
 - Group backend implementation
+- User backend implementation
 
 ### Fixed
 - Table and column autocomplete in settings panel
