@@ -56,7 +56,7 @@ final class Utils
     {
         $string = "";
         for ($idx = 0; $idx != $length; ++$idx) {
-            $string .= $alphabet[mt_rand(0, strlen($alphabet) - 1)];
+            $string .= $alphabet[random_int(0, strlen($alphabet) - 1)];
         }
         return $string;
     }

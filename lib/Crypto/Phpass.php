@@ -30,23 +30,21 @@ use OCP\IL10N;
  */
 class Phpass extends AbstractAlgorithm
 {
-    /**
-     * @var PasswordHash
-     */
-    private $hasher;
+    const ITOA64 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+
+    private $iterationCount;
 
     /**
      * The class constructor.
      *
-     * @param IL10N $localization The localization service.
-     * @param int   $hashCostLog2 Log2 Hash cost.
-     * @param bool  $hashPortable Use portable hash implementation.
+     * @param IL10N $localization   The localization service.
+     * @param int   $iterationCount Iteration count (log2).
+     *                              This value must be between 4 and 31.
      */
-    public function __construct(
-        IL10N $localization, $hashCostLog2 = 8, $hashPortable = true
-    ) {
+    public function __construct(IL10N $localization, $iterationCount = 8)
+    {
         parent::__construct($localization);
-        $this->hasher = new PasswordHash($hashCostLog2, $hashPortable);
+        $this->iterationCount = $iterationCount;
     }
 
     /**
@@ -54,7 +52,73 @@ class Phpass extends AbstractAlgorithm
      */
     public function checkPassword($password, $dbHash)
     {
-        return $this->hasher->CheckPassword($password, $dbHash);
+        return hash_equals($dbHash, $this->crypt($password, $dbHash));
+    }
+
+    /**
+     * @param string $password Password to encrypt.
+     * @param string $setting  Hash settings.
+     *
+     * @return string|null Generated hash. Null on invalid settings.
+     */
+    private function crypt($password, $setting)
+    {
+        $countLog2 = strpos(self::ITOA64, $setting[3]);
+        if ($countLog2 < 7 || $countLog2 > 30) {
+            return null;
+        }
+
+        $count = 1 << $countLog2;
+
+        $salt = substr($setting, 4, 8);
+        if (strlen($salt) !== 8) {
+            return null;
+        }
+
+        $hash = md5($salt . $password, true);
+        do {
+            $hash = md5($hash . $password, true);
+        } while (--$count);
+
+        $output = substr($setting, 0, 12);
+        $output .= $this->encode64($hash, 16);
+
+        return $output;
+    }
+
+    /**
+     * Encode binary input to base64 string.
+     *
+     * @param string $input Binary data.
+     * @param int    $count Data size.
+     *
+     * @return string Base64 encoded data.
+     */
+    private function encode64($input, $count)
+    {
+        $output = '';
+        $i = 0;
+        do {
+            $value = ord($input[$i++]);
+            $output .= self::ITOA64[$value & 0x3f];
+            if ($i < $count) {
+                $value |= ord($input[$i]) << 8;
+            }
+            $output .= self::ITOA64[($value >> 6) & 0x3f];
+            if ($i++ >= $count) {
+                break;
+            }
+            if ($i < $count) {
+                $value |= ord($input[$i]) << 16;
+            }
+            $output .= self::ITOA64[($value >> 12) & 0x3f];
+            if ($i++ >= $count) {
+                break;
+            }
+            $output .= self::ITOA64[($value >> 18) & 0x3f];
+        } while ($i < $count);
+
+        return $output;
     }
 
     /**
@@ -62,7 +126,21 @@ class Phpass extends AbstractAlgorithm
      */
     public function getPasswordHash($password)
     {
-        return $this->hasher->HashPassword($password);
+        return $this->crypt($password, $this->genSalt());
+    }
+
+    /**
+     * Generate salt for the hash.
+     *
+     * @return string Salt string.
+     */
+    private function genSalt()
+    {
+        $output = '$P$';
+        $output .= self::ITOA64[min($this->iterationCount + 5, 30)];
+        $output .= $this->encode64(random_bytes(6), 6);
+
+        return $output;
     }
 
     /**
