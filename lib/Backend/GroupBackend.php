@@ -21,12 +21,20 @@
 
 namespace OCA\UserSQL\Backend;
 
-use OC\Group\Backend;
 use OCA\UserSQL\Cache;
 use OCA\UserSQL\Constant\DB;
 use OCA\UserSQL\Model\Group;
 use OCA\UserSQL\Properties;
 use OCA\UserSQL\Repository\GroupRepository;
+use OCP\Group\Backend\ABackend;
+use OCP\Group\Backend\IAddToGroupBackend;
+use OCP\Group\Backend\ICountDisabledInGroup;
+use OCP\Group\Backend\ICountUsersBackend;
+use OCP\Group\Backend\ICreateGroupBackend;
+use OCP\Group\Backend\IDeleteGroupBackend;
+use OCP\Group\Backend\IGroupDetailsBackend;
+use OCP\Group\Backend\IIsAdminBackend;
+use OCP\Group\Backend\IRemoveFromGroupBackend;
 use OCP\ILogger;
 
 /**
@@ -34,7 +42,15 @@ use OCP\ILogger;
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-final class GroupBackend extends Backend
+final class GroupBackend extends ABackend implements
+    IAddToGroupBackend,
+    ICountDisabledInGroup,
+    ICountUsersBackend,
+    ICreateGroupBackend,
+    IDeleteGroupBackend,
+    IGroupDetailsBackend,
+    IIsAdminBackend,
+    IRemoveFromGroupBackend
 {
     /**
      * @var string The application name.
@@ -128,14 +144,9 @@ final class GroupBackend extends Backend
     }
 
     /**
-     * Returns the number of users in given group matching the search term.
-     *
-     * @param string $gid    The group ID.
-     * @param string $search The search term.
-     *
-     * @return int The number of users in given group matching the search term.
+     * @inheritdoc
      */
-    public function countUsersInGroup($gid, $search = "")
+    public function countUsersInGroup(string $gid, string $search = ""): int
     {
         $this->logger->debug(
             "Entering countUsersInGroup($gid, $search)",
@@ -355,17 +366,17 @@ final class GroupBackend extends Backend
     }
 
     /**
-     * Checks if a user is in the admin group.
-     *
-     * @param string $uid User ID.
-     *
-     * @return bool TRUE if a user is in the admin group, FALSE otherwise.
+     * @inheritdoc
      */
-    public function isAdmin($uid)
+    public function isAdmin(string $uid): bool
     {
         $this->logger->debug(
             "Entering isAdmin($uid)", ["app" => $this->appName]
         );
+
+        if (empty($this->properties[DB::GROUP_ADMIN_COLUMN])) {
+            return false;
+        }
 
         $cacheKey = self::class . "admin_" . $uid;
         $admin = $this->cache->get($cacheKey);
@@ -394,17 +405,17 @@ final class GroupBackend extends Backend
     }
 
     /**
-     * Get associative array of the group details.
-     *
-     * @param string $gid The group ID.
-     *
-     * @return array Associative array of the group details.
+     * @inheritdoc
      */
-    public function getGroupDetails($gid)
+    public function getGroupDetails(string $gid): array
     {
         $this->logger->debug(
             "Entering getGroupDetails($gid)", ["app" => $this->appName]
         );
+
+        if (empty($this->properties[DB::GROUP_NAME_COLUMN])) {
+            return [];
+        }
 
         $group = $this->getGroup($gid);
 
@@ -419,21 +430,6 @@ final class GroupBackend extends Backend
         );
 
         return $details;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getSupportedActions()
-    {
-        $actions = parent::getSupportedActions();
-
-        $actions &= empty($this->properties[DB::GROUP_ADMIN_COLUMN])
-            ? ~Backend::IS_ADMIN : ~0;
-        $actions &= empty($this->properties[DB::GROUP_NAME_COLUMN])
-            ? ~Backend::GROUP_DETAILS : ~0;
-
-        return $actions;
     }
 
     /**
@@ -453,5 +449,50 @@ final class GroupBackend extends Backend
             && !empty($this->properties[DB::GROUP_GID_COLUMN])
             && !empty($this->properties[DB::USER_GROUP_GID_COLUMN])
             && !empty($this->properties[DB::USER_GROUP_UID_COLUMN]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function addToGroup(string $uid, string $gid): bool
+    {
+        // TODO: Implement addToGroup() method.
+        return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function countDisabledInGroup(string $gid): int
+    {
+        // TODO: Implement countDisabledInGroup() method.
+        return 0;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function createGroup(string $gid): bool
+    {
+        // TODO: Implement createGroup() method.
+        return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function deleteGroup(string $gid): bool
+    {
+        // TODO: Implement deleteGroup() method.
+        return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function removeFromGroup(string $uid, string $gid)
+    {
+        // TODO: Implement removeFromGroup() method.
+        return false;
     }
 }
