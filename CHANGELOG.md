@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Added
 - SHA512 Whirlpool hashing algorithm
+- WoltLab Community Framework 2.x hashing algorithm
 - phpass hashing implementation
 - Support for salt column
 
