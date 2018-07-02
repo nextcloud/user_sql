@@ -50,7 +50,7 @@ Name | Description | Details
 **Allow display name change** | With this option enabled user can change its display name. The display name change is propagated to the database. | Optional.<br/>Default: false.<br/>Requires: user *Display name* column.
 **Allow password change** | Can user change its password. The password change is propagated to the database. See [Hash algorithms](#hash-algorithms). | Optional.<br/>Default: false.
 **Use cache** | Use database query results cache. The cache can be cleared any time with the *Clear cache* button click. | Optional.<br/>Default: false.
-**Hashing algorithm** | How users passwords are stored in the database. See [Hash algorithms](#hash-algorithms). | Mandatory.
+**Hash algorithm** | How users passwords are stored in the database. See [Hash algorithms](#hash-algorithms). | Mandatory.
 **Email sync** | Sync e-mail address with the Nextcloud.<br/>- *None* - Disables this feature. This is the default option.<br/>- *Synchronise only once* - Copy the e-mail address to the Nextcloud storage if its not set.<br/>- *Nextcloud always wins* - Always copy the e-mail address to the database. This updates the user table.<br/>- *SQL always wins* - Always copy the e-mail address to the Nextcloud storage. | Optional.<br/>Default: *None*.<br/>Requires: user *Email* column.
 **Home mode** | User storage path.<br/>- *Default* - Let the Nextcloud manage this. The default option.<br/>- *Query* - Use location from the user table pointed by the *home* column.<br/>- *Static* - Use static location. The `%u` variable is replaced with the username of the user. | Optional<br/>Default: *Default*.
 **Home Location** | User storage path for the `static` *home mode*. | Mandatory if the *Home mode* is set to `Static`.
@@ -146,7 +146,7 @@ User table: wp_users
 Username column: user_login
 Password column: user_pass
 
-Hashing algorithm: Unix (Crypt) or Portable PHP password
+Hash algorithm: Unix (Crypt) or Portable PHP password
 ```
 
 #### JHipster
@@ -163,7 +163,7 @@ Password column: password_hash
 Email column: email
 Active column: activated
 
-Hashing algorithm: Unix (Crypt)
+Hash algorithm: Unix (Crypt)
 ```
 
 ## Hash algorithms
@@ -203,7 +203,7 @@ Add a new class in the `OCA\UserSQL\Platform` namespace which extends the `Abstr
 Add this driver in `admin.php` template  to `$drivers` variable and in method `getPlatform(Connection $connection)`
 of `PlatformFactory` class.
 
-#### New hashing algorithm support
+#### New hash algorithm support
 
 Create a new class in `OCA\UserSQL\Crypto` namespace which implements `IPasswordAlgorithm` interface.
 Do not forget to write unit tests.

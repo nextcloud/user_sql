@@ -24,7 +24,7 @@ namespace OCA\UserSQL\Crypto;
 use OCP\IL10N;
 
 /**
- * SHA1 hashing implementation.
+ * SHA1 hash implementation.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */

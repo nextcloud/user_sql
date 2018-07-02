@@ -24,7 +24,7 @@ namespace OCA\UserSQL\Crypto;
 use OCP\IL10N;
 
 /**
- * Joomla hashing implementation.
+ * Joomla hash implementation.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */

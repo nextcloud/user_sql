@@ -22,8 +22,8 @@
 namespace OCA\UserSQL\Crypto;
 
 /**
- * Abstract Unix Crypt hashing implementation.
- * The hashing algorithm depends on the chosen salt.
+ * Abstract Unix Crypt hash implementation.
+ * The hash algorithm depends on the chosen salt.
  *
  * @see    crypt()
  * @author Marcin Łojewski <dev@mlojewski.me>
@@ -52,7 +52,7 @@ abstract class AbstractCrypt extends AbstractAlgorithm
     }
 
     /**
-     * Generate a salt string for the hashing algorithm.
+     * Generate a salt string for the hash algorithm.
      *
      * @return string The salt string.
      */

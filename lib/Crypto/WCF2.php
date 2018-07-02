@@ -22,7 +22,7 @@
 namespace OCA\UserSQL\Crypto;
 
 /**
- * WCF2 hashing implementation.
+ * WCF2 hash implementation.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */

@@ -115,7 +115,7 @@ function print_select_options(
                     <input type="submit" id="user_sql-clear_cache" value="<?php p($l->t("Clear cache")); ?>">
                 </div>
                 <?php
-                $hashing = [];
+                $hashes = [];
                 foreach (glob(__DIR__ . "/../lib/Crypto/*.php") as $filename) {
                     $class = 'OCA\\UserSQL\\Crypto\\' . basename(substr($filename, 0, -4));
                     try {
@@ -123,13 +123,13 @@ function print_select_options(
                         if ($passwordAlgorithm instanceof
                             \OCA\UserSQL\Crypto\IPasswordAlgorithm
                         ) {
-                            $hashing[$class] = $passwordAlgorithm->getVisibleName();
+                            $hashes[$class] = $passwordAlgorithm->getVisibleName();
                         }
                     } catch (Throwable $e) {
                     }
                 }
 
-                print_select_options($l, "opt-crypto_class", "Hashing algorithm", $hashing, $_['opt.crypto_class']);
+                print_select_options($l, "opt-crypto_class", "Hash algorithm", $hashes, $_['opt.crypto_class']);
                 print_select_options($l, "opt-email_sync", "Email sync", ["" => "None", "initial" => "Synchronise only once", "force_nc"=>"Nextcloud always wins", "force_sql"=>"SQL always wins"], $_['opt.email_sync']);
                 print_select_options($l, "opt-home_mode", "Home mode", ["" => "Default", "query" => "Query", "static" => "Static"], $_['opt.home_mode']);
                 print_text_input($l, "opt-home_location", "Home Location", $_['opt.home_location']); ?>
