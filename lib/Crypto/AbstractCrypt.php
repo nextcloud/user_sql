@@ -56,8 +56,5 @@ abstract class AbstractCrypt extends AbstractAlgorithm
      *
      * @return string The salt string.
      */
-    protected function getSalt()
-    {
-        return "";
-    }
+    protected abstract function getSalt();
 }

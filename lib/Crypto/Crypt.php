@@ -56,4 +56,12 @@ class Crypt extends AbstractCrypt
     {
         return "Unix (Crypt)";
     }
+
+    /**
+     * Not used.
+     */
+    protected function getSalt()
+    {
+        return null;
+    }
 }
