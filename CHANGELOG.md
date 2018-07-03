@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - WoltLab Community Framework 2.x hashing algorithm
 - phpass hashing implementation
 - Support for salt column
+
 ### Changed
 - Example SQL script in README file
 
@@ -25,9 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [4.0.0-rc1]
 ### Added
-- New hashing algorithms: Argon2 Crypt (PHP 7.2 and above), Blowfish Crypt, Courier base64-encoded MD5, Courier base64-encoded SHA1,
-  Courier base64-encoded SHA256, Courier hexadecimal MD5, Extended DES Crypt, SHA256 Crypt,
-  SHA512 Crypt, SSHA512, Standard DES Crypt
+- New hashing algorithms: Argon2 Crypt (PHP 7.2 and above), Blowfish Crypt, Courier base64-encoded MD5, Courier base64-encoded SHA1, Courier base64-encoded SHA256, Courier hexadecimal MD5, Extended DES Crypt, SHA256 Crypt, SHA512 Crypt, SSHA512, Standard DES Crypt
 - Option to allow users to change their display names
 - Option to allow user to change its avatar 
 - Database query results cache
