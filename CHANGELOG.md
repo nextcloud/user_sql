@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - WoltLab Community Framework 2.x hashing algorithm
 - phpass hashing implementation
 - Support for salt column
+### Changed
+- Example SQL script in README file
 
 ### Fixed
 - Table and column autocomplete in settings panel
@@ -36,7 +38,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - The whole core implementation, which is NOT COMPATIBLE with the previous versions.
 - Minimum supported PHP version - 7.0
 
-## Removed
+### Removed
 - MySQL ENCRYPT() hashing implementation - Function is deprecated as of MySQL 5.7.6 and will be removed in a future MySQL release.
 - MySQL PASSWORD() hashing implementation - Function is deprecated as of MySQL 5.7.6 and will be removed in a future MySQL release.
 - Redmine hashing implementation - Cannot implement in new core system.
