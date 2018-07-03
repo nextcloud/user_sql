@@ -106,36 +106,33 @@ but be aware that some functionalities requires data changes (update queries).
 
 If you don't have any database model yet you can use below tables (MySQL):
 ```
-CREATE TABLE sql_users
+CREATE TABLE sql_user
 (
-  id                INT         AUTO_INCREMENT PRIMARY KEY,
-  username          VARCHAR(16) NOT NULL,
+  username          VARCHAR(16) PRIMARY KEY,
   display_name      TEXT        NULL,
   email             TEXT        NULL,
   home              TEXT        NULL,
   password          TEXT        NOT NULL,
   active            TINYINT(1)  NOT NULL DEFAULT '1',
-  can_change_avatar BOOLEAN     NOT NULL DEFAULT FALSE,
-  CONSTRAINT users_username_uindex UNIQUE (username)
+  can_change_avatar BOOLEAN     NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE sql_group
 (
-  id           INT         AUTO_INCREMENT PRIMARY KEY,
-  name         VARCHAR(16) NOT NULL,
+  name         VARCHAR(16) PRIMARY KEY,
   display_name TEXT        NULL,
-  admin        BOOLEAN     NOT NULL DEFAULT FALSE,
-  CONSTRAINT group_name_uindex UNIQUE (name)
+  admin        BOOLEAN     NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE sql_user_group
 (
-  id         INT         AUTO_INCREMENT PRIMARY KEY,
-  group_name VARCHAR(16) NOT NULL,
   username   VARCHAR(16) NOT NULL,
-  CONSTRAINT user_group_group_name_username_uindex UNIQUE (group_name, username),
-  INDEX user_group_group_name_index (group_name),
-  INDEX user_group_username_index (username)
+  group_name VARCHAR(16) NOT NULL,
+  PRIMARY KEY (username, group_name),
+  FOREIGN KEY (username) REFERENCES sql_user (username),
+  FOREIGN KEY (group_name) REFERENCES sql_group (name),
+  INDEX sql_user_group_username_idx (username),
+  INDEX sql_user_group_group_name_idx (group_name)
 );
 ```
 
