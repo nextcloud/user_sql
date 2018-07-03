@@ -17,14 +17,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Table and column autocomplete in settings panel
 
-## [v4.0.0-rc2]
+## [v4.0.0-rc2] - 2018-06-14
 ### Added
 - User active column
 
 ### Changed
 - Fixed "Use of undefined constant" error for Argon2 Crypt with PHP below 7.2.
 
-## [4.0.0-rc1]
+## [4.0.0-rc1] - 2018-06-13
 ### Added
 - New hashing algorithms: Argon2 Crypt (PHP 7.2 and above), Blowfish Crypt, Courier base64-encoded MD5, Courier base64-encoded SHA1, Courier base64-encoded SHA256, Courier hexadecimal MD5, Extended DES Crypt, SHA256 Crypt, SHA512 Crypt, SSHA512, Standard DES Crypt
 - Option to allow users to change their display names
