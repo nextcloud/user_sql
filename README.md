@@ -196,6 +196,7 @@ SHA1 | No salt supported. | 5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8
 SHA512 Whirlpool | No salt supported. | a96b16ebb691dbe968b0d66d0d924cff5cf5de5e0885181d00761d87f295b2bf3d3c66187c050fc01c196ff3acaa48d3561ffd170413346e934a32280d632f2e
 SSHA256 | Generates 32 chars salt. | {SSHA256}+WxTB3JxprNteeovsuSYtgI+UkVPA9lfwGoYkz3Ff7hjd1FSdmlTMkNsSExyR21KM3NvNTZ5V0p4WXJMUjFzUg==
 SSHA512 | Generates 32 chars salt. | {SSHA512}It+v1kAEUBbhMJYJ2swAtz+RLE6ispv/FB6G/ALhK/YWwEmrloY+0jzrWIfmu+rWUXp8u0Tg4jLXypC5oXAW00IyYnRVdEZJbE9wak96bkNRVWFCYmlJNWxrdTA0QmhL
+WoltLab Community Framework 2.x | Double salted bcrypt. | $2a$08$XEQDKNU/Vbootwxv5Gp7gujxFX/RUFsZLvQPYM435Dd3/p17fto02
 
 ## Development
 
