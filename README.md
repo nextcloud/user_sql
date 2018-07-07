@@ -68,7 +68,7 @@ Name | Description | Details
 **Password** | Password hash column. | Mandatory for user backend.
 **Display name** | Display name column. | Optional.
 **Active** | Flag indicating if user can log in. | Optional.<br/>Default: true.
-**Can change avatar** | Flag indicating if user can change its avatar. | Optional.<br/>Default: false.
+**Provide avatar** | Flag indicating if user can change its avatar. | Optional.<br/>Default: false.
 **Salt** | Salt which is appended to password when checking or changing the password. | Optional.
 
 #### Group table
@@ -108,13 +108,13 @@ If you don't have any database model yet you can use below tables (MySQL):
 ```
 CREATE TABLE sql_user
 (
-  username          VARCHAR(16) PRIMARY KEY,
-  display_name      TEXT        NULL,
-  email             TEXT        NULL,
-  home              TEXT        NULL,
-  password          TEXT        NOT NULL,
-  active            TINYINT(1)  NOT NULL DEFAULT '1',
-  can_change_avatar BOOLEAN     NOT NULL DEFAULT FALSE
+  username       VARCHAR(16) PRIMARY KEY,
+  display_name   TEXT        NULL,
+  email          TEXT        NULL,
+  home           TEXT        NULL,
+  password       TEXT        NOT NULL,
+  active         TINYINT(1)  NOT NULL DEFAULT '1',
+  provide_avatar BOOLEAN     NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE sql_group
