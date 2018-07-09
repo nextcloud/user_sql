@@ -24,7 +24,7 @@ namespace OCA\UserSQL\Crypto;
 use OCP\IL10N;
 
 /**
- * Standard DES Crypt hashing implementation.
+ * Standard DES Crypt hash implementation.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */

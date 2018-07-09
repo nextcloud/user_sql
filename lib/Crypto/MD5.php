@@ -24,7 +24,7 @@ namespace OCA\UserSQL\Crypto;
 use OCP\IL10N;
 
 /**
- * MD5 hashing implementation.
+ * MD5 hash implementation.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */

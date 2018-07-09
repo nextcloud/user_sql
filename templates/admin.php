@@ -71,6 +71,16 @@ function print_select_options(
         echo "</option>";
     }
 
+
+#54: Merge develop-14 into develop Conflicts
+Resolved all conflicts
+2 conflicting files
+CHANGELOG.md
+CHANGELOG.md
+admin.php
+templates/admin.php
+templates/admin.php
+Resolved
     echo "</select>";
     echo "</label></div>";
 }
@@ -115,7 +125,7 @@ function print_select_options(
                     <input type="submit" id="user_sql-clear_cache" value="<?php p($l->t("Clear cache")); ?>">
                 </div>
                 <?php
-                $hashing = [];
+                $hashes = [];
                 foreach (glob(__DIR__ . "/../lib/Crypto/*.php") as $filename) {
                     $class = "OCA\\UserSQL\\Crypto\\" . basename(substr($filename, 0, -4));
                     try {
@@ -123,14 +133,15 @@ function print_select_options(
                         if ($passwordAlgorithm instanceof
                             \OCA\UserSQL\Crypto\IPasswordAlgorithm
                         ) {
-                            $hashing[$class] = $passwordAlgorithm->getVisibleName();
+                            $hashes[$class] = $passwordAlgorithm->getVisibleName();
                         }
                     } catch (Throwable $e) {
                     }
                 }
 
-                print_select_options($l, "opt-crypto_class", "Hashing algorithm", $hashing, $_["opt.crypto_class"]);
+                print_select_options($l, "opt-crypto_class", "Hash algorithm", $hashes, $_["opt.crypto_class"]);
                 print_select_options($l, "opt-email_sync", "Email sync", ["" => "None", "initial" => "Synchronise only once", "force_nc"=>"Nextcloud always wins", "force_sql"=>"SQL always wins"], $_["opt.email_sync"]);
+                print_select_options($l, "opt-quota_sync", "Quota sync", ["" => "None", "initial" => "Synchronise only once", "force_nc"=>"Nextcloud always wins", "force_sql"=>"SQL always wins"], $_["opt.quota_sync"]);
                 print_select_options($l, "opt-home_mode", "Home mode", ["" => "Default", "query" => "Query", "static" => "Static"], $_["opt.home_mode"]);
                 print_text_input($l, "opt-home_location", "Home Location", $_["opt.home_location"]); ?>
             </fieldset>
@@ -144,11 +155,12 @@ function print_select_options(
                 <?php
                 print_text_input($l, "db-table-user-column-uid", "Username", $_["db.table.user.column.uid"]);
                 print_text_input($l, "db-table-user-column-email", "Email", $_["db.table.user.column.email"]);
+                print_text_input($l, "db-table-user-column-quota", "Quota", $_["db.table.user.column.quota"]);
                 print_text_input($l, "db-table-user-column-home", "Home", $_["db.table.user.column.home"]);
                 print_text_input($l, "db-table-user-column-password", "Password", $_["db.table.user.column.password"]);
                 print_text_input($l, "db-table-user-column-name", "Display name", $_["db.table.user.column.name"]);
                 print_text_input($l, "db-table-user-column-active", "Active", $_["db.table.user.column.active"]);
-                print_text_input($l, "db-table-user-column-avatar", "Can change avatar", $_["db.table.user.column.avatar"]);
+                print_text_input($l, "db-table-user-column-avatar", "Provide avatar", $_["db.table.user.column.avatar"]);
                 print_text_input($l, "db-table-user-column-salt", "Salt", $_["db.table.user.column.salt"]); ?>
             </fieldset>
         </div>

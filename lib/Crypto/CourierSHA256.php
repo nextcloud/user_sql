@@ -24,7 +24,7 @@ namespace OCA\UserSQL\Crypto;
 use OCP\IL10N;
 
 /**
- * Courier SHA256 hashing implementation.
+ * Courier SHA256 hash implementation.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */

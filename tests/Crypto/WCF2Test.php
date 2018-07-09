@@ -19,41 +19,44 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace OCA\UserSQL\Crypto;
+namespace Tests\UserSQL\Crypto;
 
+use OCA\UserSQL\Crypto\IPasswordAlgorithm;
+use OCA\UserSQL\Crypto\WCF2;
 use OCP\IL10N;
+use Test\TestCase;
 
 /**
- * MD5 Crypt hash implementation.
+ * Unit tests for class <code>WCF2</code>.
  *
- * @see    crypt()
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class CryptMD5 extends AbstractCrypt
+class WCF2Test extends TestCase
 {
     /**
-     * The class constructor.
-     *
-     * @param IL10N $localization The localization service.
+     * @var IPasswordAlgorithm
      */
-    public function __construct(IL10N $localization)
+    private $crypto;
+
+    public function testCheckPassword()
     {
-        parent::__construct($localization);
+        $this->assertTrue(
+            $this->crypto->checkPassword(
+                "password",
+                "$2a$08\$XEQDKNU/Vbootwxv5Gp7gujxFX/RUFsZLvQPYM435Dd3/p17fto02"
+            )
+        );
     }
 
-    /**
-     * @inheritdoc
-     */
-    protected function getSalt()
+    public function testPasswordHash()
     {
-        return "$1$" . Utils::randomString(8, self::SALT_ALPHABET) . "$";
+        $hash = $this->crypto->getPasswordHash("password");
+        $this->assertTrue($this->crypto->checkPassword("password", $hash));
     }
 
-    /**
-     * @inheritdoc
-     */
-    protected function getAlgorithmName()
+    protected function setUp()
     {
-        return "MD5 (Crypt)";
+        parent::setUp();
+        $this->crypto = new WCF2($this->createMock(IL10N::class));
     }
 }

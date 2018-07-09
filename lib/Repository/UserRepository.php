@@ -107,6 +107,8 @@ class UserRepository
             Query::SAVE_USER, [
                 Query::NAME_PARAM => $user->name,
                 Query::PASSWORD_PARAM => $user->password,
+                Query::EMAIL_PARAM => $user->email,
+                Query::QUOTA_PARAM => $user->quota,
                 Query::UID_PARAM => $user->uid
             ]
         );

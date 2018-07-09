@@ -6,9 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
-- SHA512 Whirlpool hashing algorithm
-- phpass hashing implementation
+- SHA512 Whirlpool hash algorithm
+- WoltLab Community Framework 2.x hash algorithm
+- phpass hash implementation
 - Support for salt column
+- User quota synchronization
+
+### Changed
+- Example SQL script in README file
+- Fixed misspelling
 
 ### Changed
 - Support for Nextcloud 14 only
@@ -18,18 +24,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Table and column autocomplete in settings panel
 
-## [4.0.0-rc2]
+## [4.0.0-rc2] - 2018-06-14
 ### Added
 - User active column
 
 ### Changed
 - Fixed "Use of undefined constant" error for Argon2 Crypt with PHP below 7.2.
 
-## [4.0.0-rc1]
+## [4.0.0-rc1] - 2018-06-13
 ### Added
-- New hashing algorithms: Argon2 Crypt (PHP 7.2 and above), Blowfish Crypt, Courier base64-encoded MD5, Courier base64-encoded SHA1,
-  Courier base64-encoded SHA256, Courier hexadecimal MD5, Extended DES Crypt, SHA256 Crypt,
-  SHA512 Crypt, SSHA512, Standard DES Crypt
+- New hash algorithms: Argon2 Crypt (PHP 7.2 and above), Blowfish Crypt, Courier base64-encoded MD5, Courier base64-encoded SHA1, Courier base64-encoded SHA256, Courier hexadecimal MD5, Extended DES Crypt, SHA256 Crypt, SHA512 Crypt, SSHA512, Standard DES Crypt
 - Option to allow users to change their display names
 - Option to allow user to change its avatar 
 - Database query results cache
@@ -40,10 +44,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - The whole core implementation, which is NOT COMPATIBLE with the previous versions.
 - Minimum supported PHP version - 7.0
 
-## Removed
-- MySQL ENCRYPT() hashing implementation - Function is deprecated as of MySQL 5.7.6 and will be removed in a future MySQL release.
-- MySQL PASSWORD() hashing implementation - Function is deprecated as of MySQL 5.7.6 and will be removed in a future MySQL release.
-- Redmine hashing implementation - Cannot implement in new core system.
+### Removed
+- MySQL ENCRYPT() hash implementation - Function is deprecated as of MySQL 5.7.6 and will be removed in a future MySQL release.
+- MySQL PASSWORD() hash implementation - Function is deprecated as of MySQL 5.7.6 and will be removed in a future MySQL release.
+- Redmine hash implementation - Cannot implement in new core system.
 - User active column - Use database view instead
 - Domain support
 

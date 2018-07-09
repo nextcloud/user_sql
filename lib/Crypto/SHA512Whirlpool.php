@@ -24,7 +24,7 @@ namespace OCA\UserSQL\Crypto;
 use OCP\IL10N;
 
 /**
- * SHA512 Whirlpool hashing implementation.
+ * SHA512 Whirlpool hash implementation.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */

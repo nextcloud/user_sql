@@ -24,7 +24,7 @@ namespace OCA\UserSQL\Crypto;
 use OCP\IL10N;
 
 /**
- * phpass hashing implementation.
+ * phpass hash implementation.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */

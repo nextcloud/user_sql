@@ -37,6 +37,10 @@ class User
      */
     public $email;
     /**
+     * @var string The user quota.
+     */
+    public $quota;
+    /**
      * @var string The user's display name.
      */
     public $name;

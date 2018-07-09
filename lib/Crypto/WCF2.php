@@ -21,24 +21,28 @@
 
 namespace OCA\UserSQL\Crypto;
 
-use OCP\IL10N;
-
 /**
- * MD5 Crypt hash implementation.
+ * WCF2 hash implementation.
  *
- * @see    crypt()
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class CryptMD5 extends AbstractCrypt
+class WCF2 extends AbstractCrypt
 {
     /**
-     * The class constructor.
-     *
-     * @param IL10N $localization The localization service.
+     * @inheritdoc
      */
-    public function __construct(IL10N $localization)
+    public function checkPassword($password, $dbHash)
     {
-        parent::__construct($localization);
+        return hash_equals($dbHash, crypt(crypt($password, $dbHash), $dbHash));
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getPasswordHash($password)
+    {
+        $salt = $this->getSalt();
+        return crypt(crypt($password, $salt), $salt);
     }
 
     /**
@@ -46,7 +50,7 @@ class CryptMD5 extends AbstractCrypt
      */
     protected function getSalt()
     {
-        return "$1$" . Utils::randomString(8, self::SALT_ALPHABET) . "$";
+        return "$2a$08$" . Utils::randomString(22, self::SALT_ALPHABET) . "$";
     }
 
     /**
@@ -54,6 +58,6 @@ class CryptMD5 extends AbstractCrypt
      */
     protected function getAlgorithmName()
     {
-        return "MD5 (Crypt)";
+        return "WoltLab Community Framework 2.x";
     }
 }

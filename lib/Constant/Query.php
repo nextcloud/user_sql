@@ -39,9 +39,11 @@ final class Query
     const FIND_USERS = "find_users";
     const SAVE_USER = "save_user";
 
+    const EMAIL_PARAM = "email";
     const GID_PARAM = "gid";
     const NAME_PARAM = "name";
     const PASSWORD_PARAM = "password";
+    const QUOTA_PARAM = "quota";
     const SEARCH_PARAM = "search";
     const UID_PARAM = "uid";
 }

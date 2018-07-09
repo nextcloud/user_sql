@@ -43,6 +43,12 @@ class CleartextTest extends TestCase
         $this->assertTrue($this->crypto->checkPassword("password", "password"));
     }
 
+    public function testPasswordHash()
+    {
+        $hash = $this->crypto->getPasswordHash("password");
+        $this->assertTrue($this->crypto->checkPassword("password", $hash));
+    }
+
     protected function setUp()
     {
         parent::setUp();

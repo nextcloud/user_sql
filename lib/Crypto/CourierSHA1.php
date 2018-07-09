@@ -24,7 +24,7 @@ namespace OCA\UserSQL\Crypto;
 use OCP\IL10N;
 
 /**
- * Courier SHA1 hashing implementation.
+ * Courier SHA1 hash implementation.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
