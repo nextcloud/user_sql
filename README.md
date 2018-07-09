@@ -51,7 +51,8 @@ Name | Description | Details
 **Allow password change** | Can user change its password. The password change is propagated to the database. See [Hash algorithms](#hash-algorithms). | Optional.<br/>Default: false.
 **Use cache** | Use database query results cache. The cache can be cleared any time with the *Clear cache* button click. | Optional.<br/>Default: false.
 **Hash algorithm** | How users passwords are stored in the database. See [Hash algorithms](#hash-algorithms). | Mandatory.
-**Email sync** | Sync e-mail address with the Nextcloud.<br/>- *None* - Disables this feature. This is the default option.<br/>- *Synchronise only once* - Copy the e-mail address to the Nextcloud storage if its not set.<br/>- *Nextcloud always wins* - Always copy the e-mail address to the database. This updates the user table.<br/>- *SQL always wins* - Always copy the e-mail address to the Nextcloud storage. | Optional.<br/>Default: *None*.<br/>Requires: user *Email* column.
+**Email sync** | Sync e-mail address with the Nextcloud.<br/>- *None* - Disables this feature. This is the default option.<br/>- *Synchronise only once* - Copy the e-mail address to the Nextcloud preferences if its not set.<br/>- *Nextcloud always wins* - Always copy the e-mail address to the database. This updates the user table.<br/>- *SQL always wins* - Always copy the e-mail address to the Nextcloud preferences. | Optional.<br/>Default: *None*.<br/>Requires: user *Email* column.
+**Quota sync** | Sync user quota with the Nextcloud.<br/>- *None* - Disables this feature. This is the default option.<br/>- *Synchronise only once* - Copy the user quota to the Nextcloud preferences if its not set.<br/>- *Nextcloud always wins* - Always copy the user quota to the database. This updates the user table.<br/>- *SQL always wins* - Always copy the user quota to the Nextcloud preferences. | Optional.<br/>Default: *None*.<br/>Requires: user *Quota* column.
 **Home mode** | User storage path.<br/>- *Default* - Let the Nextcloud manage this. The default option.<br/>- *Query* - Use location from the user table pointed by the *home* column.<br/>- *Static* - Use static location. The `%u` variable is replaced with the username of the user. | Optional<br/>Default: *Default*.
 **Home Location** | User storage path for the `static` *home mode*. | Mandatory if the *Home mode* is set to `Static`.
 
@@ -64,6 +65,7 @@ Name | Description | Details
 **Table name** | The table name. | Mandatory for user backend.
 **Username** | Username column. | Mandatory for user backend.
 **Email** | E-mail column. | Mandatory for *Email sync* option.
+**Quota** | Quota column. | Mandatory for *Quota sync* option.
 **Home** | Home path column. | Mandatory for `Query` *Home sync* option.
 **Password** | Password hash column. | Mandatory for user backend.
 **Display name** | Display name column. | Optional.
@@ -111,6 +113,7 @@ CREATE TABLE sql_user
   username       VARCHAR(16) PRIMARY KEY,
   display_name   TEXT        NULL,
   email          TEXT        NULL,
+  quota          TEXT        NULL,
   home           TEXT        NULL,
   password       TEXT        NOT NULL,
   active         TINYINT(1)  NOT NULL DEFAULT '1',

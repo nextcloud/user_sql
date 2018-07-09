@@ -10,9 +10,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - WoltLab Community Framework 2.x hash algorithm
 - phpass hash implementation
 - Support for salt column
+- User quota synchronization
 
 ### Changed
 - Example SQL script in README file
+- Fixed misspelling
 
 ### Fixed
 - Table and column autocomplete in settings panel

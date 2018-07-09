@@ -34,7 +34,7 @@ final class App
     const HOME_QUERY = "query";
     const HOME_STATIC = "static";
 
-    const EMAIL_FORCE_NC = "force_nc";
-    const EMAIL_FORCE_SQL = "force_sql";
-    const EMAIL_INITIAL = "initial";
+    const SYNC_FORCE_NC = "force_nc";
+    const SYNC_FORCE_SQL = "force_sql";
+    const SYNC_INITIAL = "initial";
 }

@@ -131,6 +131,7 @@ function print_select_options(
 
                 print_select_options($l, "opt-crypto_class", "Hash algorithm", $hashes, $_['opt.crypto_class']);
                 print_select_options($l, "opt-email_sync", "Email sync", ["" => "None", "initial" => "Synchronise only once", "force_nc"=>"Nextcloud always wins", "force_sql"=>"SQL always wins"], $_['opt.email_sync']);
+                print_select_options($l, "opt-quota_sync", "Quota sync", ["" => "None", "initial" => "Synchronise only once", "force_nc"=>"Nextcloud always wins", "force_sql"=>"SQL always wins"], $_['opt.quota_sync']);
                 print_select_options($l, "opt-home_mode", "Home mode", ["" => "Default", "query" => "Query", "static" => "Static"], $_['opt.home_mode']);
                 print_text_input($l, "opt-home_location", "Home Location", $_['opt.home_location']); ?>
             </fieldset>
@@ -144,6 +145,7 @@ function print_select_options(
                 <?php
                 print_text_input($l, "db-table-user-column-uid", "Username", $_['db.table.user.column.uid']);
                 print_text_input($l, "db-table-user-column-email", "Email", $_['db.table.user.column.email']);
+                print_text_input($l, "db-table-user-column-quota", "Quota", $_['db.table.user.column.quota']);
                 print_text_input($l, "db-table-user-column-home", "Home", $_['db.table.user.column.home']);
                 print_text_input($l, "db-table-user-column-password", "Password", $_['db.table.user.column.password']);
                 print_text_input($l, "db-table-user-column-name", "Display name", $_['db.table.user.column.name']);
