@@ -10,8 +10,8 @@
     </description>
     <version>4.0.0-dev</version>
     <licence>agpl</licence>
-    <author>Andreas Böhler &lt;dev (at) aboehler (dot) at&gt;</author>
-    <author>Marcin Łojewski &lt;dev@mlojewski.me&gt;</author>
+    <author>Marcin Łojewski</author>
+    <author>Andreas Böhler</author>
     <namespace>UserSQL</namespace>
     <bugs>https://github.com/nextcloud/user_sql/issues</bugs>
     <repository>https://github.com/nextcloud/user_sql</repository>
@@ -22,7 +22,7 @@
     <category>auth</category>
     <dependencies>
         <php min-version="7.0"/>
-        <nextcloud min-version="13" max-version="13"/>
+        <nextcloud min-version="14" max-version="14"/>
     </dependencies>
     <settings>
         <admin>\OCA\UserSQL\Settings\Admin</admin>
