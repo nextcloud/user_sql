@@ -41,7 +41,7 @@ class CryptExtendedDESTest extends TestCase
     public function testCheckPassword()
     {
         $this->assertTrue(
-            $this->crypto->checkPassword("password", "..UZoIyj/Hy/c")
+            $this->crypto->checkPassword("password", "cDRpdxPmHpzS.")
         );
     }
 

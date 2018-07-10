@@ -68,6 +68,19 @@ class CryptBlowfish extends AbstractAlgorithm
     }
 
     /**
+     * @inheritdoc
+     */
+    public function configuration()
+    {
+        return [
+            [
+                "name" => "cost", "visible_name" => "Cost", "default" => 10,
+                "min" => 4, "max" => 31
+            ]
+        ];
+    }
+
+    /**
      * Get the algorithm name.
      *
      * @return string The algorithm name.

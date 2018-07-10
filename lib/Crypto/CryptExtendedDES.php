@@ -51,6 +51,19 @@ class CryptExtendedDES extends AbstractCrypt
     /**
      * @inheritdoc
      */
+    public function configuration()
+    {
+        return [
+            [
+                "name" => "iterations", "visible_name" => "Iterations", "default" => 1000,
+                "min" => 0, "max" => 16777215
+            ]
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected function getSalt()
     {
         return self::encodeIterationCount($this->iterationCount)
@@ -76,7 +89,7 @@ class CryptExtendedDES extends AbstractCrypt
         while ($number) {
             $rem = $number % $base;
             $number = (int)($number / $base);
-            $arr[] = $alphabet[$rem];
+            $chars[] = $alphabet[$rem];
         }
 
         return str_pad(implode($chars), 4, ".", STR_PAD_RIGHT);

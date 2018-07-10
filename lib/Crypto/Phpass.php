@@ -146,6 +146,19 @@ class Phpass extends AbstractAlgorithm
     /**
      * @inheritdoc
      */
+    public function configuration()
+    {
+        return [
+            [
+                "name" => "iterations", "visible_name" => "Iterations (log2)",
+                "default" => 8, "min" => 4, "max" => 31
+            ]
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected function getAlgorithmName()
     {
         return "Portable PHP password";

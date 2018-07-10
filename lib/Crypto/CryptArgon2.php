@@ -103,6 +103,27 @@ class CryptArgon2 extends AbstractAlgorithm
     /**
      * @inheritdoc
      */
+    public function configuration()
+    {
+        return [
+            [
+                "name" => "memoryCost", "visible_name" => "Memory cost (KiB)",
+                "default" => PASSWORD_ARGON2_DEFAULT_MEMORY_COST, "min" => 1, "max" => 1048576
+            ],
+            [
+                "name" => "timeCost", "visible_name" => "Time cost",
+                "default" => PASSWORD_ARGON2_DEFAULT_TIME_COST, "min" => 1, "max" => 1024
+            ],
+            [
+                "name" => "threads", "visible_name" => "Threads",
+                "default" => PASSWORD_ARGON2_DEFAULT_THREADS, "min" => 1, "max" => 1024
+            ]
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected function getAlgorithmName()
     {
         return "Argon2 (Crypt)";

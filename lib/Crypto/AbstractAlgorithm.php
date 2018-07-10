@@ -74,4 +74,12 @@ abstract class AbstractAlgorithm implements IPasswordAlgorithm
      * @inheritdoc
      */
     public abstract function getPasswordHash($password);
+
+    /**
+     * @inheritdoc
+     */
+    public function configuration()
+    {
+        return [];
+    }
 }

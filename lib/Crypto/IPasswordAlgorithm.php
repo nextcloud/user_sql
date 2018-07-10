@@ -56,4 +56,13 @@ interface IPasswordAlgorithm
      * @return boolean True if the password is correct, false otherwise.
      */
     public function checkPassword($password, $dbHash);
+
+    /**
+     * Configuration for the algorithm.
+     * The return array should contain entries which define keys:
+     * name, visible_name, default, min, max.
+     *
+     * @return array The configuration array.
+     */
+    public function configuration();
 }
