@@ -37,6 +37,10 @@ class User
      */
     public $email;
     /**
+     * @var string The user quota.
+     */
+    public $quota;
+    /**
      * @var string The user's display name.
      */
     public $name;
@@ -56,4 +60,8 @@ class User
      * @var bool Can user change its avatar.
      */
     public $avatar;
+    /**
+     * @var string The password's salt.
+     */
+    public $salt;
 }

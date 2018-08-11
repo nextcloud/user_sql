@@ -24,7 +24,7 @@ namespace OCA\UserSQL\Crypto;
 use OCP\IL10N;
 
 /**
- * Extended DES Crypt hashing implementation.
+ * Extended DES Crypt hash implementation.
  *
  * @see    crypt()
  * @author Marcin Łojewski <dev@mlojewski.me>

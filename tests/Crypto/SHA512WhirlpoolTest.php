@@ -19,41 +19,44 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace OCA\UserSQL\Crypto;
+namespace Tests\UserSQL\Crypto;
 
+use OCA\UserSQL\Crypto\SHA512Whirlpool;
+use OCA\UserSQL\Crypto\IPasswordAlgorithm;
 use OCP\IL10N;
+use Test\TestCase;
 
 /**
- * MD5 Crypt hash implementation.
+ * Unit tests for class <code>SHA512Whirlpool</code>.
  *
- * @see    crypt()
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class CryptMD5 extends AbstractCrypt
+class SHA512WhirlpoolTest extends TestCase
 {
     /**
-     * The class constructor.
-     *
-     * @param IL10N $localization The localization service.
+     * @var IPasswordAlgorithm
      */
-    public function __construct(IL10N $localization)
+    private $crypto;
+
+    public function testCheckPassword()
     {
-        parent::__construct($localization);
+        $this->assertTrue(
+            $this->crypto->checkPassword(
+                "password",
+                "a96b16ebb691dbe968b0d66d0d924cff5cf5de5e0885181d00761d87f295b2bf3d3c66187c050fc01c196ff3acaa48d3561ffd170413346e934a32280d632f2e"
+            )
+        );
     }
 
-    /**
-     * @inheritdoc
-     */
-    protected function getSalt()
+    public function testPasswordHash()
     {
-        return "$1$" . Utils::randomString(8, self::SALT_ALPHABET) . "$";
+        $hash = $this->crypto->getPasswordHash("password");
+        $this->assertTrue($this->crypto->checkPassword("password", $hash));
     }
 
-    /**
-     * @inheritdoc
-     */
-    protected function getAlgorithmName()
+    protected function setUp()
     {
-        return "MD5 (Crypt)";
+        parent::setUp();
+        $this->crypto = new SHA512Whirlpool($this->createMock(IL10N::class));
     }
 }

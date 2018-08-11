@@ -24,7 +24,7 @@ namespace OCA\UserSQL\Crypto;
 use OCP\IL10N;
 
 /**
- * Unix Crypt hashing implementation.
+ * Unix Crypt hash implementation.
  *
  * @see    crypt()
  * @author Marcin Łojewski <dev@mlojewski.me>
@@ -55,5 +55,13 @@ class Crypt extends AbstractCrypt
     protected function getAlgorithmName()
     {
         return "Unix (Crypt)";
+    }
+
+    /**
+     * Not used.
+     */
+    protected function getSalt()
+    {
+        return null;
     }
 }

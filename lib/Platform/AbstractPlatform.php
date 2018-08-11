@@ -49,12 +49,13 @@ abstract class AbstractPlatform
     /**
      * Get all the tables defined in the database.
      *
-     * @param bool $schemaPrefix Show schema name in the results.
+     * @param string $phrase       Show only tables containing given phrase.
+     * @param bool   $schemaPrefix Show schema name in the results.
      *
      * @return array Array with table names.
      * @throws DBALException On a database exception.
      */
-    public function getTables($schemaPrefix = false)
+    public function getTables($phrase = "", $schemaPrefix = false)
     {
         $platform = $this->connection->getDatabasePlatform();
 
@@ -68,13 +69,17 @@ abstract class AbstractPlatform
         $result = $this->connection->executeQuery($queryTables);
         while ($row = $result->fetch()) {
             $name = $this->getTableName($row, $schemaPrefix);
-            $tables[] = $name;
+            if (preg_match("/.*$phrase.*/i", $name)) {
+                $tables[] = $name;
+            }
         }
 
         $result = $this->connection->executeQuery($queryViews);
         while ($row = $result->fetch()) {
             $name = $this->getViewName($row, $schemaPrefix);
-            $tables[] = $name;
+            if (preg_match("/.*$phrase.*/i", $name)) {
+                $tables[] = $name;
+            }
         }
 
         return $tables;
@@ -103,12 +108,13 @@ abstract class AbstractPlatform
     /**
      * Get all the columns defined in the table.
      *
-     * @param string $table The table name.
+     * @param string $table  The table name.
+     * @param string $phrase Show only columns containing given phrase.
      *
      * @return array Array with column names.
      * @throws DBALException On a database exception.
      */
-    public function getColumns($table)
+    public function getColumns($table, $phrase = "")
     {
         $platform = $this->connection->getDatabasePlatform();
         $query = $platform->getListTableColumnsSQL($table);
@@ -118,7 +124,9 @@ abstract class AbstractPlatform
 
         while ($row = $result->fetch()) {
             $name = $this->getColumnName($row);
-            $columns[] = $name;
+            if (preg_match("/.*$phrase.*/i", $name)) {
+                $columns[] = $name;
+            }
         }
 
         return $columns;

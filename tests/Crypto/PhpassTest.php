@@ -19,41 +19,43 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace OCA\UserSQL\Crypto;
+namespace Tests\UserSQL\Crypto;
 
+use OCA\UserSQL\Crypto\Phpass;
+use OCA\UserSQL\Crypto\IPasswordAlgorithm;
 use OCP\IL10N;
+use Test\TestCase;
 
 /**
- * MD5 Crypt hash implementation.
+ * Unit tests for class <code>PhpassTest</code>.
  *
- * @see    crypt()
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class CryptMD5 extends AbstractCrypt
+class PhpassTest extends TestCase
 {
     /**
-     * The class constructor.
-     *
-     * @param IL10N $localization The localization service.
+     * @var IPasswordAlgorithm
      */
-    public function __construct(IL10N $localization)
+    private $crypto;
+
+    public function testCheckPassword()
     {
-        parent::__construct($localization);
+        $this->assertTrue(
+            $this->crypto->checkPassword(
+                "password", "\$P\$BxrwraqNTi4as0EI.IpiA/K.muk9ke/"
+            )
+        );
     }
 
-    /**
-     * @inheritdoc
-     */
-    protected function getSalt()
+    public function testPasswordHash()
     {
-        return "$1$" . Utils::randomString(8, self::SALT_ALPHABET) . "$";
+        $hash = $this->crypto->getPasswordHash("password");
+        $this->assertTrue($this->crypto->checkPassword("password", $hash));
     }
 
-    /**
-     * @inheritdoc
-     */
-    protected function getAlgorithmName()
+    protected function setUp()
     {
-        return "MD5 (Crypt)";
+        parent::setUp();
+        $this->crypto = new Phpass($this->createMock(IL10N::class));
     }
 }

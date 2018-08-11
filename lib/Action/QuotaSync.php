@@ -30,11 +30,11 @@ use OCP\IConfig;
 use OCP\ILogger;
 
 /**
- * Synchronizes the user email address.
+ * Synchronizes the user quota.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class EmailSync implements IUserAction
+class QuotaSync implements IUserAction
 {
     /**
      * @var string The application name.
@@ -84,41 +84,41 @@ class EmailSync implements IUserAction
     public function doAction(User $user)
     {
         $this->logger->debug(
-            "Entering EmailSync#doAction($user->uid)", ["app" => $this->appName]
+            "Entering QuotaSync#doAction($user->uid)", ["app" => $this->appName]
         );
 
-        $ncMail = $this->config->getUserValue(
-            $user->uid, "settings", "email", ""
+        $ncQuota = $this->config->getUserValue(
+            $user->uid, "files", "quota", ""
         );
 
         $result = false;
 
-        switch ($this->properties[Opt::EMAIL_SYNC]) {
+        switch ($this->properties[Opt::QUOTA_SYNC]) {
         case App::SYNC_INITIAL:
-            if (empty($ncMail) && !empty($user->email)) {
+            if (empty($ncQuota) && !empty($user->quota)) {
                 $this->config->setUserValue(
-                    $user->uid, "settings", "email", $user->email
+                    $user->uid, "files", "quota", $user->quota
                 );
             }
 
             $result = true;
             break;
         case App::SYNC_FORCE_NC:
-            if (!empty($ncMail) && $user->email !== $ncMail) {
+            if (!empty($ncQuota) && $user->quota !== $ncQuota) {
                 $user = $this->userRepository->findByUid($user->uid);
                 if (!($user instanceof User)) {
                     break;
                 }
 
-                $user->email = $ncMail;
+                $user->quota = $ncQuota;
                 $result = $this->userRepository->save($user);
             }
 
             break;
         case App::SYNC_FORCE_SQL:
-            if (!empty($user->email) && $user->email !== $ncMail) {
+            if (!empty($user->quota) && $user->quota !== $ncQuota) {
                 $this->config->setUserValue(
-                    $user->uid, "settings", "email", $user->email
+                    $user->uid, "files", "quota", $user->quota
                 );
             }
 
@@ -127,7 +127,7 @@ class EmailSync implements IUserAction
         }
 
         $this->logger->debug(
-            "Returning EmailSync#doAction($user->uid): " . ($result ? "true"
+            "Returning QuotaSync#doAction($user->uid): " . ($result ? "true"
                 : "false"),
             ["app" => $this->appName]
         );

@@ -24,7 +24,7 @@ namespace OCA\UserSQL\Crypto;
 use OCP\IL10N;
 
 /**
- * Courier MD5 hashing implementation.
+ * Courier MD5 hash implementation.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */

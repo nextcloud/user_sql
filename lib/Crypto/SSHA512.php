@@ -24,7 +24,7 @@ namespace OCA\UserSQL\Crypto;
 use OCP\IL10N;
 
 /**
- * SSHA512 hashing implementation.
+ * SSHA512 hash implementation.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */

@@ -24,12 +24,11 @@ namespace OCA\UserSQL\Crypto;
 use OCP\IL10N;
 
 /**
- * MD5 Crypt hash implementation.
+ * SHA512 Whirlpool hash implementation.
  *
- * @see    crypt()
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class CryptMD5 extends AbstractCrypt
+class SHA512Whirlpool extends AbstractAlgorithm
 {
     /**
      * The class constructor.
@@ -44,9 +43,9 @@ class CryptMD5 extends AbstractCrypt
     /**
      * @inheritdoc
      */
-    protected function getSalt()
+    public function getPasswordHash($password)
     {
-        return "$1$" . Utils::randomString(8, self::SALT_ALPHABET) . "$";
+        return hash('sha512', hash('whirlpool', $password));
     }
 
     /**
@@ -54,6 +53,6 @@ class CryptMD5 extends AbstractCrypt
      */
     protected function getAlgorithmName()
     {
-        return "MD5 (Crypt)";
+        return "SHA512 Whirlpool";
     }
 }

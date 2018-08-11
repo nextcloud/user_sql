@@ -47,6 +47,12 @@ class CryptMD5Test extends TestCase
         );
     }
 
+    public function testPasswordHash()
+    {
+        $hash = $this->crypto->getPasswordHash("password");
+        $this->assertTrue($this->crypto->checkPassword("password", $hash));
+    }
+
     protected function setUp()
     {
         parent::setUp();

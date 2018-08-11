@@ -50,10 +50,11 @@ Name | Description | Details
 **Allow display name change** | With this option enabled user can change its display name. The display name change is propagated to the database. | Optional.<br/>Default: false.<br/>Requires: user *Display name* column.
 **Allow password change** | Can user change its password. The password change is propagated to the database. See [Hash algorithms](#hash-algorithms). | Optional.<br/>Default: false.
 **Use cache** | Use database query results cache. The cache can be cleared any time with the *Clear cache* button click. | Optional.<br/>Default: false.
-**Hashing algorithm** | How users passwords are stored in the database. See [Hash algorithms](#hash-algorithms). | Mandatory.
-**Email sync** | Sync e-mail address with the Nextcloud.<br/>- *None* - Disables this feature. This is the default option.<br/>- *Synchronise only once* - Copy the e-mail address to the Nextcloud storage if its not set.<br/>- *Nextcloud always wins* - Always copy the e-mail address to the database. This updates the user table.<br/>- *SQL always wins* - Always copy the e-mail address to the Nextcloud storage. | Optional.<br/>Default: *None*.<br/>Requires: user *Email* column.
-**Home mode** | User storage path.<br/>- *Default* - Let the Nextcloud manage this. The default option.<br/>- *Query* - Use location from the user table pointed by the *home* column.<br/>- *Static* - Use static location. The `%u` variable is replaced with the username of the user. | Optional<br/>Default: *Default*.
-**Home Location** | User storage path for the `static` *home mode*. | Mandatory if the *Home mode* is set to `Static`.
+**Hash algorithm** | How users passwords are stored in the database. See [Hash algorithms](#hash-algorithms). | Mandatory.
+**Email sync** | Sync e-mail address with the Nextcloud.<br/>- *None* - Disables this feature. This is the default option.<br/>- *Synchronise only once* - Copy the e-mail address to the Nextcloud preferences if its not set.<br/>- *Nextcloud always wins* - Always copy the e-mail address to the database. This updates the user table.<br/>- *SQL always wins* - Always copy the e-mail address to the Nextcloud preferences. | Optional.<br/>Default: *None*.<br/>Requires: user *Email* column.
+**Quota sync** | Sync user quota with the Nextcloud.<br/>- *None* - Disables this feature. This is the default option.<br/>- *Synchronise only once* - Copy the user quota to the Nextcloud preferences if its not set.<br/>- *Nextcloud always wins* - Always copy the user quota to the database. This updates the user table.<br/>- *SQL always wins* - Always copy the user quota to the Nextcloud preferences. | Optional.<br/>Default: *None*.<br/>Requires: user *Quota* column.
+**Home mode** | User storage path.<br/>- *Default* - Let the Nextcloud manage this. The default option.<br/>- *Query* - Use location from the user table pointed by the *home* column.<br/>- *Static* - Use static location pointed by the *Home Location* option. | Optional<br/>Default: *Default*.
+**Home Location** | User storage path for the `Static` *Home mode*. The `%u` variable is replaced with the username of the user. | Mandatory if the *Home mode* is set to `Static`.
 
 #### User table
 
@@ -64,11 +65,13 @@ Name | Description | Details
 **Table name** | The table name. | Mandatory for user backend.
 **Username** | Username column. | Mandatory for user backend.
 **Email** | E-mail column. | Mandatory for *Email sync* option.
+**Quota** | Quota column. | Mandatory for *Quota sync* option.
 **Home** | Home path column. | Mandatory for `Query` *Home sync* option.
 **Password** | Password hash column. | Mandatory for user backend.
 **Display name** | Display name column. | Optional.
 **Active** | Flag indicating if user can log in. | Optional.<br/>Default: true.
-**Can change avatar** | Flag indicating if user can change its avatar. | Optional.<br/>Default: false.
+**Provide avatar** | Flag indicating if user can change its avatar. | Optional.<br/>Default: false.
+**Salt** | Salt which is appended to password when checking or changing the password. | Optional.
 
 #### Group table
 
@@ -105,36 +108,34 @@ but be aware that some functionalities requires data changes (update queries).
 
 If you don't have any database model yet you can use below tables (MySQL):
 ```
-CREATE TABLE sql_users
+CREATE TABLE sql_user
 (
-  id                INT         AUTO_INCREMENT PRIMARY KEY,
-  username          VARCHAR(16) NOT NULL,
-  display_name      TEXT        NULL,
-  email             TEXT        NULL,
-  home              TEXT        NULL,
-  password          TEXT        NOT NULL,
-  active            TINYINT(1)  NOT NULL DEFAULT '1',
-  can_change_avatar BOOLEAN     NOT NULL DEFAULT FALSE,
-  CONSTRAINT users_username_uindex UNIQUE (username)
+  username       VARCHAR(16) PRIMARY KEY,
+  display_name   TEXT        NULL,
+  email          TEXT        NULL,
+  quota          TEXT        NULL,
+  home           TEXT        NULL,
+  password       TEXT        NOT NULL,
+  active         TINYINT(1)  NOT NULL DEFAULT '1',
+  provide_avatar BOOLEAN     NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE sql_group
 (
-  id           INT         AUTO_INCREMENT PRIMARY KEY,
-  name         VARCHAR(16) NOT NULL,
+  name         VARCHAR(16) PRIMARY KEY,
   display_name TEXT        NULL,
-  admin        BOOLEAN     NOT NULL DEFAULT FALSE,
-  CONSTRAINT group_name_uindex UNIQUE (name)
+  admin        BOOLEAN     NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE sql_user_group
 (
-  id         INT         AUTO_INCREMENT PRIMARY KEY,
-  group_name VARCHAR(16) NOT NULL,
   username   VARCHAR(16) NOT NULL,
-  CONSTRAINT user_group_group_name_username_uindex UNIQUE (group_name, username),
-  INDEX user_group_group_name_index (group_name),
-  INDEX user_group_username_index (username)
+  group_name VARCHAR(16) NOT NULL,
+  PRIMARY KEY (username, group_name),
+  FOREIGN KEY (username) REFERENCES sql_user (username),
+  FOREIGN KEY (group_name) REFERENCES sql_group (name),
+  INDEX sql_user_group_username_idx (username),
+  INDEX sql_user_group_group_name_idx (group_name)
 );
 ```
 
@@ -148,7 +149,7 @@ User table: wp_users
 Username column: user_login
 Password column: user_pass
 
-Hashing algorithm: Unix (Crypt)
+Hash algorithm: Unix (Crypt) or Portable PHP password
 ```
 
 #### JHipster
@@ -165,7 +166,7 @@ Password column: password_hash
 Email column: email
 Active column: activated
 
-Hashing algorithm: Unix (Crypt)
+Hash algorithm: Unix (Crypt)
 ```
 
 ## Hash algorithms
@@ -190,9 +191,12 @@ SHA512 (Crypt) | Generates hash with 5000 rounds. | $6$rounds=5000$yH.Q0OL4qbCOU
 Standard DES (Crypt) | | yTBnb7ab/N072
 Joomla MD5 Encryption | Generates 32 chars salt. | 14d21b49b0f13e2acba962b6b0039edd:haJK0yTvBXTNMh76xwEw5RYEVpJsN8us
 MD5 | No salt supported. | 5f4dcc3b5aa765d61d8327deb882cf99
+Portable PHP password | See [phpass](http://www.openwall.com/phpass/). | $P$BxrwraqNTi4as0EI.IpiA/K.muk9ke/
 SHA1 | No salt supported. | 5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8
+SHA512 Whirlpool | No salt supported. | a96b16ebb691dbe968b0d66d0d924cff5cf5de5e0885181d00761d87f295b2bf3d3c66187c050fc01c196ff3acaa48d3561ffd170413346e934a32280d632f2e
 SSHA256 | Generates 32 chars salt. | {SSHA256}+WxTB3JxprNteeovsuSYtgI+UkVPA9lfwGoYkz3Ff7hjd1FSdmlTMkNsSExyR21KM3NvNTZ5V0p4WXJMUjFzUg==
 SSHA512 | Generates 32 chars salt. | {SSHA512}It+v1kAEUBbhMJYJ2swAtz+RLE6ispv/FB6G/ALhK/YWwEmrloY+0jzrWIfmu+rWUXp8u0Tg4jLXypC5oXAW00IyYnRVdEZJbE9wak96bkNRVWFCYmlJNWxrdTA0QmhL
+WoltLab Community Framework 2.x | Double salted bcrypt. | $2a$08$XEQDKNU/Vbootwxv5Gp7gujxFX/RUFsZLvQPYM435Dd3/p17fto02
 
 ## Development
 
@@ -202,7 +206,7 @@ Add a new class in the `OCA\UserSQL\Platform` namespace which extends the `Abstr
 Add this driver in `admin.php` template  to `$drivers` variable and in method `getPlatform(Connection $connection)`
 of `PlatformFactory` class.
 
-#### New hashing algorithm support
+#### New hash algorithm support
 
 Create a new class in `OCA\UserSQL\Crypto` namespace which implements `IPasswordAlgorithm` interface.
 Do not forget to write unit tests.

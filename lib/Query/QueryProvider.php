@@ -71,14 +71,18 @@ class QueryProvider implements \ArrayAccess
         $uHome = $this->properties[DB::USER_HOME_COLUMN];
         $uName = $this->properties[DB::USER_NAME_COLUMN];
         $uPassword = $this->properties[DB::USER_PASSWORD_COLUMN];
+        $uQuota = $this->properties[DB::USER_QUOTA_COLUMN];
+        $uSalt = $this->properties[DB::USER_SALT_COLUMN];
         $uUID = $this->properties[DB::USER_UID_COLUMN];
 
         $ugGID = $this->properties[DB::USER_GROUP_GID_COLUMN];
         $ugUID = $this->properties[DB::USER_GROUP_UID_COLUMN];
 
+        $emailParam = Query::EMAIL_PARAM;
         $gidParam = Query::GID_PARAM;
         $nameParam = Query::NAME_PARAM;
         $passwordParam = Query::PASSWORD_PARAM;
+        $quotaParam = Query::QUOTA_PARAM;
         $searchParam = Query::SEARCH_PARAM;
         $uidParam = Query::UID_PARAM;
 
@@ -90,9 +94,11 @@ class QueryProvider implements \ArrayAccess
             = "$uUID AS uid, " .
             (empty($uName) ? "null" : $uName) . " AS name, " .
             (empty($uEmail) ? "null" : $uEmail) . " AS email, " .
+            (empty($uQuota) ? "null" : $uQuota) . " AS quota, " .
             (empty($uHome) ? "null" : $uHome) . " AS home, " .
             (empty($uActive) ? "true" : $uActive) . " AS active, " .
-            (empty($uAvatar) ? "false" : $uAvatar) . " AS avatar";
+            (empty($uAvatar) ? "false" : $uAvatar) . " AS avatar, " .
+            (empty($uSalt) ? "null" : $uSalt) . " AS salt";
 
         $this->queries = [
             Query::BELONGS_TO_ADMIN =>
@@ -154,7 +160,9 @@ class QueryProvider implements \ArrayAccess
             Query::SAVE_USER =>
                 "UPDATE $user " .
                 "SET $uPassword = :$passwordParam, " .
-                "$uName = :$nameParam " .
+                "$uName = :$nameParam, " .
+                "$uEmail = :$emailParam, " .
+                "$uQuota = :$quotaParam " .
                 "WHERE $uUID = :$uidParam",
         ];
     }

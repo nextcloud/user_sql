@@ -21,9 +21,9 @@
 
 namespace OCA\UserSQL\Backend;
 
-use OC\User\Backend;
 use OCA\UserSQL\Action\EmailSync;
 use OCA\UserSQL\Action\IUserAction;
+use OCA\UserSQL\Action\QuotaSync;
 use OCA\UserSQL\Cache;
 use OCA\UserSQL\Constant\App;
 use OCA\UserSQL\Constant\DB;
@@ -35,13 +35,28 @@ use OCA\UserSQL\Repository\UserRepository;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\ILogger;
+use OCP\User\Backend\ABackend;
+use OCP\User\Backend\ICheckPasswordBackend;
+use OCP\User\Backend\ICountUsersBackend;
+use OCP\User\Backend\IGetDisplayNameBackend;
+use OCP\User\Backend\IGetHomeBackend;
+use OCP\User\Backend\IProvideAvatarBackend;
+use OCP\User\Backend\ISetDisplayNameBackend;
+use OCP\User\Backend\ISetPasswordBackend;
 
 /**
  * The SQL user backend manager.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-final class UserBackend extends Backend
+final class UserBackend extends ABackend implements
+    ICheckPasswordBackend,
+    ICountUsersBackend,
+    IGetDisplayNameBackend,
+    IGetHomeBackend,
+    IProvideAvatarBackend,
+    ISetDisplayNameBackend,
+    ISetPasswordBackend
 {
     /**
      * @var string The application name.
@@ -112,6 +127,14 @@ final class UserBackend extends Backend
             && !empty($this->properties[DB::USER_EMAIL_COLUMN])
         ) {
             $this->actions[] = new EmailSync(
+                $this->appName, $this->logger, $this->properties, $this->config,
+                $this->userRepository
+            );
+        }
+        if (!empty($this->properties[Opt::QUOTA_SYNC])
+            && !empty($this->properties[DB::USER_QUOTA_COLUMN])
+        ) {
+            $this->actions[] = new QuotaSync(
                 $this->appName, $this->logger, $this->properties, $this->config,
                 $this->userRepository
             );
@@ -228,7 +251,7 @@ final class UserBackend extends Backend
     /**
      * @inheritdoc
      */
-    public function getDisplayName($uid)
+    public function getDisplayName($uid): string
     {
         $this->logger->debug(
             "Entering getDisplayName($uid)", ["app" => $this->appName]
@@ -258,7 +281,7 @@ final class UserBackend extends Backend
      *
      * @return string|bool The user ID on success, false otherwise.
      */
-    public function checkPassword($uid, $password)
+    public function checkPassword(string $uid, string $password)
     {
         $this->logger->debug(
             "Entering checkPassword($uid, *)", ["app" => $this->appName]
@@ -272,6 +295,10 @@ final class UserBackend extends Backend
         $user = $this->userRepository->findByUid($uid);
         if (!($user instanceof User)) {
             return false;
+        }
+
+        if ($user->salt !== null) {
+            $password .= $user->salt;
         }
 
         $isCorrect = $passwordAlgorithm->checkPassword(
@@ -332,6 +359,10 @@ final class UserBackend extends Backend
             "Entering getDisplayNames($search, $limit, $offset)",
             ["app" => $this->appName]
         );
+
+        if (empty($this->properties[DB::USER_NAME_COLUMN])) {
+            return false;
+        }
 
         $users = $this->getUsers($search, $limit, $offset);
 
@@ -406,24 +437,32 @@ final class UserBackend extends Backend
      *
      * @return bool TRUE if the password has been set, FALSE otherwise.
      */
-    public function setPassword($uid, $password)
+    public function setPassword(string $uid, string $password): bool
     {
         $this->logger->debug(
             "Entering setPassword($uid, *)", ["app" => "user_sql"]
         );
+
+        if (empty($this->properties[Opt::PASSWORD_CHANGE])) {
+            return false;
+        }
 
         $passwordAlgorithm = $this->getPasswordAlgorithm();
         if ($passwordAlgorithm === false) {
             return false;
         }
 
-        $passwordHash = $passwordAlgorithm->getPasswordHash($password);
-        if ($passwordHash === false) {
+        $user = $this->userRepository->findByUid($uid);
+        if (!($user instanceof User)) {
             return false;
         }
 
-        $user = $this->userRepository->findByUid($uid);
-        if (!($user instanceof User)) {
+        if ($user->salt !== null) {
+            $password .= $user->salt;
+        }
+
+        $passwordHash = $passwordAlgorithm->getPasswordHash($password);
+        if ($passwordHash === false) {
             return false;
         }
 
@@ -444,11 +483,15 @@ final class UserBackend extends Backend
     /**
      * @inheritdoc
      */
-    public function getHome($uid)
+    public function getHome(string $uid)
     {
         $this->logger->debug(
             "Entering getHome($uid)", ["app" => $this->appName]
         );
+
+        if (empty($this->properties[Opt::HOME_MODE])) {
+            return false;
+        }
 
         $home = false;
         switch ($this->properties[Opt::HOME_MODE]) {
@@ -479,11 +522,15 @@ final class UserBackend extends Backend
      *
      * @return bool TRUE if the user can change its avatar, FALSE otherwise.
      */
-    public function canChangeAvatar($uid)
+    public function canChangeAvatar(string $uid): bool
     {
         $this->logger->debug(
             "Entering canChangeAvatar($uid)", ["app" => $this->appName]
         );
+
+        if (empty($this->properties[DB::USER_AVATAR_COLUMN])) {
+            return false;
+        }
 
         $user = $this->userRepository->findByUid($uid);
         if (!($user instanceof User)) {
@@ -507,12 +554,16 @@ final class UserBackend extends Backend
      *
      * @return bool TRUE if the password has been set, FALSE otherwise.
      */
-    public function setDisplayName($uid, $displayName)
+    public function setDisplayName(string $uid, string $displayName): bool
     {
         $this->logger->debug(
             "Entering setDisplayName($uid, $displayName)",
             ["app" => $this->appName]
         );
+
+        if (empty($this->properties[Opt::NAME_CHANGE])) {
+            return false;
+        }
 
         $user = $this->userRepository->findByUid($uid);
         if (!($user instanceof User)) {
@@ -534,28 +585,6 @@ final class UserBackend extends Backend
     }
 
     /**
-     * @inheritdoc
-     */
-    public function getSupportedActions()
-    {
-        $actions = parent::getSupportedActions();
-
-        $actions &= empty($this->properties[DB::USER_NAME_COLUMN])
-            ? ~Backend::GET_DISPLAYNAME : ~0;
-        $actions &= empty($this->properties[Opt::HOME_MODE])
-            ? ~Backend::GET_HOME : ~0;
-        $actions &= empty($this->properties[DB::USER_AVATAR_COLUMN])
-            ? ~Backend::PROVIDE_AVATAR : ~0;
-        $actions &= (!empty($this->properties[DB::USER_NAME_COLUMN])
-            && $this->properties[Opt::NAME_CHANGE]) ? ~0
-            : ~Backend::SET_DISPLAYNAME;
-        $actions &= $this->properties[Opt::PASSWORD_CHANGE] ? ~0
-            : ~Backend::SET_PASSWORD;
-
-        return $actions;
-    }
-
-    /**
      * Check if this backend is correctly set and can be enabled.
      *
      * @return bool TRUE if all necessary options for this backend
@@ -571,5 +600,21 @@ final class UserBackend extends Backend
             && !empty($this->properties[DB::USER_UID_COLUMN])
             && !empty($this->properties[DB::USER_PASSWORD_COLUMN])
             && !empty($this->properties[Opt::CRYPTO_CLASS]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getBackendName()
+    {
+        return "User SQL";
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function deleteUser($uid)
+    {
+        return false;
     }
 }

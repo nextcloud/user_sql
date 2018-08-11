@@ -266,7 +266,8 @@ class SettingsController extends Controller
         try {
             $connection = $this->getConnection();
             $platform = PlatformFactory::getPlatform($connection);
-            $tables = $platform->getTables();
+            $input = $this->request->getParam("input");
+            $tables = $platform->getTables($input);
 
             $this->logger->debug(
                 "Returning tableAutocomplete(): count(" . count($tables) . ")",
@@ -314,7 +315,8 @@ class SettingsController extends Controller
             $connection = $this->getConnection();
             $platform = PlatformFactory::getPlatform($connection);
             $columns = $platform->getColumns(
-                $this->request->getParam($table)
+                $this->request->getParam($table),
+                $this->request->getParam("input")
             );
 
             return $columns;

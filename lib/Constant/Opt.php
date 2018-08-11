@@ -34,5 +34,6 @@ final class Opt
     const HOME_MODE = "opt.home_mode";
     const NAME_CHANGE = "opt.name_change";
     const PASSWORD_CHANGE = "opt.password_change";
+    const QUOTA_SYNC = "opt.quota_sync";
     const USE_CACHE = "opt.use_cache";
 }
