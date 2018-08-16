@@ -71,16 +71,6 @@ function print_select_options(
         echo "</option>";
     }
 
-
-#54: Merge develop-14 into develop Conflicts
-Resolved all conflicts
-2 conflicting files
-CHANGELOG.md
-CHANGELOG.md
-admin.php
-templates/admin.php
-templates/admin.php
-Resolved
     echo "</select>";
     echo "</label></div>";
 }
