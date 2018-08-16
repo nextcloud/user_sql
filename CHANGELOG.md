@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.0.1] - 2018-08-11
+### Fixed
+- Leftover lines break the admin page
+
 ## [4.0.0] - 2018-08-11
 ### Added
 - SHA512 Whirlpool hash algorithm
@@ -83,6 +87,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Supported version of ownCloud, Nextcloud: ownCloud 10, Nextcloud 12
 
+[4.0.1]: https://github.com/nextcloud/user_sql/compare/v4.0.0...v4.0.1
 [4.0.0]: https://github.com/nextcloud/user_sql/compare/v4.0.0-rc2...v4.0.0
 [4.0.0-rc2]: https://github.com/nextcloud/user_sql/compare/v4.0.0-rc1...v4.0.0-rc2
 [4.0.0-rc1]: https://github.com/nextcloud/user_sql/compare/v3.1.0...v4.0.0-rc1
