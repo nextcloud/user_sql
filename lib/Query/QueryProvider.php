@@ -92,7 +92,7 @@ class QueryProvider implements \ArrayAccess
             (empty($gAdmin) ? "false" : $gAdmin) . " AS admin";
         $userColumns
             = "$uUID AS uid, " .
-            (empty($uName) ? "null" : $uName) . " AS name, " .
+            (empty($uName) ? $uUID : $uName) . " AS name, " .
             (empty($uEmail) ? "null" : $uEmail) . " AS email, " .
             (empty($uQuota) ? "null" : $uQuota) . " AS quota, " .
             (empty($uHome) ? "null" : $uHome) . " AS home, " .
