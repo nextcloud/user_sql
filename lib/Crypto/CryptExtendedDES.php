@@ -76,7 +76,7 @@ class CryptExtendedDES extends AbstractCrypt
         while ($number) {
             $rem = $number % $base;
             $number = (int)($number / $base);
-            $arr[] = $alphabet[$rem];
+            $chars[] = $alphabet[$rem];
         }
 
         return str_pad(implode($chars), 4, ".", STR_PAD_RIGHT);

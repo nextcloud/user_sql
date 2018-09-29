@@ -7,8 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Fixed
 - Error when 'Display name' not set
+- Encoding of iteration for 'Extended DES (Crypt)'
 
-## [4.0.1] - 2018-08-11
+## [4.0.1] - 2018-08-16
 ### Fixed
 - Leftover lines break the admin page
 
