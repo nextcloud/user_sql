@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Added
 - Whirlpool hash algorithm
+- 'Prepend salt' toggle
 ### Fixed
 - Error when 'Display name' not set
 - Encoding of iteration for 'Extended DES (Crypt)'

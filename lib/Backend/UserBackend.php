@@ -297,9 +297,7 @@ final class UserBackend extends ABackend implements
             return false;
         }
 
-        if ($user->salt !== null) {
-            $password .= $user->salt;
-        }
+        $password = $this->addSalt($user, $password);
 
         $isCorrect = $passwordAlgorithm->checkPassword(
             $password, $user->password
@@ -348,6 +346,27 @@ final class UserBackend extends ABackend implements
         }
 
         return $passwordAlgorithm;
+    }
+
+    /**
+     * Append or prepend salt from external column if available.
+     *
+     * @param User   $user     The user instance.
+     * @param string $password The password.
+     *
+     * @return string Salted password.
+     */
+    private function addSalt(User $user, string $password): string
+    {
+        if ($user->salt !== null) {
+            if (empty($this->properties[Opt::PREPEND_SALT])) {
+                return $password . $user->salt;
+            } else {
+                return $user->salt . $password;
+            }
+        }
+
+        return $password;
     }
 
     /**
@@ -457,9 +476,7 @@ final class UserBackend extends ABackend implements
             return false;
         }
 
-        if ($user->salt !== null) {
-            $password .= $user->salt;
-        }
+        $password = $this->addSalt($user, $password);
 
         $passwordHash = $passwordAlgorithm->getPasswordHash($password);
         if ($passwordHash === false) {
