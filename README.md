@@ -184,7 +184,7 @@ Courier base64-encoded SHA256 | No salt supported. | {SHA256}XohImNooBHFR0OVvjcY
 Unix (Crypt) | See [crypt](http://php.net/manual/en/function.crypt.php). | $2y$10$5rsN1fmoSkaRy9bqhozAXOr0mn0QiVIfd2L04Bbk1Go9MjdvotwBq
 Argon2 (Crypt) | Requires PHP >= 7.2.<br/>Uses default parameters. See [password_hash](http://php.net/manual/en/function.password-hash.php). | $argon2i$v=19$m=1024,t=2,p=2$NnpSNlRNLlZobnJHUDh0Sw$oW5E1cfdPzLWfkTvQFUyzTR00R0aLwEdYwldcqW6Pmo
 Blowfish (Crypt) | Uses default parameters. See [password_hash](http://php.net/manual/en/function.password-hash.php). | $2y$10$5rsN1fmoSkaRy9bqhozAXOr0mn0QiVIfd2L04Bbk1Go9MjdvotwBq
-Extended DES (Crypt) | | ..UZoIyj/Hy/c
+Extended DES (Crypt) | | cDRpdxPmHpzS.
 MD5 (Crypt) | | $1$RzaFbNcU$u9adfTY/Q6za6nu0Ogrl1/
 SHA256 (Crypt) | Generates hash with 5000 rounds. | $5$rounds=5000$VIYD0iHkg7uY9SRc$v2XLS/9dvfFN84mzGvW9wxnVt9Xd/urXaaTkpW8EwD1
 SHA512 (Crypt) | Generates hash with 5000 rounds. | $6$rounds=5000$yH.Q0OL4qbCOUJ3q$Xry5EVFva3wKnfo8/ktrugmBd8tcl34NK6rXInv1HhmdSUNLEm0La9JnA57rqwQ.9/Bz513MD4tvmmISLUIHs/
