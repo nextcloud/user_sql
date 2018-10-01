@@ -49,7 +49,6 @@ Name | Description | Details
 --- | --- | ---
 **Allow display name change** | With this option enabled user can change its display name. The display name change is propagated to the database. | Optional.<br/>Default: false.<br/>Requires: user *Display name* column.
 **Allow password change** | Can user change its password. The password change is propagated to the database. See [Hash algorithms](#hash-algorithms). | Optional.<br/>Default: false.
-**Prepend salt** | Prepend a salt to the password instead of appending it. See [User table](#user-table) -> **Salt**. | Optional.<br/>Default: false.
 **Use cache** | Use database query results cache. The cache can be cleared any time with the *Clear cache* button click. | Optional.<br/>Default: false.
 **Hash algorithm** | How users passwords are stored in the database. See [Hash algorithms](#hash-algorithms). | Mandatory.
 **Email sync** | Sync e-mail address with the Nextcloud.<br/>- *None* - Disables this feature. This is the default option.<br/>- *Synchronise only once* - Copy the e-mail address to the Nextcloud preferences if its not set.<br/>- *Nextcloud always wins* - Always copy the e-mail address to the database. This updates the user table.<br/>- *SQL always wins* - Always copy the e-mail address to the Nextcloud preferences. | Optional.<br/>Default: *None*.<br/>Requires: user *Email* column.
@@ -73,6 +72,7 @@ Name | Description | Details
 **Active** | Flag indicating if user can log in. | Optional.<br/>Default: true.
 **Provide avatar** | Flag indicating if user can change its avatar. | Optional.<br/>Default: false.
 **Salt** | Salt which is appended to password when checking or changing the password. | Optional.
+**Prepend salt** | Prepend a salt to the password instead of appending it. | Optional.<br/>Default: false.
 
 #### Group table
 

@@ -109,8 +109,7 @@ function print_select_options(
             <p class="settings-hint"><?php p($l->t("Here are all currently supported options.")); ?></p>
             <fieldset><?php
                 print_checkbox_input($l, "opt-name_change", "Allow display name change", $_["opt.name_change"]);
-                print_checkbox_input($l, "opt-password_change", "Allow password change", $_["opt.password_change"]);
-                print_checkbox_input($l, "opt-prepend_salt", "Prepend salt", $_["opt.prepend_salt"]); ?>
+                print_checkbox_input($l, "opt-password_change", "Allow password change", $_["opt.password_change"]); ?>
                 <div class="button-right"><?php
                     print_checkbox_input($l, "opt-use_cache", "Use cache", $_["opt.use_cache"], false); ?>
                     <input type="submit" id="user_sql-clear_cache" value="<?php p($l->t("Clear cache")); ?>">
@@ -152,7 +151,8 @@ function print_select_options(
                 print_text_input($l, "db-table-user-column-name", "Display name", $_["db.table.user.column.name"]);
                 print_text_input($l, "db-table-user-column-active", "Active", $_["db.table.user.column.active"]);
                 print_text_input($l, "db-table-user-column-avatar", "Provide avatar", $_["db.table.user.column.avatar"]);
-                print_text_input($l, "db-table-user-column-salt", "Salt", $_["db.table.user.column.salt"]); ?>
+                print_text_input($l, "db-table-user-column-salt", "Salt", $_["db.table.user.column.salt"]);
+                print_checkbox_input($l, "opt-prepend_salt", "Prepend salt", $_["opt.prepend_salt"]); ?>
             </fieldset>
         </div>
         <div class="section">
