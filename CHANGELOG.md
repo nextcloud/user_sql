@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Error when 'Display name' not set
 - Encoding of iteration for 'Extended DES (Crypt)'
+- 'Trying to get property of non-object' warning
 
 ## [4.0.1] - 2018-08-16
 ### Fixed
