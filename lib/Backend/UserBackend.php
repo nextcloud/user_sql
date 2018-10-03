@@ -387,7 +387,7 @@ final class UserBackend extends ABackend implements
 
         $names = [];
         foreach ($users as $user) {
-            $names[$user->uid] = $user->name;
+            $names[$user] = $user->name;
         }
 
         $this->logger->debug(
