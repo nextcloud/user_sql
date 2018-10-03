@@ -190,6 +190,7 @@ MD5 (Crypt) | | $1$RzaFbNcU$u9adfTY/Q6za6nu0Ogrl1/
 SHA256 (Crypt) | Generates hash with 5000 rounds. | $5$rounds=5000$VIYD0iHkg7uY9SRc$v2XLS/9dvfFN84mzGvW9wxnVt9Xd/urXaaTkpW8EwD1
 SHA512 (Crypt) | Generates hash with 5000 rounds. | $6$rounds=5000$yH.Q0OL4qbCOUJ3q$Xry5EVFva3wKnfo8/ktrugmBd8tcl34NK6rXInv1HhmdSUNLEm0La9JnA57rqwQ.9/Bz513MD4tvmmISLUIHs/
 Standard DES (Crypt) | | yTBnb7ab/N072
+Drupal 7 | See [phpass](http://www.openwall.com/phpass/). | $S$DC7eCpJQ3SUQtW4Bp.vKb2rpeaffi4iqk9OpYwJyEoSMsezn67Sl
 Joomla MD5 Encryption | Generates 32 chars salt. | 14d21b49b0f13e2acba962b6b0039edd:haJK0yTvBXTNMh76xwEw5RYEVpJsN8us
 MD5 | No salt supported. | 5f4dcc3b5aa765d61d8327deb882cf99
 Portable PHP password | See [phpass](http://www.openwall.com/phpass/). | $P$BxrwraqNTi4as0EI.IpiA/K.muk9ke/
