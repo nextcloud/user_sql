@@ -484,7 +484,7 @@ final class UserBackend extends ABackend implements
         }
 
         $user->password = $passwordHash;
-        $result = $this->userRepository->save($user);
+        $result = $this->userRepository->save($user, UserRepository::PASSWORD_FIELD);
 
         if ($result === true) {
             $this->logger->info(
@@ -588,7 +588,7 @@ final class UserBackend extends ABackend implements
         }
 
         $user->name = $displayName;
-        $result = $this->userRepository->save($user);
+        $result = $this->userRepository->save($user, UserRepository::DISPLAY_NAME_FIELD);
 
         if ($result === true) {
             $this->logger->info(

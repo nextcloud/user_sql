@@ -157,12 +157,24 @@ class QueryProvider implements \ArrayAccess
                 "WHERE $uUID LIKE :$searchParam " .
                 "ORDER BY $uUID",
 
-            Query::SAVE_USER =>
+            Query::UPDATE_DISPLAY_NAME =>
                 "UPDATE $user " .
-                "SET $uPassword = :$passwordParam, " .
-                "$uName = :$nameParam, " .
-                "$uEmail = :$emailParam, " .
-                "$uQuota = :$quotaParam " .
+                "SET $uName = :$nameParam " .
+                "WHERE $uUID = :$uidParam",
+
+            Query::UPDATE_EMAIL =>
+                "UPDATE $user " .
+                "SET $uEmail = :$emailParam " .
+                "WHERE $uUID = :$uidParam",
+
+            Query::UPDATE_PASSWORD =>
+                "UPDATE $user " .
+                "SET $uPassword = :$passwordParam " .
+                "WHERE $uUID = :$uidParam",
+
+            Query::UPDATE_QUOTA =>
+                "UPDATE $user " .
+                "SET $uQuota = :$quotaParam " .
                 "WHERE $uUID = :$uidParam",
         ];
     }
