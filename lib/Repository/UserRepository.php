@@ -32,7 +32,7 @@ use OCA\UserSQL\Query\DataQuery;
  */
 class UserRepository
 {
-    const DISPLAY_NAME_FIELD = 0b001;
+    const DISPLAY_NAME_FIELD = 0b0001;
     const EMAIL_FIELD = 0b0010;
     const PASSWORD_FIELD = 0b0100;
     const QUOTA_FIELD = 0b1000;
