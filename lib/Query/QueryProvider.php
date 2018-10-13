@@ -88,7 +88,7 @@ class QueryProvider implements \ArrayAccess
 
         $groupColumns
             = "$gGID AS gid, " .
-            (empty($gName) ? "null" : $gName) . " AS name, " .
+            (empty($gName) ? $gGID : $gName) . " AS name, " .
             (empty($gAdmin) ? "false" : $gAdmin) . " AS admin";
         $userColumns
             = "$uUID AS uid, " .
