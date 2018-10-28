@@ -19,41 +19,40 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Tests\UserSQL\Crypto;
+namespace OCA\UserSQL\Crypto;
 
-use OCA\UserSQL\Crypto\CryptExtendedDES;
-use OCA\UserSQL\Crypto\IPasswordAlgorithm;
 use OCP\IL10N;
-use Test\TestCase;
 
 /**
- * Unit tests for class <code>CryptExtendedDES</code>.
+ * Whirlpool hash implementation.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class CryptExtendedDESTest extends TestCase
+class Whirlpool extends AbstractAlgorithm
 {
     /**
-     * @var IPasswordAlgorithm
+     * The class constructor.
+     *
+     * @param IL10N $localization The localization service.
      */
-    private $crypto;
-
-    public function testCheckPassword()
+    public function __construct(IL10N $localization)
     {
-        $this->assertTrue(
-            $this->crypto->checkPassword("password", "cDRpdxPmHpzS.")
-        );
+        parent::__construct($localization);
     }
 
-    public function testPasswordHash()
+    /**
+     * @inheritdoc
+     */
+    public function getPasswordHash($password)
     {
-        $hash = $this->crypto->getPasswordHash("password");
-        $this->assertTrue($this->crypto->checkPassword("password", $hash));
+        return hash('whirlpool', $password);
     }
 
-    protected function setUp()
+    /**
+     * @inheritdoc
+     */
+    protected function getAlgorithmName()
     {
-        parent::setUp();
-        $this->crypto = new CryptExtendedDES($this->createMock(IL10N::class));
+        return "Whirlpool";
     }
 }

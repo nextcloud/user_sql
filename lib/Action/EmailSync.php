@@ -111,7 +111,7 @@ class EmailSync implements IUserAction
                 }
 
                 $user->email = $ncMail;
-                $result = $this->userRepository->save($user);
+                $result = $this->userRepository->save($user, UserRepository::EMAIL_FIELD);
             }
 
             break;

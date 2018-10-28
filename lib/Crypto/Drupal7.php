@@ -19,41 +19,42 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Tests\UserSQL\Crypto;
-
-use OCA\UserSQL\Crypto\CryptExtendedDES;
-use OCA\UserSQL\Crypto\IPasswordAlgorithm;
-use OCP\IL10N;
-use Test\TestCase;
+namespace OCA\UserSQL\Crypto;
 
 /**
- * Unit tests for class <code>CryptExtendedDES</code>.
+ * Drupal 7 overrides of phpass hash implementation.
  *
+ * @author BrandonKerr
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class CryptExtendedDESTest extends TestCase
+class Drupal7 extends Phpass
 {
     /**
-     * @var IPasswordAlgorithm
+     * The expected (and maximum) number of characters in a hashed password.
      */
-    private $crypto;
+    const DRUPAL_HASH_LENGTH = 55;
 
-    public function testCheckPassword()
+    /**
+     * @inheritdoc
+     */
+    protected function crypt($password, $setting)
     {
-        $this->assertTrue(
-            $this->crypto->checkPassword("password", "cDRpdxPmHpzS.")
-        );
+        return substr(parent::crypt($password, $setting), 0, self::DRUPAL_HASH_LENGTH);
     }
 
-    public function testPasswordHash()
+    /**
+     * @inheritdoc
+     */
+    protected function hash($input)
     {
-        $hash = $this->crypto->getPasswordHash("password");
-        $this->assertTrue($this->crypto->checkPassword("password", $hash));
+        return hash('sha512', $input, true);
     }
 
-    protected function setUp()
+    /**
+     * @inheritdoc
+     */
+    protected function getAlgorithmName()
     {
-        parent::setUp();
-        $this->crypto = new CryptExtendedDES($this->createMock(IL10N::class));
+        return "Drupal 7";
     }
 }

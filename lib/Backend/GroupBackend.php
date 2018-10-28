@@ -403,10 +403,6 @@ final class GroupBackend extends ABackend implements
             "Entering getGroupDetails($gid)", ["app" => $this->appName]
         );
 
-        if (empty($this->properties[DB::GROUP_NAME_COLUMN])) {
-            return [];
-        }
-
         $group = $this->getGroup($gid);
 
         if (!($group instanceof Group)) {

@@ -21,17 +21,17 @@
 
 namespace Tests\UserSQL\Crypto;
 
-use OCA\UserSQL\Crypto\CryptExtendedDES;
 use OCA\UserSQL\Crypto\IPasswordAlgorithm;
+use OCA\UserSQL\Crypto\Whirlpool;
 use OCP\IL10N;
 use Test\TestCase;
 
 /**
- * Unit tests for class <code>CryptExtendedDES</code>.
+ * Unit tests for class <code>SHA512Whirlpool</code>.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class CryptExtendedDESTest extends TestCase
+class WhirlpoolTest extends TestCase
 {
     /**
      * @var IPasswordAlgorithm
@@ -41,7 +41,10 @@ class CryptExtendedDESTest extends TestCase
     public function testCheckPassword()
     {
         $this->assertTrue(
-            $this->crypto->checkPassword("password", "cDRpdxPmHpzS.")
+            $this->crypto->checkPassword(
+                "password",
+                "74dfc2b27acfa364da55f93a5caee29ccad3557247eda238831b3e9bd931b01d77fe994e4f12b9d4cfa92a124461d2065197d8cf7f33fc88566da2db2a4d6eae"
+            )
         );
     }
 
@@ -54,6 +57,6 @@ class CryptExtendedDESTest extends TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->crypto = new CryptExtendedDES($this->createMock(IL10N::class));
+        $this->crypto = new Whirlpool($this->createMock(IL10N::class));
     }
 }

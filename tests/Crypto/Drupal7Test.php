@@ -21,17 +21,17 @@
 
 namespace Tests\UserSQL\Crypto;
 
-use OCA\UserSQL\Crypto\CryptExtendedDES;
+use OCA\UserSQL\Crypto\Drupal7;
 use OCA\UserSQL\Crypto\IPasswordAlgorithm;
 use OCP\IL10N;
 use Test\TestCase;
 
 /**
- * Unit tests for class <code>CryptExtendedDES</code>.
+ * Unit tests for class <code>Drupal7</code>.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class CryptExtendedDESTest extends TestCase
+class Drupal7Test extends TestCase
 {
     /**
      * @var IPasswordAlgorithm
@@ -41,7 +41,9 @@ class CryptExtendedDESTest extends TestCase
     public function testCheckPassword()
     {
         $this->assertTrue(
-            $this->crypto->checkPassword("password", "cDRpdxPmHpzS.")
+            $this->crypto->checkPassword(
+                "password", "\$S\$DC7eCpJQ3SUQtW4Bp.vKb2rpeaffi4iqk9OpYwJyEoSMsezn67Sl"
+            )
         );
     }
 
@@ -54,6 +56,6 @@ class CryptExtendedDESTest extends TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->crypto = new CryptExtendedDES($this->createMock(IL10N::class));
+        $this->crypto = new Drupal7($this->createMock(IL10N::class));
     }
 }

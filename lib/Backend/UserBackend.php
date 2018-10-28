@@ -292,14 +292,14 @@ final class UserBackend extends ABackend implements
             return false;
         }
 
-        $user = $this->userRepository->findByUid($uid);
-        if (!($user instanceof User)) {
+        $caseSensitive = empty($this->properties[Opt::CASE_INSENSITIVE_USERNAME]);
+        $user = $this->userRepository->findByUid($uid, $caseSensitive);
+        if (!($user instanceof User) || ($caseSensitive && $user->uid !== $uid)) {
             return false;
         }
 
-        if ($user->salt !== null) {
-            $password .= $user->salt;
-        }
+        $uid = $user->uid;
+        $password = $this->addSalt($user, $password);
 
         $isCorrect = $passwordAlgorithm->checkPassword(
             $password, $user->password
@@ -351,6 +351,27 @@ final class UserBackend extends ABackend implements
     }
 
     /**
+     * Append or prepend salt from external column if available.
+     *
+     * @param User   $user     The user instance.
+     * @param string $password The password.
+     *
+     * @return string Salted password.
+     */
+    private function addSalt(User $user, string $password): string
+    {
+        if ($user->salt !== null) {
+            if (empty($this->properties[Opt::PREPEND_SALT])) {
+                return $password . $user->salt;
+            } else {
+                return $user->salt . $password;
+            }
+        }
+
+        return $password;
+    }
+
+    /**
      * @inheritdoc
      */
     public function getDisplayNames($search = "", $limit = null, $offset = null)
@@ -368,7 +389,7 @@ final class UserBackend extends ABackend implements
 
         $names = [];
         foreach ($users as $user) {
-            $names[$user->uid] = $user->name;
+            $names[$user] = $user->name;
         }
 
         $this->logger->debug(
@@ -457,9 +478,7 @@ final class UserBackend extends ABackend implements
             return false;
         }
 
-        if ($user->salt !== null) {
-            $password .= $user->salt;
-        }
+        $password = $this->addSalt($user, $password);
 
         $passwordHash = $passwordAlgorithm->getPasswordHash($password);
         if ($passwordHash === false) {
@@ -467,7 +486,7 @@ final class UserBackend extends ABackend implements
         }
 
         $user->password = $passwordHash;
-        $result = $this->userRepository->save($user);
+        $result = $this->userRepository->save($user, UserRepository::PASSWORD_FIELD);
 
         if ($result === true) {
             $this->logger->info(
@@ -571,7 +590,7 @@ final class UserBackend extends ABackend implements
         }
 
         $user->name = $displayName;
-        $result = $this->userRepository->save($user);
+        $result = $this->userRepository->save($user, UserRepository::DISPLAY_NAME_FIELD);
 
         if ($result === true) {
             $this->logger->info(
