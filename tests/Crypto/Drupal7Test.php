@@ -19,23 +19,43 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace OCA\UserSQL\Constant;
+namespace Tests\UserSQL\Crypto;
+
+use OCA\UserSQL\Crypto\Drupal7;
+use OCA\UserSQL\Crypto\IPasswordAlgorithm;
+use OCP\IL10N;
+use Test\TestCase;
 
 /**
- * The option properties names.
+ * Unit tests for class <code>Drupal7</code>.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-final class Opt
+class Drupal7Test extends TestCase
 {
-    const CASE_INSENSITIVE_USERNAME = "opt.case_insensitive_username";
-    const CRYPTO_CLASS = "opt.crypto_class";
-    const EMAIL_SYNC = "opt.email_sync";
-    const HOME_LOCATION = "opt.home_location";
-    const HOME_MODE = "opt.home_mode";
-    const NAME_CHANGE = "opt.name_change";
-    const PASSWORD_CHANGE = "opt.password_change";
-    const PREPEND_SALT = "opt.prepend_salt";
-    const QUOTA_SYNC = "opt.quota_sync";
-    const USE_CACHE = "opt.use_cache";
+    /**
+     * @var IPasswordAlgorithm
+     */
+    private $crypto;
+
+    public function testCheckPassword()
+    {
+        $this->assertTrue(
+            $this->crypto->checkPassword(
+                "password", "\$S\$DC7eCpJQ3SUQtW4Bp.vKb2rpeaffi4iqk9OpYwJyEoSMsezn67Sl"
+            )
+        );
+    }
+
+    public function testPasswordHash()
+    {
+        $hash = $this->crypto->getPasswordHash("password");
+        $this->assertTrue($this->crypto->checkPassword("password", $hash));
+    }
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->crypto = new Drupal7($this->createMock(IL10N::class));
+    }
 }

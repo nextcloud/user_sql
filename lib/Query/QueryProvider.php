@@ -88,11 +88,11 @@ class QueryProvider implements \ArrayAccess
 
         $groupColumns
             = "$gGID AS gid, " .
-            (empty($gName) ? "null" : $gName) . " AS name, " .
+            (empty($gName) ? $gGID : $gName) . " AS name, " .
             (empty($gAdmin) ? "false" : $gAdmin) . " AS admin";
         $userColumns
             = "$uUID AS uid, " .
-            (empty($uName) ? "null" : $uName) . " AS name, " .
+            (empty($uName) ? $uUID : $uName) . " AS name, " .
             (empty($uEmail) ? "null" : $uEmail) . " AS email, " .
             (empty($uQuota) ? "null" : $uQuota) . " AS quota, " .
             (empty($uHome) ? "null" : $uHome) . " AS home, " .
@@ -144,6 +144,11 @@ class QueryProvider implements \ArrayAccess
                 "FROM $user " .
                 "WHERE $uUID = :$uidParam",
 
+            Query::FIND_USER_CASE_INSENSITIVE =>
+                "SELECT $userColumns, $uPassword AS password " .
+                "FROM $user " .
+                "WHERE lower($uUID) = lower(:$uidParam)",
+
             Query::FIND_USER_GROUPS =>
                 "SELECT $groupColumns " .
                 "FROM $group, $userGroup " .
@@ -157,12 +162,24 @@ class QueryProvider implements \ArrayAccess
                 "WHERE $uUID LIKE :$searchParam " .
                 "ORDER BY $uUID",
 
-            Query::SAVE_USER =>
+            Query::UPDATE_DISPLAY_NAME =>
                 "UPDATE $user " .
-                "SET $uPassword = :$passwordParam, " .
-                "$uName = :$nameParam, " .
-                "$uEmail = :$emailParam, " .
-                "$uQuota = :$quotaParam " .
+                "SET $uName = :$nameParam " .
+                "WHERE $uUID = :$uidParam",
+
+            Query::UPDATE_EMAIL =>
+                "UPDATE $user " .
+                "SET $uEmail = :$emailParam " .
+                "WHERE $uUID = :$uidParam",
+
+            Query::UPDATE_PASSWORD =>
+                "UPDATE $user " .
+                "SET $uPassword = :$passwordParam " .
+                "WHERE $uUID = :$uidParam",
+
+            Query::UPDATE_QUOTA =>
+                "UPDATE $user " .
+                "SET $uQuota = :$quotaParam " .
                 "WHERE $uUID = :$uidParam",
         ];
     }

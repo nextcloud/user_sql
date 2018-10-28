@@ -19,23 +19,40 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace OCA\UserSQL\Constant;
+namespace OCA\UserSQL\Crypto;
+
+use OCP\IL10N;
 
 /**
- * The option properties names.
+ * Whirlpool hash implementation.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-final class Opt
+class Whirlpool extends AbstractAlgorithm
 {
-    const CASE_INSENSITIVE_USERNAME = "opt.case_insensitive_username";
-    const CRYPTO_CLASS = "opt.crypto_class";
-    const EMAIL_SYNC = "opt.email_sync";
-    const HOME_LOCATION = "opt.home_location";
-    const HOME_MODE = "opt.home_mode";
-    const NAME_CHANGE = "opt.name_change";
-    const PASSWORD_CHANGE = "opt.password_change";
-    const PREPEND_SALT = "opt.prepend_salt";
-    const QUOTA_SYNC = "opt.quota_sync";
-    const USE_CACHE = "opt.use_cache";
+    /**
+     * The class constructor.
+     *
+     * @param IL10N $localization The localization service.
+     */
+    public function __construct(IL10N $localization)
+    {
+        parent::__construct($localization);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getPasswordHash($password)
+    {
+        return hash('whirlpool', $password);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function getAlgorithmName()
+    {
+        return "Whirlpool";
+    }
 }

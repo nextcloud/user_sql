@@ -111,7 +111,7 @@ class QuotaSync implements IUserAction
                 }
 
                 $user->quota = $ncQuota;
-                $result = $this->userRepository->save($user);
+                $result = $this->userRepository->save($user, UserRepository::QUOTA_FIELD);
             }
 
             break;

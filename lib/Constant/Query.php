@@ -35,9 +35,13 @@ final class Query
     const FIND_GROUP_USERS = "find_group_users";
     const FIND_GROUPS = "find_groups";
     const FIND_USER = "find_user";
+    const FIND_USER_CASE_INSENSITIVE = "find_user_case_insensitive";
     const FIND_USER_GROUPS = "find_user_groups";
     const FIND_USERS = "find_users";
-    const SAVE_USER = "save_user";
+    const UPDATE_DISPLAY_NAME = "update_display_name";
+    const UPDATE_EMAIL = "update_email";
+    const UPDATE_PASSWORD = "update_password";
+    const UPDATE_QUOTA = "update_quota";
 
     const EMAIL_PARAM = "email";
     const GID_PARAM = "gid";

@@ -19,23 +19,42 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace OCA\UserSQL\Constant;
+namespace OCA\UserSQL\Crypto;
 
 /**
- * The option properties names.
+ * Drupal 7 overrides of phpass hash implementation.
  *
+ * @author BrandonKerr
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-final class Opt
+class Drupal7 extends Phpass
 {
-    const CASE_INSENSITIVE_USERNAME = "opt.case_insensitive_username";
-    const CRYPTO_CLASS = "opt.crypto_class";
-    const EMAIL_SYNC = "opt.email_sync";
-    const HOME_LOCATION = "opt.home_location";
-    const HOME_MODE = "opt.home_mode";
-    const NAME_CHANGE = "opt.name_change";
-    const PASSWORD_CHANGE = "opt.password_change";
-    const PREPEND_SALT = "opt.prepend_salt";
-    const QUOTA_SYNC = "opt.quota_sync";
-    const USE_CACHE = "opt.use_cache";
+    /**
+     * The expected (and maximum) number of characters in a hashed password.
+     */
+    const DRUPAL_HASH_LENGTH = 55;
+
+    /**
+     * @inheritdoc
+     */
+    protected function crypt($password, $setting)
+    {
+        return substr(parent::crypt($password, $setting), 0, self::DRUPAL_HASH_LENGTH);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function hash($input)
+    {
+        return hash('sha512', $input, true);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function getAlgorithmName()
+    {
+        return "Drupal 7";
+    }
 }

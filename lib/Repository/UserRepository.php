@@ -32,6 +32,11 @@ use OCA\UserSQL\Query\DataQuery;
  */
 class UserRepository
 {
+    const DISPLAY_NAME_FIELD = 0b0001;
+    const EMAIL_FIELD = 0b0010;
+    const PASSWORD_FIELD = 0b0100;
+    const QUOTA_FIELD = 0b1000;
+
     /**
      * @var DataQuery The data query object.
      */
@@ -48,18 +53,26 @@ class UserRepository
     }
 
     /**
-     * Get a user entity object.
+     * Get an user entity object.
      *
-     * @param string $uid The user ID.
+     * @param string $uid           The user ID.
+     * @param bool   $caseSensitive TRUE for case sensitive search,
+     *                              FALSE for case insensitive search.
      *
      * @return User The user entity, NULL if it does not exists or
      *              FALSE on failure.
      */
-    public function findByUid($uid)
+    public function findByUid($uid, $caseSensitive = true)
     {
-        return $this->dataQuery->queryEntity(
-            Query::FIND_USER, User::class, [Query::UID_PARAM => $uid]
-        );
+        if ($caseSensitive) {
+            return $this->dataQuery->queryEntity(
+                Query::FIND_USER, User::class, [Query::UID_PARAM => $uid]
+            );
+        } else {
+            return $this->dataQuery->queryEntity(
+                Query::FIND_USER_CASE_INSENSITIVE, User::class, [Query::UID_PARAM => $uid]
+            );
+        }
     }
 
     /**
@@ -97,20 +110,48 @@ class UserRepository
     /**
      * Save an user entity object.
      *
-     * @param User $user The user entity.
+     * @param User $user   The user entity.
+     * @param int  $fields Fields to update.
      *
      * @return bool TRUE on success, FALSE otherwise.
      */
-    public function save($user)
+    public function save($user, $fields)
     {
-        return $this->dataQuery->update(
-            Query::SAVE_USER, [
-                Query::NAME_PARAM => $user->name,
-                Query::PASSWORD_PARAM => $user->password,
-                Query::EMAIL_PARAM => $user->email,
-                Query::QUOTA_PARAM => $user->quota,
-                Query::UID_PARAM => $user->uid
-            ]
-        );
+        $status = true;
+
+        if ($fields & self::DISPLAY_NAME_FIELD) {
+            $status =& $this->dataQuery->update(
+                Query::UPDATE_DISPLAY_NAME, [
+                    Query::NAME_PARAM => $user->name,
+                    Query::UID_PARAM => $user->uid
+                ]
+            );
+        }
+        if ($fields & self::PASSWORD_FIELD) {
+            $status =& $this->dataQuery->update(
+                Query::UPDATE_PASSWORD, [
+                    Query::PASSWORD_PARAM => $user->password,
+                    Query::UID_PARAM => $user->uid
+                ]
+            );
+        }
+        if ($fields & self::EMAIL_FIELD) {
+            $status =& $this->dataQuery->update(
+                Query::UPDATE_EMAIL, [
+                    Query::EMAIL_PARAM => $user->email,
+                    Query::UID_PARAM => $user->uid
+                ]
+            );
+        }
+        if ($fields & self::QUOTA_FIELD) {
+            $status =& $this->dataQuery->update(
+                Query::UPDATE_QUOTA, [
+                    Query::QUOTA_PARAM => $user->quota,
+                    Query::UID_PARAM => $user->uid
+                ]
+            );
+        }
+
+        return $status;
     }
 }
