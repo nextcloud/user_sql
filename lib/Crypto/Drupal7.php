@@ -37,6 +37,14 @@ class Drupal7 extends Phpass
     /**
      * @inheritdoc
      */
+    public function configuration()
+    {
+        return [];
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected function crypt($password, $setting)
     {
         return substr(parent::crypt($password, $setting), 0, self::DRUPAL_HASH_LENGTH);
