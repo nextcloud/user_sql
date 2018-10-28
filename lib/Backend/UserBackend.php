@@ -292,11 +292,13 @@ final class UserBackend extends ABackend implements
             return false;
         }
 
-        $user = $this->userRepository->findByUid($uid);
-        if (!($user instanceof User)) {
+        $caseSensitive = empty($this->properties[Opt::CASE_INSENSITIVE_USERNAME]);
+        $user = $this->userRepository->findByUid($uid, $caseSensitive);
+        if (!($user instanceof User) || ($caseSensitive && $user->uid !== $uid)) {
             return false;
         }
 
+        $uid = $user->uid;
         $password = $this->addSalt($user, $password);
 
         $isCorrect = $passwordAlgorithm->checkPassword(

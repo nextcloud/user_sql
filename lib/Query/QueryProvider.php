@@ -144,6 +144,11 @@ class QueryProvider implements \ArrayAccess
                 "FROM $user " .
                 "WHERE $uUID = :$uidParam",
 
+            Query::FIND_USER_CASE_INSENSITIVE =>
+                "SELECT $userColumns, $uPassword AS password " .
+                "FROM $user " .
+                "WHERE lower($uUID) = lower(:$uidParam)",
+
             Query::FIND_USER_GROUPS =>
                 "SELECT $groupColumns " .
                 "FROM $group, $userGroup " .

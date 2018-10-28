@@ -53,18 +53,26 @@ class UserRepository
     }
 
     /**
-     * Get a user entity object.
+     * Get an user entity object.
      *
-     * @param string $uid The user ID.
+     * @param string $uid           The user ID.
+     * @param bool   $caseSensitive TRUE for case sensitive search,
+     *                              FALSE for case insensitive search.
      *
      * @return User The user entity, NULL if it does not exists or
      *              FALSE on failure.
      */
-    public function findByUid($uid)
+    public function findByUid($uid, $caseSensitive = true)
     {
-        return $this->dataQuery->queryEntity(
-            Query::FIND_USER, User::class, [Query::UID_PARAM => $uid]
-        );
+        if ($caseSensitive) {
+            return $this->dataQuery->queryEntity(
+                Query::FIND_USER, User::class, [Query::UID_PARAM => $uid]
+            );
+        } else {
+            return $this->dataQuery->queryEntity(
+                Query::FIND_USER_CASE_INSENSITIVE, User::class, [Query::UID_PARAM => $uid]
+            );
+        }
     }
 
     /**

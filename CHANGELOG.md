@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Whirlpool hash algorithm
 - 'Prepend salt' toggle
 - Drupal 7 hash algorithm
+- Case-insensitive username option
 ### Fixed
 - Error when 'Display name' not set
 - Encoding of iteration for 'Extended DES (Crypt)'

@@ -28,6 +28,7 @@ namespace OCA\UserSQL\Constant;
  */
 final class Opt
 {
+    const CASE_INSENSITIVE_USERNAME = "opt.case_insensitive_username";
     const CRYPTO_CLASS = "opt.crypto_class";
     const EMAIL_SYNC = "opt.email_sync";
     const HOME_LOCATION = "opt.home_location";
