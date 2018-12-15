@@ -263,6 +263,10 @@ final class UserBackend extends ABackend implements
             return false;
         }
 
+        if (is_null($user->name)) {
+            return false;
+        }
+
         $name = $user->name;
         $this->logger->debug(
             "Returning getDisplayName($uid): $name",
@@ -389,7 +393,9 @@ final class UserBackend extends ABackend implements
 
         $names = [];
         foreach ($users as $user) {
-            $names[$user] = $user->name;
+            if (!is_null($user->name)) {
+                $names[$user] = $user->name;
+            }
         }
 
         $this->logger->debug(
