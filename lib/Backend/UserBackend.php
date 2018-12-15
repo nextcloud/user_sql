@@ -21,6 +21,7 @@
 
 namespace OCA\UserSQL\Backend;
 
+use OC\User\Backend;
 use OCA\UserSQL\Action\EmailSync;
 use OCA\UserSQL\Action\IUserAction;
 use OCA\UserSQL\Action\QuotaSync;
@@ -641,5 +642,17 @@ final class UserBackend extends ABackend implements
     public function deleteUser($uid)
     {
         return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function implementsActions($actions): bool
+    {
+        if ($actions & Backend::SET_PASSWORD) {
+            return !empty($this->properties[Opt::PASSWORD_CHANGE]);
+        }
+
+        return parent::implementsActions($actions);
     }
 }
