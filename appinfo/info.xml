@@ -22,7 +22,7 @@
     <category>auth</category>
     <dependencies>
         <php min-version="7.0"/>
-        <nextcloud min-version="14" max-version="14"/>
+        <nextcloud min-version="14" max-version="15"/>
     </dependencies>
     <settings>
         <admin>\OCA\UserSQL\Settings\Admin</admin>
