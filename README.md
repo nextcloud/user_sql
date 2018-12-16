@@ -119,7 +119,8 @@ CREATE TABLE sql_user
   home           TEXT        NULL,
   password       TEXT        NOT NULL,
   active         TINYINT(1)  NOT NULL DEFAULT '1',
-  provide_avatar BOOLEAN     NOT NULL DEFAULT FALSE
+  provide_avatar BOOLEAN     NOT NULL DEFAULT FALSE,
+  salt           TEXT        NULL
 );
 
 CREATE TABLE sql_group
@@ -205,6 +206,10 @@ WoltLab Community Framework 2.x | Double salted bcrypt. | $2a$08$XEQDKNU/Vbootwx
 Whirlpool | | 74dfc2b27acfa364da55f93a5caee29ccad3557247eda238831b3e9bd931b01d77fe994e4f12b9d4cfa92a124461d2065197d8cf7f33fc88566da2db2a4d6eae
 
 ## Development
+
+#### Testing environment
+
+There is a [vagrant](https://github.com/mlojewski-me/user_sql-vagrant) box which you can use at development stage.
 
 #### New database driver support
 
