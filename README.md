@@ -73,7 +73,8 @@ Name | Description | Details
 **Active** | Flag indicating if user can log in. | Optional.<br/>Default: true.
 **Provide avatar** | Flag indicating if user can change its avatar. | Optional.<br/>Default: false.
 **Salt** | Salt which is appended to password when checking or changing the password. | Optional.
-**Prepend salt** | Prepend a salt to the password instead of appending it. | Optional.<br/>Default: false.
+**Append salt** | Append a salt to the password. | Optional.<br/>Default: false.
+**Prepend salt** | Prepend a salt to the password. | Optional.<br/>Default: false.
 
 #### Group table
 
@@ -196,6 +197,7 @@ Drupal 7 | See [phpass](http://www.openwall.com/phpass/). | $S$DC7eCpJQ3SUQtW4Bp
 Joomla MD5 Encryption | Generates 32 chars salt. | 14d21b49b0f13e2acba962b6b0039edd:haJK0yTvBXTNMh76xwEw5RYEVpJsN8us
 MD5 | No salt supported. | 5f4dcc3b5aa765d61d8327deb882cf99
 Portable PHP password | See [phpass](http://www.openwall.com/phpass/). | $P$BxrwraqNTi4as0EI.IpiA/K.muk9ke/
+Redmine | Requires salt. Salt value for hash in the next column is 'salt'. | 48b75edeffd8e413341d7734f0f3391e7a5da994 
 SHA-1 | No salt supported. | 5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8
 SHA-256 | No salt supported. | 5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8
 SHA-512 | No salt supported. | b109f3bbbc244eb82441917ed06d618b9008dd09b3befd1b5e07394c706a8bb980b1d7785e5976ec049b46df5f1326af5a2ea6d103fd07c95385ffab0cacbc86

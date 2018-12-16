@@ -7,10 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Added
 - Support for Nextcloud 15
-- SHA-256, SHA-512 hash algorithm
+- Redmine, SHA-256, SHA-512 hash algorithms
 ### Fixed
 - Loading user list when display name is null
 - Hide "password change form" when "Allow password change" not set
+### Changed
+- Append salt only when checked. Not by default
 
 ## [4.1.0] - 2018-10-28
 ### Added

@@ -21,17 +21,17 @@
 
 namespace Tests\UserSQL\Crypto;
 
-use OCA\UserSQL\Crypto\Phpass;
 use OCA\UserSQL\Crypto\IPasswordAlgorithm;
+use OCA\UserSQL\Crypto\Redmine;
 use OCP\IL10N;
 use Test\TestCase;
 
 /**
- * Unit tests for class <code>Phpass</code>.
+ * Unit tests for class <code>Redmine</code>.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class PhpassTest extends TestCase
+class RedmineTest extends TestCase
 {
     /**
      * @var IPasswordAlgorithm
@@ -42,20 +42,20 @@ class PhpassTest extends TestCase
     {
         $this->assertTrue(
             $this->crypto->checkPassword(
-                "password", "\$P\$BxrwraqNTi4as0EI.IpiA/K.muk9ke/"
+                "password", "48b75edeffd8e413341d7734f0f3391e7a5da994", "salt"
             )
         );
     }
 
     public function testPasswordHash()
     {
-        $hash = $this->crypto->getPasswordHash("password");
-        $this->assertTrue($this->crypto->checkPassword("password", $hash));
+        $hash = $this->crypto->getPasswordHash("password", "salt");
+        $this->assertTrue($this->crypto->checkPassword("password", $hash, "salt"));
     }
 
     protected function setUp()
     {
         parent::setUp();
-        $this->crypto = new Phpass($this->createMock(IL10N::class));
+        $this->crypto = new Redmine($this->createMock(IL10N::class));
     }
 }

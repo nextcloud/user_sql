@@ -153,6 +153,7 @@ function print_select_options(
                 print_text_input($l, "db-table-user-column-active", "Active", $_["db.table.user.column.active"]);
                 print_text_input($l, "db-table-user-column-avatar", "Provide avatar", $_["db.table.user.column.avatar"]);
                 print_text_input($l, "db-table-user-column-salt", "Salt", $_["db.table.user.column.salt"]);
+                print_checkbox_input($l, "opt-append_salt", "Append salt", $_["opt.append_salt"]);
                 print_checkbox_input($l, "opt-prepend_salt", "Prepend salt", $_["opt.prepend_salt"]); ?>
             </fieldset>
         </div>

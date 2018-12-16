@@ -307,7 +307,7 @@ final class UserBackend extends ABackend implements
         $password = $this->addSalt($user, $password);
 
         $isCorrect = $passwordAlgorithm->checkPassword(
-            $password, $user->password
+            $password, $user->password, $user->salt
         );
 
         if ($user->active == false) {
@@ -366,9 +366,9 @@ final class UserBackend extends ABackend implements
     private function addSalt(User $user, string $password): string
     {
         if ($user->salt !== null) {
-            if (empty($this->properties[Opt::PREPEND_SALT])) {
+            if (!empty($this->properties[Opt::APPEND_SALT])) {
                 return $password . $user->salt;
-            } else {
+            } elseif (!empty($this->properties[Opt::PREPEND_SALT])) {
                 return $user->salt . $password;
             }
         }
