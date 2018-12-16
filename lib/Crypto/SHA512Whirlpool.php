@@ -24,7 +24,7 @@ namespace OCA\UserSQL\Crypto;
 use OCP\IL10N;
 
 /**
- * SHA512 Whirlpool hash implementation.
+ * SHA-512 Whirlpool hash implementation.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
@@ -53,6 +53,6 @@ class SHA512Whirlpool extends AbstractAlgorithm
      */
     protected function getAlgorithmName()
     {
-        return "SHA512 Whirlpool";
+        return "SHA-512 Whirlpool";
     }
 }

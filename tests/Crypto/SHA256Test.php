@@ -19,40 +19,43 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace OCA\UserSQL\Crypto;
+namespace Tests\UserSQL\Crypto;
 
+use OCA\UserSQL\Crypto\IPasswordAlgorithm;
+use OCA\UserSQL\Crypto\SHA256;
 use OCP\IL10N;
+use Test\TestCase;
 
 /**
- * SHA-1 hash implementation.
+ * Unit tests for class <code>SHA256</code>.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class SHA1 extends AbstractAlgorithm
+class SHA512Test extends TestCase
 {
     /**
-     * The class constructor.
-     *
-     * @param IL10N $localization The localization service.
+     * @var IPasswordAlgorithm
      */
-    public function __construct(IL10N $localization)
+    private $crypto;
+
+    public function testCheckPassword()
     {
-        parent::__construct($localization);
+        $this->assertTrue(
+            $this->crypto->checkPassword(
+                "password", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"
+            )
+        );
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getPasswordHash($password)
+    public function testPasswordHash()
     {
-        return sha1($password);
+        $hash = $this->crypto->getPasswordHash("password");
+        $this->assertTrue($this->crypto->checkPassword("password", $hash));
     }
 
-    /**
-     * @inheritdoc
-     */
-    protected function getAlgorithmName()
+    protected function setUp()
     {
-        return "SHA-1";
+        parent::setUp();
+        $this->crypto = new SHA256($this->createMock(IL10N::class));
     }
 }

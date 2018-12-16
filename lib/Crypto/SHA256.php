@@ -24,11 +24,11 @@ namespace OCA\UserSQL\Crypto;
 use OCP\IL10N;
 
 /**
- * SHA-1 hash implementation.
+ * SHA-256 hash implementation.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class SHA1 extends AbstractAlgorithm
+class SHA256 extends AbstractAlgorithm
 {
     /**
      * The class constructor.
@@ -45,7 +45,7 @@ class SHA1 extends AbstractAlgorithm
      */
     public function getPasswordHash($password)
     {
-        return sha1($password);
+        return hash('sha256', $password);
     }
 
     /**
@@ -53,6 +53,6 @@ class SHA1 extends AbstractAlgorithm
      */
     protected function getAlgorithmName()
     {
-        return "SHA-1";
+        return "SHA-256";
     }
 }

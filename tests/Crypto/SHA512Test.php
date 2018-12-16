@@ -19,40 +19,44 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace OCA\UserSQL\Crypto;
+namespace Tests\UserSQL\Crypto;
 
+use OCA\UserSQL\Crypto\IPasswordAlgorithm;
+use OCA\UserSQL\Crypto\SHA512;
 use OCP\IL10N;
+use Test\TestCase;
 
 /**
- * SHA-1 hash implementation.
+ * Unit tests for class <code>SHA512</code>.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class SHA1 extends AbstractAlgorithm
+class SHA512Test extends TestCase
 {
     /**
-     * The class constructor.
-     *
-     * @param IL10N $localization The localization service.
+     * @var IPasswordAlgorithm
      */
-    public function __construct(IL10N $localization)
+    private $crypto;
+
+    public function testCheckPassword()
     {
-        parent::__construct($localization);
+        $this->assertTrue(
+            $this->crypto->checkPassword(
+                "password",
+                "b109f3bbbc244eb82441917ed06d618b9008dd09b3befd1b5e07394c706a8bb980b1d7785e5976ec049b46df5f1326af5a2ea6d103fd07c95385ffab0cacbc86"
+            )
+        );
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getPasswordHash($password)
+    public function testPasswordHash()
     {
-        return sha1($password);
+        $hash = $this->crypto->getPasswordHash("password");
+        $this->assertTrue($this->crypto->checkPassword("password", $hash));
     }
 
-    /**
-     * @inheritdoc
-     */
-    protected function getAlgorithmName()
+    protected function setUp()
     {
-        return "SHA-1";
+        parent::setUp();
+        $this->crypto = new SHA512($this->createMock(IL10N::class));
     }
 }
