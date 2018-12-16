@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Support for Nextcloud 15
+- SHA-256, SHA-512 hash algorithm
+### Fixed
+- Loading user list when display name is null
+- Hide "password change form" when "Allow password change" not set
 
 ## [4.1.0] - 2018-10-28
 ### Added
