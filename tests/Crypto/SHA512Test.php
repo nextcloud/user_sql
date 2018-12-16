@@ -21,17 +21,17 @@
 
 namespace Tests\UserSQL\Crypto;
 
-use OCA\UserSQL\Crypto\Phpass;
 use OCA\UserSQL\Crypto\IPasswordAlgorithm;
+use OCA\UserSQL\Crypto\SHA512;
 use OCP\IL10N;
 use Test\TestCase;
 
 /**
- * Unit tests for class <code>Phpass</code>.
+ * Unit tests for class <code>SHA512</code>.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class PhpassTest extends TestCase
+class SHA512Test extends TestCase
 {
     /**
      * @var IPasswordAlgorithm
@@ -42,7 +42,8 @@ class PhpassTest extends TestCase
     {
         $this->assertTrue(
             $this->crypto->checkPassword(
-                "password", "\$P\$BxrwraqNTi4as0EI.IpiA/K.muk9ke/"
+                "password",
+                "b109f3bbbc244eb82441917ed06d618b9008dd09b3befd1b5e07394c706a8bb980b1d7785e5976ec049b46df5f1326af5a2ea6d103fd07c95385ffab0cacbc86"
             )
         );
     }
@@ -56,6 +57,6 @@ class PhpassTest extends TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->crypto = new Phpass($this->createMock(IL10N::class));
+        $this->crypto = new SHA512($this->createMock(IL10N::class));
     }
 }

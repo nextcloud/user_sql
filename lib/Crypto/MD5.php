@@ -43,7 +43,7 @@ class MD5 extends AbstractAlgorithm
     /**
      * @inheritdoc
      */
-    public function getPasswordHash($password)
+    public function getPasswordHash($password, $salt = null)
     {
         return md5($password);
     }

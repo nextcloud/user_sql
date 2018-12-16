@@ -43,7 +43,7 @@ class Joomla extends AbstractAlgorithm
     /**
      * @inheritdoc
      */
-    public function getPasswordHash($password)
+    public function getPasswordHash($password, $salt = null)
     {
         $salt = Utils::randomString(
             32, "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
@@ -55,7 +55,7 @@ class Joomla extends AbstractAlgorithm
     /**
      * @inheritdoc
      */
-    public function checkPassword($password, $dbHash)
+    public function checkPassword($password, $dbHash, $salt = null)
     {
         return hash_equals($dbHash, self::generateHash($password, $dbHash));
     }

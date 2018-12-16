@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.2.0] - 2018-12-16
+### Added
+- Support for Nextcloud 15
+- Redmine, SHA-256, SHA-512 hash algorithms
+### Fixed
+- Loading user list when display name is null
+- Hide "password change form" when "Allow password change" not set
+### Changed
+- Append salt only when checked. Not by default
+
 ## [4.1.0] - 2018-10-28
 ### Added
 - Whirlpool hash algorithm
@@ -98,6 +108,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Supported version of ownCloud, Nextcloud: ownCloud 10, Nextcloud 12
 
+[4.2.0]: https://github.com/nextcloud/user_sql/compare/v4.1.0...v4.2.0
 [4.1.0]: https://github.com/nextcloud/user_sql/compare/v4.0.1...v4.1.0
 [4.0.1]: https://github.com/nextcloud/user_sql/compare/v4.0.0...v4.0.1
 [4.0.0]: https://github.com/nextcloud/user_sql/compare/v4.0.0-rc2...v4.0.0

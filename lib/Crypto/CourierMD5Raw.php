@@ -43,7 +43,7 @@ class CourierMD5Raw extends AbstractAlgorithm
     /**
      * @inheritdoc
      */
-    public function getPasswordHash($password)
+    public function getPasswordHash($password, $salt = null)
     {
         return '{MD5RAW}' . md5($password);
     }

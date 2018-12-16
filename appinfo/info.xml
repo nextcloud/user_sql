@@ -8,7 +8,7 @@
         Retrieve the users and groups info. Allow the users to change their passwords.
         Sync the users' email addresses with the addresses stored by Nextcloud.
     </description>
-    <version>4.1.0</version>
+    <version>4.2.0</version>
     <licence>agpl</licence>
     <author>Marcin Łojewski</author>
     <author>Andreas Böhler</author>
@@ -22,7 +22,7 @@
     <category>auth</category>
     <dependencies>
         <php min-version="7.0"/>
-        <nextcloud min-version="14" max-version="14"/>
+        <nextcloud min-version="14" max-version="15"/>
     </dependencies>
     <settings>
         <admin>\OCA\UserSQL\Settings\Admin</admin>

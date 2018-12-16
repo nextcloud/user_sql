@@ -31,7 +31,7 @@ class WCF2 extends AbstractCrypt
     /**
      * @inheritdoc
      */
-    public function checkPassword($password, $dbHash)
+    public function checkPassword($password, $dbHash, $salt = null)
     {
         return hash_equals($dbHash, crypt(crypt($password, $dbHash), $dbHash));
     }
@@ -39,7 +39,7 @@ class WCF2 extends AbstractCrypt
     /**
      * @inheritdoc
      */
-    public function getPasswordHash($password)
+    public function getPasswordHash($password, $salt = null)
     {
         $salt = $this->getSalt();
         return crypt(crypt($password, $salt), $salt);

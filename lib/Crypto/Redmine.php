@@ -19,43 +19,32 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Tests\UserSQL\Crypto;
-
-use OCA\UserSQL\Crypto\Phpass;
-use OCA\UserSQL\Crypto\IPasswordAlgorithm;
-use OCP\IL10N;
-use Test\TestCase;
+namespace OCA\UserSQL\Crypto;
 
 /**
- * Unit tests for class <code>Phpass</code>.
+ * Redmine MD5 hash implementation.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class PhpassTest extends TestCase
+class Redmine extends AbstractAlgorithm
 {
     /**
-     * @var IPasswordAlgorithm
+     * @inheritdoc
      */
-    private $crypto;
-
-    public function testCheckPassword()
+    public function getPasswordHash($password, $salt = null)
     {
-        $this->assertTrue(
-            $this->crypto->checkPassword(
-                "password", "\$P\$BxrwraqNTi4as0EI.IpiA/K.muk9ke/"
-            )
-        );
+        if (is_null($salt)) {
+            return false;
+        }
+
+        return sha1($salt . sha1($password));
     }
 
-    public function testPasswordHash()
+    /**
+     * @inheritdoc
+     */
+    protected function getAlgorithmName()
     {
-        $hash = $this->crypto->getPasswordHash("password");
-        $this->assertTrue($this->crypto->checkPassword("password", $hash));
-    }
-
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->crypto = new Phpass($this->createMock(IL10N::class));
+        return "Redmine";
     }
 }

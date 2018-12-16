@@ -21,6 +21,7 @@
 
 namespace OCA\UserSQL\Backend;
 
+use OC\User\Backend;
 use OCA\UserSQL\Action\EmailSync;
 use OCA\UserSQL\Action\IUserAction;
 use OCA\UserSQL\Action\QuotaSync;
@@ -263,6 +264,10 @@ final class UserBackend extends ABackend implements
             return false;
         }
 
+        if (is_null($user->name)) {
+            return false;
+        }
+
         $name = $user->name;
         $this->logger->debug(
             "Returning getDisplayName($uid): $name",
@@ -302,7 +307,7 @@ final class UserBackend extends ABackend implements
         $password = $this->addSalt($user, $password);
 
         $isCorrect = $passwordAlgorithm->checkPassword(
-            $password, $user->password
+            $password, $user->password, $user->salt
         );
 
         if ($user->active == false) {
@@ -361,9 +366,9 @@ final class UserBackend extends ABackend implements
     private function addSalt(User $user, string $password): string
     {
         if ($user->salt !== null) {
-            if (empty($this->properties[Opt::PREPEND_SALT])) {
+            if (!empty($this->properties[Opt::APPEND_SALT])) {
                 return $password . $user->salt;
-            } else {
+            } elseif (!empty($this->properties[Opt::PREPEND_SALT])) {
                 return $user->salt . $password;
             }
         }
@@ -389,7 +394,9 @@ final class UserBackend extends ABackend implements
 
         $names = [];
         foreach ($users as $user) {
-            $names[$user] = $user->name;
+            if (!is_null($user->name)) {
+                $names[$user] = $user->name;
+            }
         }
 
         $this->logger->debug(
@@ -635,5 +642,17 @@ final class UserBackend extends ABackend implements
     public function deleteUser($uid)
     {
         return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function implementsActions($actions): bool
+    {
+        if ($actions & Backend::SET_PASSWORD) {
+            return !empty($this->properties[Opt::PASSWORD_CHANGE]);
+        }
+
+        return parent::implementsActions($actions);
     }
 }

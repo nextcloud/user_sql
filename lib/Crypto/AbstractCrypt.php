@@ -38,7 +38,7 @@ abstract class AbstractCrypt extends AbstractAlgorithm
     /**
      * @inheritdoc
      */
-    public function checkPassword($password, $dbHash)
+    public function checkPassword($password, $dbHash, $salt = null)
     {
         return hash_equals($dbHash, crypt($password, $dbHash));
     }
@@ -46,7 +46,7 @@ abstract class AbstractCrypt extends AbstractAlgorithm
     /**
      * @inheritdoc
      */
-    public function getPasswordHash($password)
+    public function getPasswordHash($password, $salt = null)
     {
         return crypt($password, $this->getSalt());
     }
