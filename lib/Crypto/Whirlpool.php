@@ -43,7 +43,7 @@ class Whirlpool extends AbstractAlgorithm
     /**
      * @inheritdoc
      */
-    public function getPasswordHash($password)
+    public function getPasswordHash($password, $salt = null)
     {
         return hash('whirlpool', $password);
     }

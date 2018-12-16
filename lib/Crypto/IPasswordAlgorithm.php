@@ -42,18 +42,20 @@ interface IPasswordAlgorithm
      * This value is stored in the database, when the password is changed.
      *
      * @param String $password The new password.
+     * @param String $salt     Optional. Salt value.
      *
      * @return boolean True if the password was hashed successfully, false otherwise.
      */
-    public function getPasswordHash($password);
+    public function getPasswordHash($password, $salt = null);
 
     /**
      * Check password given by the user against hash stored in the database.
      *
      * @param String $password Password given by the user.
      * @param String $dbHash   Password hash stored in the database.
+     * @param String $salt     Optional. Salt value.
      *
      * @return boolean True if the password is correct, false otherwise.
      */
-    public function checkPassword($password, $dbHash);
+    public function checkPassword($password, $dbHash, $salt = null);
 }

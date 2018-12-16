@@ -81,7 +81,7 @@ class CryptArgon2 extends AbstractAlgorithm
     /**
      * @inheritdoc
      */
-    public function checkPassword($password, $dbHash)
+    public function checkPassword($password, $dbHash, $salt = null)
     {
         return password_verify($password, $dbHash);
     }
@@ -89,7 +89,7 @@ class CryptArgon2 extends AbstractAlgorithm
     /**
      * @inheritdoc
      */
-    public function getPasswordHash($password)
+    public function getPasswordHash($password, $salt = null)
     {
         return password_hash(
             $password, PASSWORD_ARGON2I, [

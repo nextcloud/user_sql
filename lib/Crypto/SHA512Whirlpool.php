@@ -43,7 +43,7 @@ class SHA512Whirlpool extends AbstractAlgorithm
     /**
      * @inheritdoc
      */
-    public function getPasswordHash($password)
+    public function getPasswordHash($password, $salt = null)
     {
         return hash('sha512', hash('whirlpool', $password));
     }

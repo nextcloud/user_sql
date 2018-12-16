@@ -43,7 +43,7 @@ class CourierSHA256 extends AbstractAlgorithm
     /**
      * @inheritdoc
      */
-    public function getPasswordHash($password)
+    public function getPasswordHash($password, $salt = null)
     {
         return '{SHA256}' . Utils::hexToBase64(hash('sha256', $password));
     }
