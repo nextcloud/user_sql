@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Added
 - Reverse active column option
+- Support for Nextcloud 16
 
 ## [4.2.0] - 2018-12-16
 ### Added
