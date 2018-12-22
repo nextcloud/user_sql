@@ -38,5 +38,6 @@ final class Opt
     const PASSWORD_CHANGE = "opt.password_change";
     const PREPEND_SALT = "opt.prepend_salt";
     const QUOTA_SYNC = "opt.quota_sync";
+    const REVERSE_ACTIVE = "opt.reverse_active";
     const USE_CACHE = "opt.use_cache";
 }
