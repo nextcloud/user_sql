@@ -22,6 +22,7 @@
 namespace OCA\UserSQL\Query;
 
 use OCA\UserSQL\Constant\DB;
+use OCA\UserSQL\Constant\Opt;
 use OCA\UserSQL\Constant\Query;
 use OCA\UserSQL\Properties;
 
@@ -86,6 +87,8 @@ class QueryProvider implements \ArrayAccess
         $searchParam = Query::SEARCH_PARAM;
         $uidParam = Query::UID_PARAM;
 
+        $reverseActiveOpt = $this->properties[Opt::REVERSE_ACTIVE];
+
         $groupColumns
             = "g.$gGID AS gid, " .
             (empty($gName) ? "g." . $gGID : "g." . $gName) . " AS name, " .
@@ -96,7 +99,7 @@ class QueryProvider implements \ArrayAccess
             (empty($uEmail) ? "null" : "u." . $uEmail) . " AS email, " .
             (empty($uQuota) ? "null" : "u." . $uQuota) . " AS quota, " .
             (empty($uHome) ? "null" : "u." . $uHome) . " AS home, " .
-            (empty($uActive) ? "true" : "u." . $uActive) . " AS active, " .
+            (empty($uActive) ? "true" : (empty($reverseActiveOpt) ? "" : "NOT ") . "u." . $uActive) . " AS active, " .
             (empty($uAvatar) ? "false" : "u." . $uAvatar) . " AS avatar, " .
             (empty($uSalt) ? "null" : "u." . $uSalt) . " AS salt";
 
