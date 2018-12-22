@@ -50,7 +50,7 @@ class Phpass extends AbstractAlgorithm
     /**
      * @inheritdoc
      */
-    public function checkPassword($password, $dbHash)
+    public function checkPassword($password, $dbHash, $salt = null)
     {
         return hash_equals($dbHash, $this->crypt($password, $dbHash));
     }
@@ -136,7 +136,7 @@ class Phpass extends AbstractAlgorithm
     /**
      * @inheritdoc
      */
-    public function getPasswordHash($password)
+    public function getPasswordHash($password, $salt = null)
     {
         return $this->crypt($password, $this->genSalt());
     }

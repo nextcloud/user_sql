@@ -65,15 +65,15 @@ abstract class AbstractAlgorithm implements IPasswordAlgorithm
     /**
      * @inheritdoc
      */
-    public function checkPassword($password, $dbHash)
+    public function checkPassword($password, $dbHash, $salt = null)
     {
-        return hash_equals($dbHash, $this->getPasswordHash($password));
+        return hash_equals($dbHash, $this->getPasswordHash($password, $salt));
     }
 
     /**
      * @inheritdoc
      */
-    public abstract function getPasswordHash($password);
+    public abstract function getPasswordHash($password, $salt = null);
 
     /**
      * @inheritdoc

@@ -44,7 +44,7 @@ class Crypt extends AbstractCrypt
     /**
      * @inheritdoc
      */
-    public function getPasswordHash($password)
+    public function getPasswordHash($password, $salt = null)
     {
         return password_hash($password, PASSWORD_DEFAULT);
     }

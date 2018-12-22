@@ -43,7 +43,7 @@ abstract class SSHA extends AbstractAlgorithm
     /**
      * @inheritdoc
      */
-    public function checkPassword($password, $dbHash)
+    public function checkPassword($password, $dbHash, $salt = null)
     {
         $saltedPassword = base64_decode(
             preg_replace("/" . $this->getPrefix() . "/i", "", $dbHash)
@@ -94,7 +94,7 @@ abstract class SSHA extends AbstractAlgorithm
     /**
      * @inheritdoc
      */
-    public function getPasswordHash($password)
+    public function getPasswordHash($password, $salt = null)
     {
         return self::ssha(
             $password, Utils::randomString(

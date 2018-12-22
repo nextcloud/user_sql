@@ -19,43 +19,40 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Tests\UserSQL\Crypto;
+namespace OCA\UserSQL\Crypto;
 
-use OCA\UserSQL\Crypto\Phpass;
-use OCA\UserSQL\Crypto\IPasswordAlgorithm;
 use OCP\IL10N;
-use Test\TestCase;
 
 /**
- * Unit tests for class <code>Phpass</code>.
+ * SHA-512 hash implementation.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class PhpassTest extends TestCase
+class SHA512 extends AbstractAlgorithm
 {
     /**
-     * @var IPasswordAlgorithm
+     * The class constructor.
+     *
+     * @param IL10N $localization The localization service.
      */
-    private $crypto;
-
-    public function testCheckPassword()
+    public function __construct(IL10N $localization)
     {
-        $this->assertTrue(
-            $this->crypto->checkPassword(
-                "password", "\$P\$BxrwraqNTi4as0EI.IpiA/K.muk9ke/"
-            )
-        );
+        parent::__construct($localization);
     }
 
-    public function testPasswordHash()
+    /**
+     * @inheritdoc
+     */
+    public function getPasswordHash($password, $salt = null)
     {
-        $hash = $this->crypto->getPasswordHash("password");
-        $this->assertTrue($this->crypto->checkPassword("password", $hash));
+        return hash('sha512', $password);
     }
 
-    protected function setUp()
+    /**
+     * @inheritdoc
+     */
+    protected function getAlgorithmName()
     {
-        parent::setUp();
-        $this->crypto = new Phpass($this->createMock(IL10N::class));
+        return "SHA-512";
     }
 }
