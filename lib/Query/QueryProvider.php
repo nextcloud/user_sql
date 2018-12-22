@@ -87,18 +87,18 @@ class QueryProvider implements \ArrayAccess
         $uidParam = Query::UID_PARAM;
 
         $groupColumns
-            = "$gGID AS gid, " .
-            (empty($gName) ? $gGID : $gName) . " AS name, " .
-            (empty($gAdmin) ? "false" : $gAdmin) . " AS admin";
+            = "g.$gGID AS gid, " .
+            (empty($gName) ? "g." . $gGID : "g." . $gName) . " AS name, " .
+            (empty($gAdmin) ? "false" : "g." . $gAdmin) . " AS admin";
         $userColumns
-            = "$uUID AS uid, " .
-            (empty($uName) ? $uUID : $uName) . " AS name, " .
-            (empty($uEmail) ? "null" : $uEmail) . " AS email, " .
-            (empty($uQuota) ? "null" : $uQuota) . " AS quota, " .
-            (empty($uHome) ? "null" : $uHome) . " AS home, " .
-            (empty($uActive) ? "true" : $uActive) . " AS active, " .
-            (empty($uAvatar) ? "false" : $uAvatar) . " AS avatar, " .
-            (empty($uSalt) ? "null" : $uSalt) . " AS salt";
+            = "u.$uUID AS uid, " .
+            (empty($uName) ? "u." . $uUID : "u." . $uName) . " AS name, " .
+            (empty($uEmail) ? "null" : "u." . $uEmail) . " AS email, " .
+            (empty($uQuota) ? "null" : "u." . $uQuota) . " AS quota, " .
+            (empty($uHome) ? "null" : "u." . $uHome) . " AS home, " .
+            (empty($uActive) ? "true" : "u." . $uActive) . " AS active, " .
+            (empty($uAvatar) ? "false" : "u." . $uAvatar) . " AS avatar, " .
+            (empty($uSalt) ? "null" : "u." . $uSalt) . " AS salt";
 
         $this->queries = [
             Query::BELONGS_TO_ADMIN =>
@@ -121,43 +121,43 @@ class QueryProvider implements \ArrayAccess
                 "WHERE u.$uUID LIKE :$searchParam",
 
             Query::FIND_GROUP =>
-                "SELECT g.$groupColumns " .
+                "SELECT $groupColumns " .
                 "FROM $group g " .
                 "WHERE g.$gGID = :$gidParam",
 
             Query::FIND_GROUP_USERS =>
                 "SELECT ug.$ugUID AS uid " .
-                "FROM ug.$userGroup " .
+                "FROM $userGroup ug " .
                 "WHERE ug.$ugGID = :$gidParam " .
                 "AND ug.$ugUID " .
                 "LIKE :$searchParam " .
                 "ORDER BY ug.$ugUID",
 
             Query::FIND_GROUPS =>
-                "SELECT g.$groupColumns " .
-                "FROM g.$group " .
+                "SELECT $groupColumns " .
+                "FROM $group g " .
                 "WHERE g.$gGID LIKE :$searchParam " .
                 "ORDER BY g.$gGID",
 
             Query::FIND_USER =>
-                "SELECT u.$userColumns, u.$uPassword AS password " .
-                "FROM u.$user " .
+                "SELECT $userColumns, u.$uPassword AS password " .
+                "FROM $user u " .
                 "WHERE u.$uUID = :$uidParam",
 
             Query::FIND_USER_CASE_INSENSITIVE =>
-                "SELECT u.$userColumns, u.$uPassword AS password " .
+                "SELECT $userColumns, u.$uPassword AS password " .
                 "FROM $user u " .
                 "WHERE lower(u.$uUID) = lower(:$uidParam)",
 
             Query::FIND_USER_GROUPS =>
-                "SELECT g.$groupColumns " .
+                "SELECT $groupColumns " .
                 "FROM $group g, $userGroup ug " .
                 "WHERE ug.$ugGID = g.$gGID " .
                 "AND ug.$ugUID = :$uidParam " .
                 "ORDER BY g.$gGID",
 
             Query::FIND_USERS =>
-                "SELECT u.$userColumns " .
+                "SELECT $userColumns " .
                 "FROM $user u " .
                 "WHERE u.$uUID LIKE :$searchParam " .
                 "ORDER BY u.$uUID",
