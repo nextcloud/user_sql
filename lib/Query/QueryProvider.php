@@ -102,65 +102,65 @@ class QueryProvider implements \ArrayAccess
 
         $this->queries = [
             Query::BELONGS_TO_ADMIN =>
-                "SELECT COUNT($gGID) > 0 AS admin " .
-                "FROM $group, $userGroup " .
-                "WHERE $ugGID = $gGID " .
-                "AND $ugUID = :$uidParam " .
-                "AND $gAdmin",
+                "SELECT COUNT(g.$gGID) > 0 AS admin " .
+                "FROM $group g, $userGroup ug " .
+                "WHERE ug.$ugGID = g.$gGID " .
+                "AND ug.$ugUID = :$uidParam " .
+                "AND g.$gAdmin",
 
             Query::COUNT_GROUPS =>
-                "SELECT COUNT($ugGID) " .
-                "FROM $userGroup " .
-                "WHERE $ugGID = :$gidParam " .
-                "AND $ugUID " .
+                "SELECT COUNT(ug.$ugGID) " .
+                "FROM $userGroup ug " .
+                "WHERE ug.$ugGID = :$gidParam " .
+                "AND ug.$ugUID " .
                 "LIKE :$searchParam",
 
             Query::COUNT_USERS =>
-                "SELECT COUNT($uUID) AS count " .
-                "FROM $user " .
-                "WHERE $uUID LIKE :$searchParam",
+                "SELECT COUNT(u.$uUID) AS count " .
+                "FROM $user u " .
+                "WHERE u.$uUID LIKE :$searchParam",
 
             Query::FIND_GROUP =>
-                "SELECT $groupColumns " .
-                "FROM $group " .
-                "WHERE $gGID = :$gidParam",
+                "SELECT g.$groupColumns " .
+                "FROM $group g " .
+                "WHERE g.$gGID = :$gidParam",
 
             Query::FIND_GROUP_USERS =>
-                "SELECT $ugUID AS uid " .
-                "FROM $userGroup " .
-                "WHERE $ugGID = :$gidParam " .
-                "AND $ugUID " .
+                "SELECT ug.$ugUID AS uid " .
+                "FROM ug.$userGroup " .
+                "WHERE ug.$ugGID = :$gidParam " .
+                "AND ug.$ugUID " .
                 "LIKE :$searchParam " .
-                "ORDER BY $ugUID",
+                "ORDER BY ug.$ugUID",
 
             Query::FIND_GROUPS =>
-                "SELECT $groupColumns " .
-                "FROM $group " .
-                "WHERE $gGID LIKE :$searchParam " .
-                "ORDER BY $gGID",
+                "SELECT g.$groupColumns " .
+                "FROM g.$group " .
+                "WHERE g.$gGID LIKE :$searchParam " .
+                "ORDER BY g.$gGID",
 
             Query::FIND_USER =>
-                "SELECT $userColumns, $uPassword AS password " .
-                "FROM $user " .
-                "WHERE $uUID = :$uidParam",
+                "SELECT u.$userColumns, u.$uPassword AS password " .
+                "FROM u.$user " .
+                "WHERE u.$uUID = :$uidParam",
 
             Query::FIND_USER_CASE_INSENSITIVE =>
-                "SELECT $userColumns, $uPassword AS password " .
-                "FROM $user " .
-                "WHERE lower($uUID) = lower(:$uidParam)",
+                "SELECT u.$userColumns, u.$uPassword AS password " .
+                "FROM $user u " .
+                "WHERE lower(u.$uUID) = lower(:$uidParam)",
 
             Query::FIND_USER_GROUPS =>
-                "SELECT $groupColumns " .
-                "FROM $group, $userGroup " .
-                "WHERE $ugGID = $gGID " .
-                "AND $ugUID = :$uidParam " .
-                "ORDER BY $gGID",
+                "SELECT g.$groupColumns " .
+                "FROM $group g, $userGroup ug " .
+                "WHERE ug.$ugGID = g.$gGID " .
+                "AND ug.$ugUID = :$uidParam " .
+                "ORDER BY g.$gGID",
 
             Query::FIND_USERS =>
-                "SELECT $userColumns " .
-                "FROM $user " .
-                "WHERE $uUID LIKE :$searchParam " .
-                "ORDER BY $uUID",
+                "SELECT u.$userColumns " .
+                "FROM $user u " .
+                "WHERE u.$uUID LIKE :$searchParam " .
+                "ORDER BY u.$uUID",
 
             Query::UPDATE_DISPLAY_NAME =>
                 "UPDATE $user " .
