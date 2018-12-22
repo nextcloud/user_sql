@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.2.1] - 2018-12-22
+### Fixed
+- SQL error when same column names given in several tables
+
 ## [4.2.0] - 2018-12-16
 ### Added
 - Support for Nextcloud 15
@@ -108,6 +112,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Supported version of ownCloud, Nextcloud: ownCloud 10, Nextcloud 12
 
+[4.2.1]: https://github.com/nextcloud/user_sql/compare/v4.2.0...v4.2.1
 [4.2.0]: https://github.com/nextcloud/user_sql/compare/v4.1.0...v4.2.0
 [4.1.0]: https://github.com/nextcloud/user_sql/compare/v4.0.1...v4.1.0
 [4.0.1]: https://github.com/nextcloud/user_sql/compare/v4.0.0...v4.0.1
