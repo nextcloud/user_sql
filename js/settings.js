@@ -58,6 +58,40 @@ user_sql.adminSettingsUI = function () {
             });
         };
 
+        var cryptoParams = function () {
+            var cryptoChanged = function () {
+                var div = $("#opt-crypto_params");
+                div.empty();
+
+                var cryptoClass = $("#opt-crypto_class").val();
+                $.get(OC.generateUrl("/apps/user_sql/settings/crypto/params"), cryptoClass, function (data) {
+                    if (data.status === "success") {
+                        for (var index = 0, length = data.data.length; index < length; ++index) {
+                            div.append("<div><label for=\"opt-crypto_param_"
+                                + index
+                                + "\"><span>"
+                                + data.data[index]["visible_name"]
+                                + "</span><input type=\"number\" id=\"opt-crypto_param_"
+                                + index
+                                + "\" name=\"opt-crypto_param_"
+                                + index
+                                + "\" step=\"1\" min=\""
+                                + data.data[index]["min"]
+                                + "\" max=\""
+                                + data.data[index]["max"]
+                                + "\" value=\""
+                                + data.data[index]["default"] // TODO set current
+                                + "\"></label></div>");
+                        }
+                    }
+                }, "json");
+            };
+            $("#opt-crypto_class").change(function () {
+                cryptoChanged();
+            });
+            cryptoChanged();
+        };
+
         $("#user_sql-db_connection_verify").click(function (event) {
             return click(event, "/apps/user_sql/settings/db/verify");
         });
@@ -89,6 +123,8 @@ user_sql.adminSettingsUI = function () {
             "#db-table-group-column-admin, #db-table-group-column-name, #db-table-group-column-gid",
             "/apps/user_sql/settings/autocomplete/table/group"
         );
+
+        cryptoParams();
     }
 };
 

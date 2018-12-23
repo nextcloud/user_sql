@@ -367,4 +367,36 @@ class SettingsController extends Controller
 
         return $columns;
     }
+
+    /**
+     * TODO
+     *
+     * @return array TODO
+     */
+    public function cryptoParams()
+    {
+        // TODO implement
+        // TODO add current values
+        return [
+            "status" => "success",
+            "data" => [
+                [
+                    "name" => "memoryCost",
+                    "visible_name" => "Memory cost (KiB)",
+                    "default" => PASSWORD_ARGON2_DEFAULT_MEMORY_COST,
+                    "min" => 1, "max" => 1048576
+                ],
+                [
+                    "name" => "timeCost", "visible_name" => "Time cost",
+                    "default" => PASSWORD_ARGON2_DEFAULT_TIME_COST, "min" => 1,
+                    "max" => 1024
+                ],
+                [
+                    "name" => "threads", "visible_name" => "Threads",
+                    "default" => PASSWORD_ARGON2_DEFAULT_THREADS, "min" => 1,
+                    "max" => 1024
+                ]
+            ]
+        ];
+    }
 }
