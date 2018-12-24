@@ -36,18 +36,8 @@
 #user_sql .main .inner-fieldset {
     border-bottom: 1px solid var(--color-border);
     border-top: 1px solid var(--color-border);
-    margin: 16px 0;
-    padding: 8px 32px;
-}
-
-#user_sql .main .inner-fieldset > legend {
-    background-color: var(--color-background-dark);
-    border-radius: var(--border-radius-pill);
-    border: 1px solid var(--color-border-dark);
-    color: var(--color-text-lighter);
-    font-size: 11px;
-    font-weight: bold;
-    padding: 3px 6px;
+    margin: 8px 0;
+    padding: 8px 0 8px 16px;
 }
 
 #user_sql .msg {

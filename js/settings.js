@@ -72,9 +72,6 @@ user_sql.adminSettingsUI = function () {
                         loading.hide();
 
                         if (data.status === "success") {
-                            if (data.data.length > 0) {
-                                content.append("<legend>" + $("#opt-crypto_class option:selected").text() + "</legend>")
-                            }
                             for (var index = 0, length = data.data.length; index < length; ++index) {
                                 content.append("<div><label for=\"opt-crypto_param_" + index
                                     + "\"><span>" + data.data[index]["name"]
