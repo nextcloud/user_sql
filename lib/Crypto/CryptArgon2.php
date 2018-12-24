@@ -21,6 +21,7 @@
 
 namespace OCA\UserSQL\Crypto;
 
+use OCA\UserSQL\Model\CryptoParam;
 use OCP\IL10N;
 
 /**
@@ -106,18 +107,14 @@ class CryptArgon2 extends AbstractAlgorithm
     public function configuration()
     {
         return [
-            [
-                "name" => "memoryCost", "visible_name" => "Memory cost (KiB)",
-                "default" => PASSWORD_ARGON2_DEFAULT_MEMORY_COST, "min" => 1, "max" => 1048576
-            ],
-            [
-                "name" => "timeCost", "visible_name" => "Time cost",
-                "default" => PASSWORD_ARGON2_DEFAULT_TIME_COST, "min" => 1, "max" => 1024
-            ],
-            [
-                "name" => "threads", "visible_name" => "Threads",
-                "default" => PASSWORD_ARGON2_DEFAULT_THREADS, "min" => 1, "max" => 1024
-            ]
+            new CryptoParam(
+                "Memory cost (KiB)", PASSWORD_ARGON2_DEFAULT_MEMORY_COST, 1,
+                1048576
+            ),
+            new CryptoParam(
+                "Time cost", PASSWORD_ARGON2_DEFAULT_TIME_COST, 1, 1024
+            ),
+            new CryptoParam("Threads", PASSWORD_ARGON2_DEFAULT_THREADS, 1, 1024)
         ];
     }
 

@@ -21,6 +21,7 @@
 
 namespace OCA\UserSQL\Crypto;
 
+use OCA\UserSQL\Model\CryptoParam;
 use OCP\IL10N;
 
 /**
@@ -54,12 +55,7 @@ class CryptSHA512 extends AbstractCrypt
      */
     public function configuration()
     {
-        return [
-            [
-                "name" => "rounds", "visible_name" => "Rounds", "default" => 5000,
-                "min" => 1000, "max" => 999999999
-            ]
-        ];
+        return [new CryptoParam("Rounds", 5000, 1000, 999999999)];
     }
 
     /**

@@ -21,6 +21,7 @@
 
 namespace OCA\UserSQL\Crypto;
 
+use OCA\UserSQL\Model\CryptoParam;
 use OCP\IL10N;
 
 /**
@@ -53,12 +54,7 @@ class CryptExtendedDES extends AbstractCrypt
      */
     public function configuration()
     {
-        return [
-            [
-                "name" => "iterations", "visible_name" => "Iterations", "default" => 1000,
-                "min" => 0, "max" => 16777215
-            ]
-        ];
+        return [new CryptoParam("Iterations", 1000, 0, 16777215)];
     }
 
     /**

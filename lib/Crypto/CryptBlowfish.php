@@ -21,6 +21,7 @@
 
 namespace OCA\UserSQL\Crypto;
 
+use OCA\UserSQL\Model\CryptoParam;
 use OCP\IL10N;
 
 /**
@@ -72,12 +73,7 @@ class CryptBlowfish extends AbstractAlgorithm
      */
     public function configuration()
     {
-        return [
-            [
-                "name" => "cost", "visible_name" => "Cost", "default" => 10,
-                "min" => 4, "max" => 31
-            ]
-        ];
+        return [new CryptoParam("Cost", 10, 4, 31)];
     }
 
     /**

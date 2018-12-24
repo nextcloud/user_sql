@@ -61,8 +61,7 @@ interface IPasswordAlgorithm
 
     /**
      * Configuration for the algorithm.
-     * The return array should contain entries which define keys:
-     * name, visible_name, default, min, max.
+     * The return array should contain entries of class <code>CryptoParam</code>
      *
      * @return array The configuration array.
      */
