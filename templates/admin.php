@@ -132,7 +132,10 @@ function print_select_options(
                 }
 
                 print_select_options($l, "opt-crypto_class", "Hash algorithm", $hashes, $_["opt.crypto_class"]); ?>
-                <div id="opt-crypto_params"></div>
+                <div id="opt-crypto_params_loading" style="display: none">
+                    <span class="icon loading"></span>
+                </div>
+                <fieldset id="opt-crypto_params_content" class="inner-fieldset" style="display: none"></fieldset>
                 <?php
                 print_select_options($l, "opt-email_sync", "Email sync", ["" => "None", "initial" => "Synchronise only once", "force_nc"=>"Nextcloud always wins", "force_sql"=>"SQL always wins"], $_["opt.email_sync"]);
                 print_select_options($l, "opt-quota_sync", "Quota sync", ["" => "None", "initial" => "Synchronise only once", "force_nc"=>"Nextcloud always wins", "force_sql"=>"SQL always wins"], $_["opt.quota_sync"]);

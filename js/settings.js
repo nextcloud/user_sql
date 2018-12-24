@@ -60,33 +60,33 @@ user_sql.adminSettingsUI = function () {
 
         var cryptoParams = function () {
             var cryptoChanged = function () {
-                var div = $("#opt-crypto_params");
-                div.empty();
-                div.append("<span class=\"icon loading\"></span>");
+                var content = $("#opt-crypto_params_content");
+                var loading = $("#opt-crypto_params_loading");
 
-                var cryptoClass = $("#opt-crypto_class").val();
-                $.get(OC.generateUrl("/apps/user_sql/settings/crypto/params"), cryptoClass, function (data) {
-                    div.empty();
-                    if (data.status === "success") {
-                        for (var index = 0, length = data.data.length; index < length; ++index) {
-                            div.append("<div><label for=\"opt-crypto_param_"
-                                + index
-                                + "\"><span>"
-                                + data.data[index]["name"]
-                                + "</span><input type=\"number\" id=\"opt-crypto_param_"
-                                + index
-                                + "\" name=\"opt-crypto_param_"
-                                + index
-                                + "\" step=\"1\" min=\""
-                                + data.data[index]["min"]
-                                + "\" max=\""
-                                + data.data[index]["max"]
-                                + "\" value=\""
-                                + data.data[index]["value"]
-                                + "\"></label></div>");
+                content.hide();
+                loading.show();
+
+                $.get(OC.generateUrl("/apps/user_sql/settings/crypto/params"), {cryptoClass: $("#opt-crypto_class").val()},
+                    function (data) {
+                        content.empty();
+                        loading.hide();
+
+                        if (data.status === "success") {
+                            if (data.data.length > 0) {
+                                content.append("<legend>" + $("#opt-crypto_class option:selected").text() + "</legend>")
+                            }
+                            for (var index = 0, length = data.data.length; index < length; ++index) {
+                                content.append("<div><label for=\"opt-crypto_param_" + index
+                                    + "\"><span>" + data.data[index]["name"]
+                                    + "</span><input type=\"number\" id=\"opt-crypto_param_"
+                                    + index + "\" name=\"opt-crypto_param_" + index
+                                    + "\" step=\"1\" min=\"" + data.data[index]["min"] + "\" max=\""
+                                    + data.data[index]["max"] + "\" value=\"" + data.data[index]["value"]
+                                    + "\"></label></div>");
+                                content.show();
+                            }
                         }
-                    }
-                }, "json");
+                    }, "json");
             };
             $("#opt-crypto_class").change(function () {
                 cryptoChanged();
