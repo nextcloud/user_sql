@@ -56,3 +56,10 @@
     background-color: #ff8f00;
     color: #fff;
 }
+
+#user_sql .loading {
+    display: inline-block;
+    height: 32px;
+    margin: 5px 0;
+    width: 32px;
+}

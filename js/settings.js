@@ -62,15 +62,17 @@ user_sql.adminSettingsUI = function () {
             var cryptoChanged = function () {
                 var div = $("#opt-crypto_params");
                 div.empty();
+                div.append("<span class=\"icon loading\"></span>");
 
                 var cryptoClass = $("#opt-crypto_class").val();
                 $.get(OC.generateUrl("/apps/user_sql/settings/crypto/params"), cryptoClass, function (data) {
+                    div.empty();
                     if (data.status === "success") {
                         for (var index = 0, length = data.data.length; index < length; ++index) {
                             div.append("<div><label for=\"opt-crypto_param_"
                                 + index
                                 + "\"><span>"
-                                + data.data[index]["visible_name"]
+                                + data.data[index]["name"]
                                 + "</span><input type=\"number\" id=\"opt-crypto_param_"
                                 + index
                                 + "\" name=\"opt-crypto_param_"
@@ -80,7 +82,7 @@ user_sql.adminSettingsUI = function () {
                                 + "\" max=\""
                                 + data.data[index]["max"]
                                 + "\" value=\""
-                                + data.data[index]["default"] // TODO set current
+                                + data.data[index]["value"]
                                 + "\"></label></div>");
                         }
                     }
