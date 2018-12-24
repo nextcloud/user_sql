@@ -28,12 +28,16 @@ use OC\DB\Connection;
 use OC\DB\ConnectionFactory;
 use OCA\UserSQL\Cache;
 use OCA\UserSQL\Constant\App;
+use OCA\UserSQL\Constant\Opt;
+use OCA\UserSQL\Crypto\IPasswordAlgorithm;
 use OCA\UserSQL\Platform\PlatformFactory;
 use OCA\UserSQL\Properties;
 use OCP\AppFramework\Controller;
 use OCP\IL10N;
 use OCP\ILogger;
 use OCP\IRequest;
+use ReflectionClass;
+use ReflectionException;
 
 /**
  * The settings controller.
@@ -72,7 +76,8 @@ class SettingsController extends Controller
     public function __construct(
         $appName, IRequest $request, ILogger $logger, IL10N $localization,
         Properties $properties, Cache $cache
-    ) {
+    )
+    {
         parent::__construct($appName, $request);
         $this->appName = $appName;
         $this->logger = $logger;
@@ -369,34 +374,42 @@ class SettingsController extends Controller
     }
 
     /**
-     * TODO
+     * Get parameters for a password algorithm.
      *
-     * @return array TODO
+     * @return array Password algorithm parameters.
+     * @throws ReflectionException Whenever Opt class cannot be initiated.
      */
     public function cryptoParams()
     {
-        sleep(3);
-        // TODO implement
-        // TODO add current values
-        return [
-            "status" => "success",
-            "data" => [
-                [
-                    "name" => "Memory cost (KiB)",
-                    "value" => PASSWORD_ARGON2_DEFAULT_MEMORY_COST,
-                    "min" => 1, "max" => 1048576
-                ],
-                [
-                    "name" => "Time cost",
-                    "value" => PASSWORD_ARGON2_DEFAULT_TIME_COST, "min" => 1,
-                    "max" => 1024
-                ],
-                [
-                    "name" => "Threads",
-                    "value" => PASSWORD_ARGON2_DEFAULT_THREADS, "min" => 1,
-                    "max" => 1024
-                ]
-            ]
-        ];
+        $this->logger->debug(
+            "Entering cryptoParams()", ["app" => $this->appName]
+        );
+
+        /**
+         * @var $passwordAlgorithm IPasswordAlgorithm
+         */
+        $cryptoClass = $this->request->getParam("cryptoClass");
+        $passwordAlgorithm = new $cryptoClass($this->localization);
+        $configuration = $passwordAlgorithm->configuration();
+
+        if ($cryptoClass === $this->properties[Opt::CRYPTO_CLASS]) {
+            foreach ($configuration as $key => $value) {
+                $opt = new ReflectionClass("OCA\UserSQL\Constant\Opt");
+                $param = $this->properties[$opt->getConstant(
+                    "CRYPTO_PARAM_" . $key
+                )];
+
+                if (!empty($param)) {
+                    $value->value = $param;
+                }
+            }
+        }
+
+        $this->logger->debug(
+            "Returning cryptoParams(): count(" . count($configuration) . ")",
+            ["app" => $this->appName]
+        );
+
+        return ["status" => "success", "data" => (array)$configuration];
     }
 }
