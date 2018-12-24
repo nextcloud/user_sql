@@ -21,7 +21,6 @@
 
 namespace OCA\UserSQL\Crypto;
 
-use OCA\UserSQL\Model\CryptoParam;
 use OCP\IL10N;
 
 /**
