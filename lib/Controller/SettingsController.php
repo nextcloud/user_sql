@@ -399,7 +399,7 @@ class SettingsController extends Controller
                     "CRYPTO_PARAM_" . $key
                 )];
 
-                if (!empty($param)) {
+                if (!is_null($param)) {
                     $value->value = $param;
                 }
             }

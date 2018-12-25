@@ -73,13 +73,23 @@ user_sql.adminSettingsUI = function () {
 
                         if (data.status === "success") {
                             for (var index = 0, length = data.data.length; index < length; ++index) {
-                                content.append("<div><label for=\"opt-crypto_param_" + index
-                                    + "\"><span>" + data.data[index]["name"]
-                                    + "</span><input type=\"number\" id=\"opt-crypto_param_"
-                                    + index + "\" name=\"opt-crypto_param_" + index
-                                    + "\" step=\"1\" min=\"" + data.data[index]["min"] + "\" max=\""
-                                    + data.data[index]["max"] + "\" value=\"" + data.data[index]["value"]
-                                    + "\"></label></div>");
+                                var param = $("<div></div>");
+                                var label = $("<label></label>").attr({for: "opt-crypto_param_" + index});
+                                var title = $("<span></span>").text(data.data[index]["name"]);
+                                var input = $("<input/>").attr({
+                                    type: "number",
+                                    id: "opt-crypto_param_" + index,
+                                    name: "opt-crypto_param_" + index,
+                                    step: 1,
+                                    min: data.data[index]["min"],
+                                    max: data.data[index]["max"],
+                                    value: data.data[index]["value"]
+                                });
+
+                                label.append(title);
+                                param.append(label);
+                                param.append(input);
+                                content.append(param);
                                 content.show();
                             }
                         }
