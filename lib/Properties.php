@@ -120,24 +120,6 @@ class Properties implements \ArrayAccess
     }
 
     /**
-     * Is given parameter a boolean parameter.
-     *
-     * @param $param string Parameter name.
-     *
-     * @return bool Is a boolean parameter.
-     */
-    private function isBooleanParam($param)
-    {
-        return in_array(
-            $param, [
-                Opt::APPEND_SALT, Opt::CASE_INSENSITIVE_USERNAME,
-                Opt::NAME_CHANGE, Opt::PASSWORD_CHANGE, Opt::PREPEND_SALT,
-                Opt::REVERSE_ACTIVE, Opt::USE_CACHE
-            ]
-        );
-    }
-
-    /**
      * Return an array with all supported parameters.
      *
      * @return array Array containing strings of the parameters.
@@ -160,6 +142,24 @@ class Properties implements \ArrayAccess
         }
 
         return $params;
+    }
+
+    /**
+     * Is given parameter a boolean parameter.
+     *
+     * @param $param string Parameter name.
+     *
+     * @return bool Is a boolean parameter.
+     */
+    private function isBooleanParam($param)
+    {
+        return in_array(
+            $param, [
+                Opt::APPEND_SALT, Opt::CASE_INSENSITIVE_USERNAME,
+                Opt::NAME_CHANGE, Opt::PASSWORD_CHANGE, Opt::PREPEND_SALT,
+                Opt::REVERSE_ACTIVE, Opt::USE_CACHE
+            ]
+        );
     }
 
     /**
@@ -229,6 +229,7 @@ class Properties implements \ArrayAccess
      */
     public function offsetUnset($offset)
     {
+        $this->config->deleteAppValue($this->appName, $offset);
         unset($this->data[$offset]);
     }
 }

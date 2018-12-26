@@ -198,6 +198,16 @@ class SettingsController extends Controller
             ];
         }
 
+        if (!$this->validateCryptoParams()) {
+            return [
+                "status" => "error", "data" => [
+                    "message" => $this->localization->t(
+                        "Hash algorithm parameter is out of range."
+                    )
+                ]
+            ];
+        }
+
         foreach ($properties as $key => $value) {
             $reqValue = $this->request->getParam(str_replace(".", "-", $key));
             $appValue = $this->properties[$key];
@@ -213,6 +223,9 @@ class SettingsController extends Controller
                     "Property '$key' has been set to: " . $value,
                     ["app" => $this->appName]
                 );
+            } elseif (!is_bool($appValue) && !isset($reqValue)) {
+                unset($this->properties[$key]);
+
             }
         }
 
@@ -228,6 +241,48 @@ class SettingsController extends Controller
                 )
             ]
         ];
+    }
+
+    /**
+     * Validate request crypto params.
+     *
+     * @return bool TRUE if crypto params are correct FALSE otherwise.
+     */
+    private function validateCryptoParams()
+    {
+        $cryptoClass = $this->request->getParam("opt-crypto_class");
+        $configuration = $this->cryptoClassConfiguration($cryptoClass);
+
+        for ($i = 0; $i < count($configuration); ++$i) {
+            $reqParam = $this->request->getParam(
+                "opt-crypto_param_" . $i, null
+            );
+            $cryptoParam = $configuration[$i];
+
+            if (is_null($reqParam) || $reqParam < $cryptoParam->min
+                || $reqParam > $cryptoParam->max
+            ) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Get a crypto class configuration from request.
+     *
+     * @param $cryptoClass string Crypto class name.
+     *
+     * @return array A crypto class configuration.
+     */
+    private function cryptoClassConfiguration($cryptoClass)
+    {
+        /**
+         * @var $passwordAlgorithm IPasswordAlgorithm
+         */
+        $passwordAlgorithm = new $cryptoClass($this->localization);
+        return $passwordAlgorithm->configuration();
     }
 
     /**
@@ -385,12 +440,8 @@ class SettingsController extends Controller
             "Entering cryptoParams()", ["app" => $this->appName]
         );
 
-        /**
-         * @var $passwordAlgorithm IPasswordAlgorithm
-         */
         $cryptoClass = $this->request->getParam("cryptoClass");
-        $passwordAlgorithm = new $cryptoClass($this->localization);
-        $configuration = $passwordAlgorithm->configuration();
+        $configuration = $this->cryptoClassConfiguration($cryptoClass);
 
         if ($cryptoClass === $this->properties[Opt::CRYPTO_CLASS]) {
             foreach ($configuration as $key => $value) {
