@@ -37,6 +37,7 @@ final class Opt
     const NAME_CHANGE = "opt.name_change";
     const PASSWORD_CHANGE = "opt.password_change";
     const PREPEND_SALT = "opt.prepend_salt";
+    const PROVIDE_AVATAR = "opt.provide_avatar";
     const QUOTA_SYNC = "opt.quota_sync";
     const REVERSE_ACTIVE = "opt.reverse_active";
     const USE_CACHE = "opt.use_cache";

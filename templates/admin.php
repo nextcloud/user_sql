@@ -110,6 +110,7 @@ function print_select_options(
             <fieldset><?php
                 print_checkbox_input($l, "opt-name_change", "Allow display name change", $_["opt.name_change"]);
                 print_checkbox_input($l, "opt-password_change", "Allow password change", $_["opt.password_change"]);
+                print_checkbox_input($l, "opt-provide_avatar", "Allow providing avatar", $_["opt.provide_avatar"]);
                 print_checkbox_input($l, "opt-case_insensitive_username", "Case-insensitive username", $_["opt.case_insensitive_username"]);
                 print_checkbox_input($l, "opt-reverse_active", "Reverse active column", $_["opt.reverse_active"]); ?>
                 <div class="button-right"><?php

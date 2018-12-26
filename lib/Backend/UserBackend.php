@@ -555,7 +555,7 @@ final class UserBackend extends ABackend implements
         );
 
         if (empty($this->properties[DB::USER_AVATAR_COLUMN])) {
-            return false;
+            return !empty($this->properties[Opt::PROVIDE_AVATAR]);
         }
 
         $user = $this->userRepository->findByUid($uid);
