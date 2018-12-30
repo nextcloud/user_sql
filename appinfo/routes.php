@@ -61,6 +61,11 @@ $application->registerRoutes(
                 "url" => "/settings/autocomplete/table/group",
                 "verb" => "POST"
             ],
+            [
+                "name" => "settings#cryptoParams",
+                "url" => "/settings/crypto/params",
+                "verb" => "GET"
+            ],
         ]
     ]
 );

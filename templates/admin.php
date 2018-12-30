@@ -110,7 +110,9 @@ function print_select_options(
             <fieldset><?php
                 print_checkbox_input($l, "opt-name_change", "Allow display name change", $_["opt.name_change"]);
                 print_checkbox_input($l, "opt-password_change", "Allow password change", $_["opt.password_change"]);
-                print_checkbox_input($l, "opt-case_insensitive_username", "Case-insensitive username", $_["opt.case_insensitive_username"]); ?>
+                print_checkbox_input($l, "opt-provide_avatar", "Allow providing avatar", $_["opt.provide_avatar"]);
+                print_checkbox_input($l, "opt-case_insensitive_username", "Case-insensitive username", $_["opt.case_insensitive_username"]);
+                print_checkbox_input($l, "opt-reverse_active", "Reverse active column", $_["opt.reverse_active"]); ?>
                 <div class="button-right"><?php
                     print_checkbox_input($l, "opt-use_cache", "Use cache", $_["opt.use_cache"], false); ?>
                     <input type="submit" id="user_sql-clear_cache" value="<?php p($l->t("Clear cache")); ?>">
@@ -130,7 +132,12 @@ function print_select_options(
                     }
                 }
 
-                print_select_options($l, "opt-crypto_class", "Hash algorithm", $hashes, $_["opt.crypto_class"]);
+                print_select_options($l, "opt-crypto_class", "Hash algorithm", $hashes, $_["opt.crypto_class"]); ?>
+                <div id="opt-crypto_params_loading" style="display: none">
+                    <span class="icon loading"></span>
+                </div>
+                <fieldset id="opt-crypto_params_content" class="inner-fieldset" style="display: none"></fieldset>
+                <?php
                 print_select_options($l, "opt-email_sync", "Email sync", ["" => "None", "initial" => "Synchronise only once", "force_nc"=>"Nextcloud always wins", "force_sql"=>"SQL always wins"], $_["opt.email_sync"]);
                 print_select_options($l, "opt-quota_sync", "Quota sync", ["" => "None", "initial" => "Synchronise only once", "force_nc"=>"Nextcloud always wins", "force_sql"=>"SQL always wins"], $_["opt.quota_sync"]);
                 print_select_options($l, "opt-home_mode", "Home mode", ["" => "Default", "query" => "Query", "static" => "Static"], $_["opt.home_mode"]);
@@ -152,9 +159,12 @@ function print_select_options(
                 print_text_input($l, "db-table-user-column-name", "Display name", $_["db.table.user.column.name"]);
                 print_text_input($l, "db-table-user-column-active", "Active", $_["db.table.user.column.active"]);
                 print_text_input($l, "db-table-user-column-avatar", "Provide avatar", $_["db.table.user.column.avatar"]);
-                print_text_input($l, "db-table-user-column-salt", "Salt", $_["db.table.user.column.salt"]);
-                print_checkbox_input($l, "opt-append_salt", "Append salt", $_["opt.append_salt"]);
-                print_checkbox_input($l, "opt-prepend_salt", "Prepend salt", $_["opt.prepend_salt"]); ?>
+                print_text_input($l, "db-table-user-column-salt", "Salt", $_["db.table.user.column.salt"]); ?>
+                <div class="inner-fieldset">
+                    <?php
+                    print_checkbox_input($l, "opt-append_salt", "Append salt", $_["opt.append_salt"]);
+                    print_checkbox_input($l, "opt-prepend_salt", "Prepend salt", $_["opt.prepend_salt"]); ?>
+                </div>
             </fieldset>
         </div>
         <div class="section">

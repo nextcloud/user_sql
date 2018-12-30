@@ -31,12 +31,17 @@ final class Opt
     const APPEND_SALT = "opt.append_salt";
     const CASE_INSENSITIVE_USERNAME = "opt.case_insensitive_username";
     const CRYPTO_CLASS = "opt.crypto_class";
+    const CRYPTO_PARAM_0 = "opt.crypto_param_0";
+    const CRYPTO_PARAM_1 = "opt.crypto_param_1";
+    const CRYPTO_PARAM_2 = "opt.crypto_param_2";
     const EMAIL_SYNC = "opt.email_sync";
     const HOME_LOCATION = "opt.home_location";
     const HOME_MODE = "opt.home_mode";
     const NAME_CHANGE = "opt.name_change";
     const PASSWORD_CHANGE = "opt.password_change";
     const PREPEND_SALT = "opt.prepend_salt";
+    const PROVIDE_AVATAR = "opt.provide_avatar";
     const QUOTA_SYNC = "opt.quota_sync";
+    const REVERSE_ACTIVE = "opt.reverse_active";
     const USE_CACHE = "opt.use_cache";
 }

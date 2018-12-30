@@ -51,6 +51,14 @@ class CryptExtendedDES extends AbstractCrypt
     /**
      * @inheritdoc
      */
+    public function configuration()
+    {
+        return [new CryptoParam("Iterations", 1000, 0, 16777215)];
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected function getSalt()
     {
         return self::encodeIterationCount($this->iterationCount)

@@ -28,12 +28,16 @@ use OC\DB\Connection;
 use OC\DB\ConnectionFactory;
 use OCA\UserSQL\Cache;
 use OCA\UserSQL\Constant\App;
+use OCA\UserSQL\Constant\Opt;
+use OCA\UserSQL\Crypto\IPasswordAlgorithm;
 use OCA\UserSQL\Platform\PlatformFactory;
 use OCA\UserSQL\Properties;
 use OCP\AppFramework\Controller;
 use OCP\IL10N;
 use OCP\ILogger;
 use OCP\IRequest;
+use ReflectionClass;
+use ReflectionException;
 
 /**
  * The settings controller.
@@ -72,7 +76,8 @@ class SettingsController extends Controller
     public function __construct(
         $appName, IRequest $request, ILogger $logger, IL10N $localization,
         Properties $properties, Cache $cache
-    ) {
+    )
+    {
         parent::__construct($appName, $request);
         $this->appName = $appName;
         $this->logger = $logger;
@@ -193,6 +198,16 @@ class SettingsController extends Controller
             ];
         }
 
+        if (!$this->validateCryptoParams()) {
+            return [
+                "status" => "error", "data" => [
+                    "message" => $this->localization->t(
+                        "Hash algorithm parameter is out of range."
+                    )
+                ]
+            ];
+        }
+
         foreach ($properties as $key => $value) {
             $reqValue = $this->request->getParam(str_replace(".", "-", $key));
             $appValue = $this->properties[$key];
@@ -208,6 +223,9 @@ class SettingsController extends Controller
                     "Property '$key' has been set to: " . $value,
                     ["app" => $this->appName]
                 );
+            } elseif (!is_bool($appValue) && !isset($reqValue)) {
+                unset($this->properties[$key]);
+
             }
         }
 
@@ -223,6 +241,48 @@ class SettingsController extends Controller
                 )
             ]
         ];
+    }
+
+    /**
+     * Validate request crypto params.
+     *
+     * @return bool TRUE if crypto params are correct FALSE otherwise.
+     */
+    private function validateCryptoParams()
+    {
+        $cryptoClass = $this->request->getParam("opt-crypto_class");
+        $configuration = $this->cryptoClassConfiguration($cryptoClass);
+
+        for ($i = 0; $i < count($configuration); ++$i) {
+            $reqParam = $this->request->getParam(
+                "opt-crypto_param_" . $i, null
+            );
+            $cryptoParam = $configuration[$i];
+
+            if (is_null($reqParam) || $reqParam < $cryptoParam->min
+                || $reqParam > $cryptoParam->max
+            ) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Get a crypto class configuration from request.
+     *
+     * @param $cryptoClass string Crypto class name.
+     *
+     * @return array A crypto class configuration.
+     */
+    private function cryptoClassConfiguration($cryptoClass)
+    {
+        /**
+         * @var $passwordAlgorithm IPasswordAlgorithm
+         */
+        $passwordAlgorithm = new $cryptoClass($this->localization);
+        return $passwordAlgorithm->configuration();
     }
 
     /**
@@ -366,5 +426,41 @@ class SettingsController extends Controller
         );
 
         return $columns;
+    }
+
+    /**
+     * Get parameters for a password algorithm.
+     *
+     * @return array Password algorithm parameters.
+     * @throws ReflectionException Whenever Opt class cannot be initiated.
+     */
+    public function cryptoParams()
+    {
+        $this->logger->debug(
+            "Entering cryptoParams()", ["app" => $this->appName]
+        );
+
+        $cryptoClass = $this->request->getParam("cryptoClass");
+        $configuration = $this->cryptoClassConfiguration($cryptoClass);
+
+        if ($cryptoClass === $this->properties[Opt::CRYPTO_CLASS]) {
+            foreach ($configuration as $key => $value) {
+                $opt = new ReflectionClass("OCA\UserSQL\Constant\Opt");
+                $param = $this->properties[$opt->getConstant(
+                    "CRYPTO_PARAM_" . $key
+                )];
+
+                if (!is_null($param)) {
+                    $value->value = $param;
+                }
+            }
+        }
+
+        $this->logger->debug(
+            "Returning cryptoParams(): count(" . count($configuration) . ")",
+            ["app" => $this->appName]
+        );
+
+        return ["status" => "success", "data" => (array)$configuration];
     }
 }

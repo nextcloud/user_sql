@@ -58,4 +58,12 @@ interface IPasswordAlgorithm
      * @return boolean True if the password is correct, false otherwise.
      */
     public function checkPassword($password, $dbHash, $salt = null);
+
+    /**
+     * Configuration for the algorithm.
+     * The return array should contain entries of class <code>CryptoParam</code>
+     *
+     * @return array The configuration array.
+     */
+    public function configuration();
 }

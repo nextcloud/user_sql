@@ -33,6 +33,13 @@
     float: right;
 }
 
+#user_sql .main .inner-fieldset {
+    border-bottom: 1px solid var(--color-border);
+    border-top: 1px solid var(--color-border);
+    margin: 8px 0;
+    padding: 8px 0 8px 16px;
+}
+
 #user_sql .msg {
     left: 0;
     padding: 3px;
@@ -43,16 +50,23 @@
 }
 
 #user_sql .msg.error {
-    background-color: #d2322d;
-    color: #fff;
+    background-color: var(--color-error);
+    color: var(--color-primary-text);
 }
 
 #user_sql .msg.success {
-    background-color: #47a447;
-    color: #fff;
+    background-color: var(--color-success);
+    color: var(--color-primary-text);
 }
 
 #user_sql .msg.waiting {
-    background-color: #ff8f00;
-    color: #fff;
+    background-color: var(--color-warning);
+    color: var(--color-primary-text);
+}
+
+#user_sql .loading {
+    display: inline-block;
+    height: 32px;
+    margin: 5px 0;
+    width: 32px;
 }

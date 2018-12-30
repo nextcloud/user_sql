@@ -21,57 +21,43 @@
 
 namespace OCA\UserSQL\Crypto;
 
-use OCP\IL10N;
-
 /**
- * SHA512 Crypt hash implementation.
+ * A parameter of a hash algorithm.
  *
- * @see    crypt()
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class CryptSHA512 extends AbstractCrypt
+class CryptoParam
 {
     /**
-     * @var int The number of rounds.
+     * @var string Parameter name.
      */
-    private $rounds;
+    public $name;
+    /**
+     * @var int Parameter default value.
+     */
+    public $value;
+    /**
+     * @var int Minimal value for parameter.
+     */
+    public $min;
+    /**
+     * @var int Maximum value for parameter.
+     */
+    public $max;
 
     /**
-     * The class constructor.
+     * Class constructor.
      *
-     * @param IL10N $localization The localization service.
-     * @param   int $rounds       The number of rounds.
-     *                            This value must be between 1000 and 999999999.
+     * @param $name  string Parameter name.
+     * @param $value int Parameter default value.
+     * @param $min   int Minimal value for parameter.
+     * @param $max   int Maximum value for parameter.
      */
-    public function __construct(IL10N $localization, $rounds = 5000)
+    public function __construct($name, $value, $min, $max)
     {
-        parent::__construct($localization);
-        $this->rounds = $rounds;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function configuration()
-    {
-        return [new CryptoParam("Rounds", 5000, 1000, 999999999)];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function getSalt()
-    {
-        return "$6\$rounds=" . $this->rounds . "$" . Utils::randomString(
-                16, self::SALT_ALPHABET
-            ) . "$";
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function getAlgorithmName()
-    {
-        return "SHA512 (Crypt)";
+        $this->name = $name;
+        $this->value = $value;
+        $this->min = $min;
+        $this->max = $max;
     }
 }

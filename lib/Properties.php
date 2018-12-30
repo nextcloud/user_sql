@@ -99,10 +99,12 @@ class Properties implements \ArrayAccess
         foreach ($params as $param) {
             $value = $this->config->getAppValue($this->appName, $param, null);
 
-            if ($value === App::FALSE_VALUE) {
-                $value = false;
-            } elseif ($value === App::TRUE_VALUE) {
-                $value = true;
+            if ($this->isBooleanParam($param)) {
+                if ($value === App::FALSE_VALUE) {
+                    $value = false;
+                } elseif ($value === App::TRUE_VALUE) {
+                    $value = true;
+                }
             }
 
             $this->data[$param] = $value;
@@ -139,6 +141,24 @@ class Properties implements \ArrayAccess
         }
 
         return $params;
+    }
+
+    /**
+     * Is given parameter a boolean parameter.
+     *
+     * @param $param string Parameter name.
+     *
+     * @return bool Is a boolean parameter.
+     */
+    private function isBooleanParam($param)
+    {
+        return in_array(
+            $param, [
+                Opt::APPEND_SALT, Opt::CASE_INSENSITIVE_USERNAME,
+                Opt::NAME_CHANGE, Opt::PASSWORD_CHANGE, Opt::PREPEND_SALT,
+                Opt::PROVIDE_AVATAR, Opt::REVERSE_ACTIVE, Opt::USE_CACHE
+            ]
+        );
     }
 
     /**
@@ -186,10 +206,12 @@ class Properties implements \ArrayAccess
     {
         $this->config->setAppValue($this->appName, $offset, $value);
 
-        if ($value === App::FALSE_VALUE) {
-            $value = false;
-        } elseif ($value === App::TRUE_VALUE) {
-            $value = true;
+        if ($this->isBooleanParam($offset)) {
+            if ($value === App::FALSE_VALUE) {
+                $value = false;
+            } elseif ($value === App::TRUE_VALUE) {
+                $value = true;
+            }
         }
 
         $this->data[$offset] = $value;
@@ -206,6 +228,7 @@ class Properties implements \ArrayAccess
      */
     public function offsetUnset($offset)
     {
+        $this->config->deleteAppValue($this->appName, $offset);
         unset($this->data[$offset]);
     }
 }
