@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Reverse active column option
 - Support for Nextcloud 16
 - Set default value for "provide avatar" option
+- Set hash algorithm parameters
 
 ## [4.2.1] - 2018-12-22
 ### Fixed

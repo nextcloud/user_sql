@@ -70,8 +70,7 @@ class Properties implements \ArrayAccess
      */
     public function __construct(
         $AppName, IConfig $config, ILogger $logger, Cache $cache
-    )
-    {
+    ) {
         $this->appName = $AppName;
         $this->config = $config;
         $this->logger = $logger;
@@ -157,7 +156,7 @@ class Properties implements \ArrayAccess
             $param, [
                 Opt::APPEND_SALT, Opt::CASE_INSENSITIVE_USERNAME,
                 Opt::NAME_CHANGE, Opt::PASSWORD_CHANGE, Opt::PREPEND_SALT,
-                Opt::REVERSE_ACTIVE, Opt::USE_CACHE
+                Opt::PROVIDE_AVATAR, Opt::REVERSE_ACTIVE, Opt::USE_CACHE
             ]
         );
     }
