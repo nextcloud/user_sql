@@ -343,7 +343,12 @@ final class UserBackend extends ABackend implements
     private function getPasswordAlgorithm()
     {
         $cryptoType = $this->properties[Opt::CRYPTO_CLASS];
-        $passwordAlgorithm = new $cryptoType($this->localization);
+        $cryptoParam0 = $this->properties[Opt::CRYPTO_PARAM_0];
+        $cryptoParam1 = $this->properties[Opt::CRYPTO_PARAM_1];
+        $cryptoParam2 = $this->properties[Opt::CRYPTO_PARAM_2];
+        $passwordAlgorithm = new $cryptoType(
+            $this->localization, $cryptoParam0, $cryptoParam1, $cryptoParam2
+        );
 
         if ($passwordAlgorithm === null) {
             $this->logger->error(

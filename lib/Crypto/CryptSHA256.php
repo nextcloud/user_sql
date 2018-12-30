@@ -52,6 +52,14 @@ class CryptSHA256 extends AbstractCrypt
     /**
      * @inheritdoc
      */
+    public function configuration()
+    {
+        return [new CryptoParam("Rounds", 5000, 1000, 999999999)];
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected function getSalt()
     {
         return "$5\$rounds=" . $this->rounds . "$" . Utils::randomString(

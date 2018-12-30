@@ -58,6 +58,49 @@ user_sql.adminSettingsUI = function () {
             });
         };
 
+        var cryptoParams = function () {
+            var cryptoChanged = function () {
+                var content = $("#opt-crypto_params_content");
+                var loading = $("#opt-crypto_params_loading");
+
+                content.hide();
+                loading.show();
+
+                $.get(OC.generateUrl("/apps/user_sql/settings/crypto/params"), {cryptoClass: $("#opt-crypto_class").val()},
+                    function (data) {
+                        content.empty();
+                        loading.hide();
+
+                        if (data.status === "success") {
+                            for (var index = 0, length = data.data.length; index < length; ++index) {
+                                var param = $("<div></div>");
+                                var label = $("<label></label>").attr({for: "opt-crypto_param_" + index});
+                                var title = $("<span></span>").text(data.data[index]["name"]);
+                                var input = $("<input/>").attr({
+                                    type: "number",
+                                    id: "opt-crypto_param_" + index,
+                                    name: "opt-crypto_param_" + index,
+                                    step: 1,
+                                    min: data.data[index]["min"],
+                                    max: data.data[index]["max"],
+                                    value: data.data[index]["value"]
+                                });
+
+                                label.append(title);
+                                param.append(label);
+                                param.append(input);
+                                content.append(param);
+                                content.show();
+                            }
+                        }
+                    }, "json");
+            };
+            $("#opt-crypto_class").change(function () {
+                cryptoChanged();
+            });
+            cryptoChanged();
+        };
+
         $("#user_sql-db_connection_verify").click(function (event) {
             return click(event, "/apps/user_sql/settings/db/verify");
         });
@@ -89,6 +132,8 @@ user_sql.adminSettingsUI = function () {
             "#db-table-group-column-admin, #db-table-group-column-name, #db-table-group-column-gid",
             "/apps/user_sql/settings/autocomplete/table/group"
         );
+
+        cryptoParams();
     }
 };
 
