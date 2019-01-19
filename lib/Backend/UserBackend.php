@@ -393,16 +393,18 @@ final class UserBackend extends ABackend implements
             ["app" => $this->appName]
         );
 
-        if (empty($this->properties[DB::USER_NAME_COLUMN])) {
-            return false;
+        $users = $this->getUsers(
+            $search, $limit, $offset, function ($user) {
+            return $user;
         }
-
-        $users = $this->getUsers($search, $limit, $offset);
+        );
 
         $names = [];
         foreach ($users as $user) {
-            if (!is_null($user->name)) {
-                $names[$user] = $user->name;
+            if (is_null($user->name)) {
+                $names[$user->uid] = $user->uid;
+            } else {
+                $names[$user->uid] = $user->name;
             }
         }
 
@@ -417,10 +419,11 @@ final class UserBackend extends ABackend implements
     /**
      * @inheritdoc
      */
-    public function getUsers($search = "", $limit = null, $offset = null)
-    {
+    public function getUsers(
+        $search = "", $limit = null, $offset = null, $callback = null
+    ) {
         $this->logger->debug(
-            "Entering getUsers($search, $limit, $offset)",
+            "Entering getUsers($search, $limit, $offset, $callback)",
             ["app" => $this->appName]
         );
 
@@ -448,15 +451,17 @@ final class UserBackend extends ABackend implements
             $this->cache->set("user_" . $user->uid, $user);
         }
 
-        $users = array_map(
-            function ($user) {
+        $callback = is_callable($callback)
+            ? $callback
+            : function ($user) {
                 return $user->uid;
-            }, $users
-        );
+            };
+        $users = array_map($callback, $users);
 
         $this->cache->set($cacheKey, $users);
         $this->logger->debug(
-            "Returning getUsers($search, $limit, $offset): count(" . count(
+            "Returning getUsers($search, $limit, $offset, $callback): count("
+            . count(
                 $users
             ) . ")", ["app" => $this->appName]
         );
