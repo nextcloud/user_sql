@@ -41,6 +41,7 @@ use OCP\User\Backend\ICheckPasswordBackend;
 use OCP\User\Backend\ICountUsersBackend;
 use OCP\User\Backend\IGetDisplayNameBackend;
 use OCP\User\Backend\IGetHomeBackend;
+use OCP\User\Backend\IPasswordConfirmationBackend;
 use OCP\User\Backend\IProvideAvatarBackend;
 use OCP\User\Backend\ISetDisplayNameBackend;
 use OCP\User\Backend\ISetPasswordBackend;
@@ -55,6 +56,7 @@ final class UserBackend extends ABackend implements
     ICountUsersBackend,
     IGetDisplayNameBackend,
     IGetHomeBackend,
+    IPasswordConfirmationBackend,
     IProvideAvatarBackend,
     ISetDisplayNameBackend,
     ISetPasswordBackend
@@ -659,5 +661,13 @@ final class UserBackend extends ABackend implements
         }
 
         return parent::implementsActions($actions);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function canConfirmPassword(string $uid): bool
+    {
+        return true;
     }
 }
