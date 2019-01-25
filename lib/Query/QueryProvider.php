@@ -163,6 +163,8 @@ class QueryProvider implements \ArrayAccess
                 "SELECT $userColumns " .
                 "FROM $user u " .
                 "WHERE u.$uUID LIKE :$searchParam " .
+                "OR u.$uName LIKE :$searchParam " .
+                "OR u.$uEmail LIKE :$searchParam " .
                 "ORDER BY u.$uUID",
 
             Query::UPDATE_DISPLAY_NAME =>
