@@ -121,7 +121,8 @@ class QueryProvider implements \ArrayAccess
             Query::COUNT_USERS =>
                 "SELECT COUNT(u.$uUID) AS count " .
                 "FROM $user u " .
-                "WHERE u.$uUID LIKE :$searchParam",
+                "WHERE u.$uUID LIKE :$searchParam " .
+                "AND " . (empty($uActive) ? "true" : (empty($reverseActiveOpt) ? "" : "NOT ") . "u." . $uActive),
 
             Query::FIND_GROUP =>
                 "SELECT $groupColumns " .
@@ -145,12 +146,14 @@ class QueryProvider implements \ArrayAccess
             Query::FIND_USER =>
                 "SELECT $userColumns, u.$uPassword AS password " .
                 "FROM $user u " .
-                "WHERE u.$uUID = :$uidParam",
+                "WHERE u.$uUID = :$uidParam ".
+                "AND " . (empty($uActive) ? "true" : (empty($reverseActiveOpt) ? "" : "NOT ") . "u." . $uActive),
 
             Query::FIND_USER_CASE_INSENSITIVE =>
                 "SELECT $userColumns, u.$uPassword AS password " .
                 "FROM $user u " .
-                "WHERE lower(u.$uUID) = lower(:$uidParam)",
+                "WHERE lower(u.$uUID) = lower(:$uidParam) " .
+                "AND " . (empty($uActive) ? "true" : (empty($reverseActiveOpt) ? "" : "NOT ") . "u." . $uActive),
 
             Query::FIND_USER_GROUPS =>
                 "SELECT $groupColumns " .
@@ -163,6 +166,7 @@ class QueryProvider implements \ArrayAccess
                 "SELECT $userColumns " .
                 "FROM $user u " .
                 "WHERE u.$uUID LIKE :$searchParam " .
+                "AND " . (empty($uActive) ? "true" : (empty($reverseActiveOpt) ? "" : "NOT ") . "u." . $uActive) . " " .
                 "ORDER BY u.$uUID",
 
             Query::UPDATE_DISPLAY_NAME =>
