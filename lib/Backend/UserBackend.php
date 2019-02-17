@@ -45,6 +45,8 @@ use OCP\User\Backend\IPasswordConfirmationBackend;
 use OCP\User\Backend\IProvideAvatarBackend;
 use OCP\User\Backend\ISetDisplayNameBackend;
 use OCP\User\Backend\ISetPasswordBackend;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
 /**
  * The SQL user backend manager.
@@ -90,6 +92,10 @@ final class UserBackend extends ABackend implements
      */
     private $config;
     /**
+     * @var EventDispatcher The event dispatcher.
+     */
+    private $eventDispatcher;
+    /**
      * @var IUserAction[] The actions to execute.
      */
     private $actions;
@@ -97,17 +103,19 @@ final class UserBackend extends ABackend implements
     /**
      * The default constructor.
      *
-     * @param string         $AppName        The application name.
-     * @param Cache          $cache          The cache instance.
-     * @param ILogger        $logger         The logger instance.
-     * @param Properties     $properties     The properties array.
-     * @param UserRepository $userRepository The user repository.
-     * @param IL10N          $localization   The localization service.
-     * @param IConfig        $config         The config instance.
+     * @param string          $AppName         The application name.
+     * @param Cache           $cache           The cache instance.
+     * @param ILogger         $logger          The logger instance.
+     * @param Properties      $properties      The properties array.
+     * @param UserRepository  $userRepository  The user repository.
+     * @param IL10N           $localization    The localization service.
+     * @param IConfig         $config          The config instance.
+     * @param EventDispatcher $eventDispatcher The event dispatcher.
      */
     public function __construct(
         $AppName, Cache $cache, ILogger $logger, Properties $properties,
-        UserRepository $userRepository, IL10N $localization, IConfig $config
+        UserRepository $userRepository, IL10N $localization, IConfig $config,
+        EventDispatcher $eventDispatcher
     ) {
         $this->appName = $AppName;
         $this->cache = $cache;
@@ -116,6 +124,7 @@ final class UserBackend extends ABackend implements
         $this->userRepository = $userRepository;
         $this->localization = $localization;
         $this->config = $config;
+        $this->eventDispatcher = $eventDispatcher;
         $this->actions = [];
 
         $this->initActions();
@@ -491,6 +500,11 @@ final class UserBackend extends ABackend implements
         if ($passwordAlgorithm === false) {
             return false;
         }
+
+        $event = new GenericEvent($password);
+        $this->eventDispatcher->dispatch(
+            'OCP\PasswordPolicy::validate', $event
+        );
 
         $user = $this->userRepository->findByUid($uid);
         if (!($user instanceof User)) {
