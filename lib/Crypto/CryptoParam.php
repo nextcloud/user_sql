@@ -53,7 +53,7 @@ class CryptoParam
      * @param $min   int Minimal value for parameter.
      * @param $max   int Maximum value for parameter.
      */
-    public function __construct($name, $value, $min, $max)
+    public function __construct($name, $value = null, $min = null, $max = null)
     {
         $this->name = $name;
         $this->value = $value;
