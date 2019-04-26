@@ -90,80 +90,80 @@ class QueryProvider implements \ArrayAccess
         $reverseActiveOpt = $this->properties[Opt::REVERSE_ACTIVE];
 
         $groupColumns
-            = "g.$gGID AS gid, " .
-            (empty($gName) ? "g." . $gGID : "g." . $gName) . " AS name, " .
-            (empty($gAdmin) ? "false" : "g." . $gAdmin) . " AS admin";
+            = "$gGID AS gid, " .
+            (empty($gName) ? "" . $gGID : "" . $gName) . " AS name, " .
+            (empty($gAdmin) ? "false" : "" . $gAdmin) . " AS admin";
         $userColumns
-            = "u.$uUID AS uid, " .
-            (empty($uName) ? "u." . $uUID : "u." . $uName) . " AS name, " .
-            (empty($uEmail) ? "null" : "u." . $uEmail) . " AS email, " .
-            (empty($uQuota) ? "null" : "u." . $uQuota) . " AS quota, " .
-            (empty($uHome) ? "null" : "u." . $uHome) . " AS home, " .
-            (empty($uActive) ? "true" : (empty($reverseActiveOpt) ? "" : "NOT ") . "u." . $uActive) . " AS active, " .
-            (empty($uAvatar) ? "false" : "u." . $uAvatar) . " AS avatar, " .
-            (empty($uSalt) ? "null" : "u." . $uSalt) . " AS salt";
+            = "$uUID AS uid, " .
+            (empty($uName) ? "" . $uUID : "" . $uName) . " AS name, " .
+            (empty($uEmail) ? "null" : "" . $uEmail) . " AS email, " .
+            (empty($uQuota) ? "null" : "" . $uQuota) . " AS quota, " .
+            (empty($uHome) ? "null" : "" . $uHome) . " AS home, " .
+            (empty($uActive) ? "true" : (empty($reverseActiveOpt) ? "" : "NOT ") . "" . $uActive) . " AS active, " .
+            (empty($uAvatar) ? "false" : "" . $uAvatar) . " AS avatar, " .
+            (empty($uSalt) ? "null" : "" . $uSalt) . " AS salt";
 
         $this->queries = [
             Query::BELONGS_TO_ADMIN =>
-                "SELECT COUNT(g.$gGID) > 0 AS admin " .
-                "FROM $group g, $userGroup ug " .
-                "WHERE ug.$ugGID = g.$gGID " .
-                "AND ug.$ugUID = :$uidParam " .
-                "AND g.$gAdmin",
+                "SELECT COUNT($gGID) > 0 AS admin " .
+                "FROM $group, $userGroup " .
+                "WHERE $ugGID = $gGID " .
+                "AND $ugUID = :$uidParam " .
+                "AND $gAdmin",
 
             Query::COUNT_GROUPS =>
-                "SELECT COUNT(ug.$ugGID) " .
-                "FROM $userGroup ug " .
-                "WHERE ug.$ugGID = :$gidParam " .
-                "AND ug.$ugUID " .
+                "SELECT COUNT(.$ugGID) " .
+                "FROM $userGroup " .
+                "WHERE $ugGID = :$gidParam " .
+                "AND $ugUID " .
                 "LIKE :$searchParam",
 
             Query::COUNT_USERS =>
-                "SELECT COUNT(u.$uUID) AS count " .
-                "FROM $user u " .
-                "WHERE u.$uUID LIKE :$searchParam",
+                "SELECT COUNT($uUID) AS count " .
+                "FROM $user " .
+                "WHERE $uUID LIKE :$searchParam",
 
             Query::FIND_GROUP =>
                 "SELECT $groupColumns " .
-                "FROM $group g " .
-                "WHERE g.$gGID = :$gidParam",
+                "FROM $group " .
+                "WHERE $gGID = :$gidParam",
 
             Query::FIND_GROUP_USERS =>
-                "SELECT ug.$ugUID AS uid " .
-                "FROM $userGroup ug " .
-                "WHERE ug.$ugGID = :$gidParam " .
-                "AND ug.$ugUID " .
+                "SELECT $ugUID AS uid " .
+                "FROM $userGroup " .
+                "WHERE $ugGID = :$gidParam " .
+                "AND $ugUID " .
                 "LIKE :$searchParam " .
-                "ORDER BY ug.$ugUID",
+                "ORDER BY $ugUID",
 
             Query::FIND_GROUPS =>
                 "SELECT $groupColumns " .
-                "FROM $group g " .
-                "WHERE g.$gGID LIKE :$searchParam " .
-                "ORDER BY g.$gGID",
+                "FROM $group " .
+                "WHERE $gGID LIKE :$searchParam " .
+                "ORDER BY $gGID",
 
             Query::FIND_USER =>
-                "SELECT $userColumns, u.$uPassword AS password " .
-                "FROM $user u " .
-                "WHERE u.$uUID = :$uidParam",
+                "SELECT $userColumns, $uPassword AS password " .
+                "FROM $user " .
+                "WHERE $uUID = :$uidParam",
 
             Query::FIND_USER_CASE_INSENSITIVE =>
-                "SELECT $userColumns, u.$uPassword AS password " .
-                "FROM $user u " .
-                "WHERE lower(u.$uUID) = lower(:$uidParam)",
+                "SELECT $userColumns, $uPassword AS password " .
+                "FROM $user " .
+                "WHERE lower($uUID) = lower(:$uidParam)",
 
             Query::FIND_USER_GROUPS =>
                 "SELECT $groupColumns " .
-                "FROM $group g, $userGroup ug " .
-                "WHERE ug.$ugGID = g.$gGID " .
-                "AND ug.$ugUID = :$uidParam " .
-                "ORDER BY g.$gGID",
+                "FROM $group, $userGroup " .
+                "WHERE $ugGID = $gGID " .
+                "AND $ugUID = :$uidParam " .
+                "ORDER BY $gGID",
 
             Query::FIND_USERS =>
                 "SELECT $userColumns " .
-                "FROM $user u " .
-                "WHERE u.$uUID LIKE :$searchParam " .
-                "ORDER BY u.$uUID",
+                "FROM $user " .
+                "WHERE $uUID LIKE :$searchParam " .
+                "ORDER BY $uUID",
 
             Query::UPDATE_DISPLAY_NAME =>
                 "UPDATE $user " .
