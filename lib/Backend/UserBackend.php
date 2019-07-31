@@ -400,7 +400,7 @@ final class UserBackend extends ABackend implements
         $names = [];
         foreach ($users as $user) {
             if (!is_null($user->name)) {
-                $names[$user] = $user->name;
+                $names[$user->uid] = $user->name;
             }
         }
 
@@ -446,13 +446,13 @@ final class UserBackend extends ABackend implements
             $this->cache->set("user_" . $user->uid, $user);
         }
 
-        $users = array_map(
+        $usersCache = array_map(
             function ($user) {
                 return $user->uid;
             }, $users
         );
 
-        $this->cache->set($cacheKey, $users);
+        $this->cache->set($cacheKey, $usersCache);
         $this->logger->debug(
             "Returning getUsers($search, $limit, $offset): count(" . count(
                 $users
