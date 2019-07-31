@@ -446,13 +446,13 @@ final class UserBackend extends ABackend implements
             $this->cache->set("user_" . $user->uid, $user);
         }
 
-        $usersCache = array_map(
+        $users = array_map(
             function ($user) {
                 return $user->uid;
             }, $users
         );
 
-        $this->cache->set($cacheKey, $usersCache);
+        $this->cache->set($cacheKey, $users);
         $this->logger->debug(
             "Returning getUsers($search, $limit, $offset): count(" . count(
                 $users
