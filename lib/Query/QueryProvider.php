@@ -139,7 +139,7 @@ class QueryProvider implements \ArrayAccess
             Query::FIND_GROUPS =>
                 "SELECT $groupColumns " .
                 "FROM $group g " .
-                "WHERE g.$gGID LIKE :$searchParam " .
+                "WHERE g.$gGID LIKE :$searchParam OR g.$gName LIKE :$searchParam " .
                 "ORDER BY g.$gGID",
 
             Query::FIND_USER =>
