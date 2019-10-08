@@ -38,6 +38,7 @@ final class Opt
     const HOME_LOCATION = "opt.home_location";
     const HOME_MODE = "opt.home_mode";
     const NAME_CHANGE = "opt.name_change";
+    const NAME_SYNC = "opt.name_sync";
     const PASSWORD_CHANGE = "opt.password_change";
     const PREPEND_SALT = "opt.prepend_salt";
     const PROVIDE_AVATAR = "opt.provide_avatar";

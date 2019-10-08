@@ -8,12 +8,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Users can confirm passwords
 - Support Nextcloud password_policy
-- Extend user/group search
 - Support for Nextcloud 18
-- Do not include users which are disabled
+- Name sync option
 
 ### Fixed
 - Getting user display names backend
+- Do not include users which are disabled
+
+### Changed
+- Extend user/group search
 
 ## [4.3.0] - 2018-12-30
 ### Added
@@ -30,9 +33,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Support for Nextcloud 15
 - Redmine, SHA-256, SHA-512 hash algorithms
+
 ### Fixed
 - Loading user list when display name is null
 - Hide "password change form" when "Allow password change" not set
+
 ### Changed
 - Append salt only when checked. Not by default
 
@@ -42,6 +47,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - 'Prepend salt' toggle
 - Drupal 7 hash algorithm
 - 'Case-insensitive username' option
+
 ### Fixed
 - Error when 'Display name' not set
 - Encoding of iteration for 'Extended DES (Crypt)'
@@ -62,8 +68,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Example SQL script in README file
 - Fixed misspelling
-
-### Changed
 - Support for Nextcloud 14 only
 - Group backend implementation
 - User backend implementation

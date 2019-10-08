@@ -54,6 +54,7 @@ Name | Description | Details
 **Reverse active column** | Reverse value of active column in user table. | Optional.<br/>Default: false.
 **Use cache** | Use database query results cache. The cache can be cleared any time with the *Clear cache* button click. | Optional.<br/>Default: false.
 **Hash algorithm** | How users passwords are stored in the database. See [Hash algorithms](#hash-algorithms). | Mandatory.
+**Name sync** | Sync display name with the Nextcloud.<br/>- *None* - Disables this feature. This is the default option.<br/>- *Synchronise only once* - Copy the display name to the Nextcloud preferences if its not set.<br/>- *Nextcloud always wins* - Always copy the display name to the database. This updates the user table.<br/>- *SQL always wins* - Always copy the display name to the Nextcloud preferences. | Optional.<br/>Default: *None*.<br/>Requires: user *Display name* column.
 **Email sync** | Sync e-mail address with the Nextcloud.<br/>- *None* - Disables this feature. This is the default option.<br/>- *Synchronise only once* - Copy the e-mail address to the Nextcloud preferences if its not set.<br/>- *Nextcloud always wins* - Always copy the e-mail address to the database. This updates the user table.<br/>- *SQL always wins* - Always copy the e-mail address to the Nextcloud preferences. | Optional.<br/>Default: *None*.<br/>Requires: user *Email* column.
 **Quota sync** | Sync user quota with the Nextcloud.<br/>- *None* - Disables this feature. This is the default option.<br/>- *Synchronise only once* - Copy the user quota to the Nextcloud preferences if its not set.<br/>- *Nextcloud always wins* - Always copy the user quota to the database. This updates the user table.<br/>- *SQL always wins* - Always copy the user quota to the Nextcloud preferences. | Optional.<br/>Default: *None*.<br/>Requires: user *Quota* column.
 **Home mode** | User storage path.<br/>- *Default* - Let the Nextcloud manage this. The default option.<br/>- *Query* - Use location from the user table pointed by the *home* column.<br/>- *Static* - Use static location pointed by the *Home Location* option. | Optional<br/>Default: *Default*.
@@ -123,6 +124,7 @@ CREATE TABLE sql_user
   home           TEXT        NULL,
   password       TEXT        NOT NULL,
   active         TINYINT(1)  NOT NULL DEFAULT '1',
+  disabled       TINYINT(1)  NOT NULL DEFAULT '0',
   provide_avatar BOOLEAN     NOT NULL DEFAULT FALSE,
   salt           TEXT        NULL
 );

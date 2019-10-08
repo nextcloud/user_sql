@@ -93,15 +93,44 @@ class NameSync implements IUserAction
 
         $result = false;
 
-        if (!empty($user->name) && $user->name !== $ncName) {
-            $this->config->setUserValue(
-                $user->uid, "settings", "displayName", $user->name
-            );
-            \OC::$server->getUserManager()->get($user->uid)->triggerChange('displayName', $user->name, null);
+        switch ($this->properties[Opt::NAME_SYNC]) {
+        case App::SYNC_INITIAL:
+            if (empty($ncName) && !empty($user->name)) {
+                $this->config->setUserValue(
+                    $user->uid, "settings", "displayName", $user->name
+                );
+                \OC::$server->getUserManager()->get($user->uid)->triggerChange(
+                    'displayName', $user->name, null
+                );
+            }
+
+            $result = true;
+            break;
+        case App::SYNC_FORCE_NC:
+            if (!empty($ncName) && $user->name !== $ncName) {
+                $user = $this->userRepository->findByUid($user->uid);
+                if (!($user instanceof User)) {
+                    break;
+                }
+
+                $user->name = $ncName;
+                $result = $this->userRepository->save($user, UserRepository::DISPLAY_NAME_FIELD);
+            }
+
+            break;
+        case App::SYNC_FORCE_SQL:
+            if (!empty($user->name) && $user->name !== $ncName) {
+                $this->config->setUserValue(
+                    $user->uid, "settings", "displayName", $user->name
+                );
+                \OC::$server->getUserManager()->get($user->uid)->triggerChange(
+                    'displayName', $user->name, null
+                );
+            }
+
+            $result = true;
+            break;
         }
-
-        $result = true;
-
 
         $this->logger->debug(
             "Returning NameSync#doAction($user->uid): " . ($result ? "true"
