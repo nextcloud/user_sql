@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Users can confirm passwords
 - Support Nextcloud password_policy
+- Extend user/group search
 
 ### Fixed
 - Getting user display names backend

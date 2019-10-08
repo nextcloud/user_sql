@@ -140,6 +140,7 @@ class QueryProvider implements \ArrayAccess
                 "SELECT $groupColumns " .
                 "FROM $group g " .
                 "WHERE g.$gGID LIKE :$searchParam " .
+                (empty($gName) ? "" : "OR g.$gName LIKE :$searchParam ") .
                 "ORDER BY g.$gGID",
 
             Query::FIND_USER =>
@@ -163,6 +164,8 @@ class QueryProvider implements \ArrayAccess
                 "SELECT $userColumns " .
                 "FROM $user u " .
                 "WHERE u.$uUID LIKE :$searchParam " .
+                (empty($uName) ? "" : "OR u.$uName LIKE :$searchParam ") .
+                (empty($uEmail) ? "" : "OR u.$uEmail LIKE :$searchParam ") .
                 "ORDER BY u.$uUID",
 
             Query::UPDATE_DISPLAY_NAME =>
