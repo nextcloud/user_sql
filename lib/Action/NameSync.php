@@ -2,8 +2,8 @@
 /**
  * Nextcloud - user_sql
  *
- * @copyright 2018 Marcin Łojewski <dev@mlojewski.me>
- * @author    Marcin Łojewski <dev@mlojewski.me>
+ * @copyright 2019 Björn Kinscher <dev@bjoern-kinscher.de>
+ * @author    Björn Kinscher <dev@bjoern-kinscher.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -30,11 +30,11 @@ use OCP\IConfig;
 use OCP\ILogger;
 
 /**
- * Synchronizes the user email address.
+ * Synchronizes the user name.
  *
- * @author Marcin Łojewski <dev@mlojewski.me>
+ * @author Björn Kinscher <dev@bjoern-kinscher.de>
  */
-class EmailSync implements IUserAction
+class NameSync implements IUserAction
 {
     /**
      * @var string The application name.
@@ -84,51 +84,27 @@ class EmailSync implements IUserAction
     public function doAction(User $user)
     {
         $this->logger->debug(
-            "Entering EmailSync#doAction($user->uid)", ["app" => $this->appName]
+            "Entering NameSync#doAction($user->uid)", ["app" => $this->appName]
         );
 
-        $ncMail = $this->config->getUserValue(
-            $user->uid, "settings", "email", ""
+        $ncName = $this->config->getUserValue(
+            $user->uid, "settings", "displayName", ""
         );
 
         $result = false;
 
-        switch ($this->properties[Opt::EMAIL_SYNC]) {
-        case App::SYNC_INITIAL:
-            if (empty($ncMail) && !empty($user->email)) {
-                $this->config->setUserValue(
-                    $user->uid, "settings", "email", $user->email
-                );
-            }
-
-            $result = true;
-            break;
-        case App::SYNC_FORCE_NC:
-            if (!empty($ncMail) && $user->email !== $ncMail) {
-                $user = $this->userRepository->findByUid($user->uid);
-                if (!($user instanceof User)) {
-                    break;
-                }
-
-                $user->email = $ncMail;
-                $result = $this->userRepository->save($user, UserRepository::EMAIL_FIELD);
-            }
-
-            break;
-        case App::SYNC_FORCE_SQL:
-            if (!empty($user->email) && $user->email !== $ncMail) {
-                $this->config->setUserValue(
-                    $user->uid, "settings", "email", $user->email
-                );
-                \OC::$server->getUserManager()->get($user->uid)->triggerChange('eMailAddress', $user->email, null);
-            }
-
-            $result = true;
-            break;
+        if (!empty($user->name) && $user->name !== $ncName) {
+            $this->config->setUserValue(
+                $user->uid, "settings", "displayName", $user->name
+            );
+            \OC::$server->getUserManager()->get($user->uid)->triggerChange('displayName', $user->name, null);
         }
 
+        $result = true;
+
+
         $this->logger->debug(
-            "Returning EmailSync#doAction($user->uid): " . ($result ? "true"
+            "Returning NameSync#doAction($user->uid): " . ($result ? "true"
                 : "false"),
             ["app" => $this->appName]
         );

@@ -25,6 +25,7 @@ use OC\User\Backend;
 use OCA\UserSQL\Action\EmailSync;
 use OCA\UserSQL\Action\IUserAction;
 use OCA\UserSQL\Action\QuotaSync;
+use OCA\UserSQL\Action\NameSync;
 use OCA\UserSQL\Cache;
 use OCA\UserSQL\Constant\App;
 use OCA\UserSQL\Constant\DB;
@@ -147,6 +148,13 @@ final class UserBackend extends ABackend implements
             && !empty($this->properties[DB::USER_QUOTA_COLUMN])
         ) {
             $this->actions[] = new QuotaSync(
+                $this->appName, $this->logger, $this->properties, $this->config,
+                $this->userRepository
+            );
+        }
+        if (!empty($this->properties[DB::USER_NAME_COLUMN])
+        ) {
+            $this->actions[] = new NameSync(
                 $this->appName, $this->logger, $this->properties, $this->config,
                 $this->userRepository
             );
