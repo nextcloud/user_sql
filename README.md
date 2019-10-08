@@ -73,6 +73,7 @@ Name | Description | Details
 **Password** | Password hash column. | Mandatory for user backend.
 **Display name** | Display name column. | Optional.
 **Active** | Flag indicating if user can log in. | Optional.<br/>Default: true.
+**Disabled** | Flag indicating if user should not be visible (not included in searches). | Optional.<br/>Default: false.
 **Provide avatar** | Flag indicating if user can change its avatar. | Optional.<br/>Default: false.
 **Salt** | Salt which is appended to password when checking or changing the password. | Optional.
 **Append salt** | Append a salt to the password. | Optional.<br/>Default: false.

@@ -47,6 +47,7 @@ final class DB
 
     const USER_ACTIVE_COLUMN = "db.table.user.column.active";
     const USER_AVATAR_COLUMN = "db.table.user.column.avatar";
+    const USER_DISABLED_COLUMN = "db.table.user.column.disabled";
     const USER_EMAIL_COLUMN = "db.table.user.column.email";
     const USER_HOME_COLUMN = "db.table.user.column.home";
     const USER_NAME_COLUMN = "db.table.user.column.name";

@@ -68,6 +68,7 @@ class QueryProvider implements \ArrayAccess
 
         $uActive = $this->properties[DB::USER_ACTIVE_COLUMN];
         $uAvatar = $this->properties[DB::USER_AVATAR_COLUMN];
+        $uDisabled = $this->properties[DB::USER_DISABLED_COLUMN];
         $uEmail = $this->properties[DB::USER_EMAIL_COLUMN];
         $uHome = $this->properties[DB::USER_HOME_COLUMN];
         $uName = $this->properties[DB::USER_NAME_COLUMN];
@@ -121,7 +122,8 @@ class QueryProvider implements \ArrayAccess
             Query::COUNT_USERS =>
                 "SELECT COUNT(u.$uUID) AS count " .
                 "FROM $user u " .
-                "WHERE u.$uUID LIKE :$searchParam",
+                "WHERE u.$uUID LIKE :$searchParam " .
+                (empty($uDisabled) ? "" : "AND NOT u.$uDisabled"),
 
             Query::FIND_GROUP =>
                 "SELECT $groupColumns " .
@@ -146,12 +148,14 @@ class QueryProvider implements \ArrayAccess
             Query::FIND_USER =>
                 "SELECT $userColumns, u.$uPassword AS password " .
                 "FROM $user u " .
-                "WHERE u.$uUID = :$uidParam",
+                "WHERE u.$uUID = :$uidParam " .
+                (empty($uDisabled) ? "" : "AND NOT u.$uDisabled"),
 
             Query::FIND_USER_CASE_INSENSITIVE =>
                 "SELECT $userColumns, u.$uPassword AS password " .
                 "FROM $user u " .
-                "WHERE lower(u.$uUID) = lower(:$uidParam)",
+                "WHERE lower(u.$uUID) = lower(:$uidParam) " .
+                (empty($uDisabled) ? "" : "AND NOT u.$uDisabled"),
 
             Query::FIND_USER_GROUPS =>
                 "SELECT $groupColumns " .
@@ -163,9 +167,12 @@ class QueryProvider implements \ArrayAccess
             Query::FIND_USERS =>
                 "SELECT $userColumns " .
                 "FROM $user u " .
-                "WHERE u.$uUID LIKE :$searchParam " .
+                "WHERE (" .
+                "u.$uUID LIKE :$searchParam " .
                 (empty($uName) ? "" : "OR u.$uName LIKE :$searchParam ") .
                 (empty($uEmail) ? "" : "OR u.$uEmail LIKE :$searchParam ") .
+                ")" .
+                (empty($uDisabled) ? "" : "AND NOT u.$uDisabled ") .
                 "ORDER BY u.$uUID",
 
             Query::UPDATE_DISPLAY_NAME =>
