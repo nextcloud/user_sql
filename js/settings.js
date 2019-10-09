@@ -119,7 +119,7 @@ user_sql.adminSettingsUI = function () {
         );
 
         autocomplete(
-            "#db-table-user-column-uid, #db-table-user-column-email, #db-table-user-column-quota, #db-table-user-column-home, #db-table-user-column-password, #db-table-user-column-name, #db-table-user-column-active, #db-table-user-column-avatar, #db-table-user-column-salt",
+            "#db-table-user-column-uid, #db-table-user-column-email, #db-table-user-column-quota, #db-table-user-column-home, #db-table-user-column-password, #db-table-user-column-name, #db-table-user-column-active, #db-table-user-column-disabled, #db-table-user-column-avatar, #db-table-user-column-salt",
             "/apps/user_sql/settings/autocomplete/table/user"
         );
 
