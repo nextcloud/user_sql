@@ -241,3 +241,4 @@ Since version 4.0.0 the whole core implementation has been rewritten.
   * Andreas Boehler for releasing the first version of this application
   * Johan Hendriks provided his user_postfixadmin
   * Ed Wildgoose for fixing possible SQL injection vulnerability
+  * Brandon Lee for implementing feature to separate uid from username resolving issues #108 & #121
