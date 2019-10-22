@@ -74,6 +74,29 @@ class UserRepository
             );
         }
     }
+    
+    /**
+     * Get an user entity object.
+     *
+     * @param string $username           The username.
+     * @param bool   $caseSensitive TRUE for case sensitive search,
+     *                              FALSE for case insensitive search.
+     *
+     * @return User The user entity, NULL if it does not exists or
+     *              FALSE on failure.
+     */
+    public function findByUsername($username, $caseSensitive = true)
+    {
+        if ($caseSensitive) {
+            return $this->dataQuery->queryEntity(
+                Query::FIND_USER_BY_USERNAME, User::class, [Query::USERNAME_PARAM => $username]
+            );
+        } else {
+            return $this->dataQuery->queryEntity(
+                Query::FIND_USER_BY_USERNAME_CASE_INSENSITIVE, User::class, [Query::USERNAME_PARAM => $username]
+            );
+        }
+    }
 
     /**
      * Get an array of user entity objects.
