@@ -29,9 +29,13 @@ namespace OCA\UserSQL\Model;
 class User
 {
     /**
-     * @var string The UID (username).
+     * @var string The UID (uid).
      */
     public $uid;
+     /**
+     * @var string The user's username for login.
+     */
+    public $username;
     /**
      * @var string The user's email address.
      */

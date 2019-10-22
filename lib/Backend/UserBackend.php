@@ -301,15 +301,15 @@ final class UserBackend extends ABackend implements
      * Check if the user's password is correct then return its ID or
      * FALSE on failure.
      *
-     * @param string $uid      The user ID.
+     * @param string $username      The user ID.
      * @param string $password The password.
      *
      * @return string|bool The user ID on success, false otherwise.
      */
-    public function checkPassword(string $uid, string $password)
+    public function checkPassword(string $username, string $password)
     {
         $this->logger->debug(
-            "Entering checkPassword($uid, *)", ["app" => $this->appName]
+            "Entering checkPassword($username, *)", ["app" => $this->appName]
         );
 
         $passwordAlgorithm = $this->getPasswordAlgorithm();
@@ -318,8 +318,8 @@ final class UserBackend extends ABackend implements
         }
 
         $caseSensitive = empty($this->properties[Opt::CASE_INSENSITIVE_USERNAME]);
-        $user = $this->userRepository->findByUid($uid, $caseSensitive);
-        if (!($user instanceof User) || ($caseSensitive && $user->uid !== $uid)) {
+        $user = $this->userRepository->findByUsername($username, $caseSensitive);
+        if (!($user instanceof User) || ($caseSensitive && $user->username !== $username)) {
             return false;
         }
 

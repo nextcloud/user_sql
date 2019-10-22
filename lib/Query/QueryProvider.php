@@ -76,6 +76,7 @@ class QueryProvider implements \ArrayAccess
         $uQuota = $this->properties[DB::USER_QUOTA_COLUMN];
         $uSalt = $this->properties[DB::USER_SALT_COLUMN];
         $uUID = $this->properties[DB::USER_UID_COLUMN];
+        $uUsername = $this->properties[DB::USER_USERNAME_COLUMN];
 
         $ugGID = $this->properties[DB::USER_GROUP_GID_COLUMN];
         $ugUID = $this->properties[DB::USER_GROUP_UID_COLUMN];
@@ -87,6 +88,7 @@ class QueryProvider implements \ArrayAccess
         $quotaParam = Query::QUOTA_PARAM;
         $searchParam = Query::SEARCH_PARAM;
         $uidParam = Query::UID_PARAM;
+        $usernameParam = Query::USERNAME_PARAM;
 
         $reverseActiveOpt = $this->properties[Opt::REVERSE_ACTIVE];
 
@@ -95,7 +97,7 @@ class QueryProvider implements \ArrayAccess
             (empty($gName) ? "g." . $gGID : "g." . $gName) . " AS name, " .
             (empty($gAdmin) ? "false" : "g." . $gAdmin) . " AS admin";
         $userColumns
-            = "u.$uUID AS uid, " .
+            = "u.$uUID AS uid, u.$uUsername AS username, " .
             (empty($uName) ? "u." . $uUID : "u." . $uName) . " AS name, " .
             (empty($uEmail) ? "null" : "u." . $uEmail) . " AS email, " .
             (empty($uQuota) ? "null" : "u." . $uQuota) . " AS quota, " .
@@ -155,6 +157,18 @@ class QueryProvider implements \ArrayAccess
                 "SELECT $userColumns, u.$uPassword AS password " .
                 "FROM $user u " .
                 "WHERE lower(u.$uUID) = lower(:$uidParam) " .
+                (empty($uDisabled) ? "" : "AND NOT u.$uDisabled"),
+                
+            Query::FIND_USER_BY_USERNAME =>
+                "SELECT $userColumns, u.$uPassword AS password " .
+                "FROM $user u " .
+                "WHERE u.$uUsername = :$usernameParam " .
+                (empty($uDisabled) ? "" : "AND NOT u.$uDisabled"),
+
+            Query::FIND_USER_BY_USERNAME_CASE_INSENSITIVE =>
+                "SELECT $userColumns, u.$uPassword AS password " .
+                "FROM $user u " .
+                "WHERE lower(u.$uUsername) = lower(:$usernameParam) " .
                 (empty($uDisabled) ? "" : "AND NOT u.$uDisabled"),
 
             Query::FIND_USER_GROUPS =>
