@@ -97,7 +97,7 @@ class QueryProvider implements \ArrayAccess
             (empty($gName) ? "g." . $gGID : "g." . $gName) . " AS name, " .
             (empty($gAdmin) ? "false" : "g." . $gAdmin) . " AS admin";
         $userColumns
-            = "u.$uUID AS uid, " .
+            = "u.$uUID AS uid, u.$uUsername AS username, " .
             (empty($uName) ? "u." . $uUID : "u." . $uName) . " AS name, " .
             (empty($uEmail) ? "null" : "u." . $uEmail) . " AS email, " .
             (empty($uQuota) ? "null" : "u." . $uQuota) . " AS quota, " .
