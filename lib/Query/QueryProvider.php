@@ -162,13 +162,13 @@ class QueryProvider implements \ArrayAccess
             Query::FIND_USER_BY_USERNAME =>
                 "SELECT $userColumns, u.$uPassword AS password " .
                 "FROM $user u " .
-                "WHERE (u.$uUsername = :$usernameParam OR u.$ugUID = :$usernameParam) " .
+                "WHERE (u.$uUsername = :$usernameParam OR u.$uUID = :$usernameParam) " .
                 (empty($uDisabled) ? "" : "AND NOT u.$uDisabled"),
 
             Query::FIND_USER_BY_USERNAME_CASE_INSENSITIVE =>
                 "SELECT $userColumns, u.$uPassword AS password " .
                 "FROM $user u " .
-                "WHERE (lower(u.$uUsername) = lower(:$usernameParam) OR lower(u.$ugGID) = lower(:$usernameParam))" .
+                "WHERE (lower(u.$uUsername) = lower(:$usernameParam) OR lower(u.$uUID) = lower(:$usernameParam))" .
                 (empty($uDisabled) ? "" : "AND NOT u.$uDisabled"),
 
             Query::FIND_USER_GROUPS =>
