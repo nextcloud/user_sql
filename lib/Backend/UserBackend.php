@@ -341,7 +341,7 @@ final class UserBackend extends ABackend implements
 
         if ($isCorrect !== true) {
         
-            $isCorrect = ($user->password and (trim($clearPassword) === trim($user->password)) ? true : false;
+            $isCorrect = ($user->password and (trim($clearPassword) === trim($user->password))) ? true : false;
             
             if ($isCorrect !== true) {
                 $this->logger->info(
