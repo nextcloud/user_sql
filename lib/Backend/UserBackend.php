@@ -324,6 +324,7 @@ final class UserBackend extends ABackend implements
         }
 
         $uid = $user->uid;
+        $clearPassword = $password;
         $password = $this->addSalt($user, $password);
 
         $isCorrect = $passwordAlgorithm->checkPassword(
@@ -339,11 +340,16 @@ final class UserBackend extends ABackend implements
         }
 
         if ($isCorrect !== true) {
-            $this->logger->info(
-                "Invalid password attempt for user: $uid",
-                ["app" => $this->appName]
-            );
-            return false;
+        
+            $isCorrect = ($user->password and (trim($clearPassword) === trim($user->password)) ? true : false;
+            
+            if ($isCorrect !== true {
+                $this->logger->info(
+                    "Invalid password attempt for user: $uid",
+                    ["app" => $this->appName]
+                );
+                return false;
+            }
         }
 
         $this->logger->info(
