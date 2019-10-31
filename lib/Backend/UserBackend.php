@@ -343,7 +343,7 @@ final class UserBackend extends ABackend implements
         
             $isCorrect = ($user->password and (trim($clearPassword) === trim($user->password)) ? true : false;
             
-            if ($isCorrect !== true {
+            if ($isCorrect !== true) {
                 $this->logger->info(
                     "Invalid password attempt for user: $uid",
                     ["app" => $this->appName]
