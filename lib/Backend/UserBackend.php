@@ -469,12 +469,12 @@ final class UserBackend extends ABackend implements
             $this->cache->set("user_" . $user->uid, $user);
         }
 
-        $callback = is_callable($callback)
+        $user_callback = is_callable($callback)
             ? $callback
             : function ($user) {
                 return $user->uid;
             };
-        $users = array_map($callback, $users);
+        $users = array_map($user_callback, $users);
 
         $this->cache->set($cacheKey, $users);
         $this->logger->debug(
