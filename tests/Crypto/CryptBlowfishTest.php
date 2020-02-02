@@ -54,7 +54,7 @@ class CryptBlowfishTest extends TestCase
         $this->assertTrue($this->crypto->checkPassword("password", $hash));
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->crypto = new CryptBlowfish($this->createMock(IL10N::class));

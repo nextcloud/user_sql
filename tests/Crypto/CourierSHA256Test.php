@@ -54,7 +54,7 @@ class CourierSHA256Test extends TestCase
         $this->assertTrue($this->crypto->checkPassword("password", $hash));
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->crypto = new CourierSHA256($this->createMock(IL10N::class));

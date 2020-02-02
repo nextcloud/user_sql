@@ -53,7 +53,7 @@ class SHA1Test extends TestCase
         $this->assertTrue($this->crypto->checkPassword("password", $hash));
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->crypto = new SHA1($this->createMock(IL10N::class));

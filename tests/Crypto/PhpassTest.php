@@ -53,7 +53,7 @@ class PhpassTest extends TestCase
         $this->assertTrue($this->crypto->checkPassword("password", $hash));
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->crypto = new Phpass($this->createMock(IL10N::class));

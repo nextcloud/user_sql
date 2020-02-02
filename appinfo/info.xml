@@ -21,7 +21,7 @@
     </types>
     <category>auth</category>
     <dependencies>
-        <php min-version="7.0"/>
+        <php min-version="7.1"/>
         <nextcloud min-version="14" max-version="19"/>
     </dependencies>
     <settings>

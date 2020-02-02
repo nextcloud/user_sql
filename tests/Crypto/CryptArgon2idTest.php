@@ -21,17 +21,17 @@
 
 namespace Tests\UserSQL\Crypto;
 
+use OCA\UserSQL\Crypto\CryptArgon2id;
 use OCA\UserSQL\Crypto\IPasswordAlgorithm;
-use OCA\UserSQL\Crypto\Redmine;
 use OCP\IL10N;
 use Test\TestCase;
 
 /**
- * Unit tests for class <code>Redmine</code>.
+ * Unit tests for class <code>CryptArgon2id</code>.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class RedmineTest extends TestCase
+class CryptArgon2idTest extends TestCase
 {
     /**
      * @var IPasswordAlgorithm
@@ -42,20 +42,21 @@ class RedmineTest extends TestCase
     {
         $this->assertTrue(
             $this->crypto->checkPassword(
-                "password", "48b75edeffd8e413341d7734f0f3391e7a5da994", "salt"
+                "password",
+                "\$argon2id\$v=19\$m=65536,t=4,p=1\$eWhTd3huemlhNGFkWTVSSQ\$BjSh9PINc9df9WU1zppBsYJKvkwUEYHYNUUMTj+QGPw"
             )
         );
     }
 
     public function testPasswordHash()
     {
-        $hash = $this->crypto->getPasswordHash("password", "salt");
-        $this->assertTrue($this->crypto->checkPassword("password", $hash, "salt"));
+        $hash = $this->crypto->getPasswordHash("password");
+        $this->assertTrue($this->crypto->checkPassword("password", $hash));
     }
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->crypto = new Redmine($this->createMock(IL10N::class));
+        $this->crypto = new CryptArgon2id($this->createMock(IL10N::class));
     }
 }

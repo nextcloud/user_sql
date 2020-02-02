@@ -53,7 +53,7 @@ class CourierMD5RawTest extends TestCase
         $this->assertTrue($this->crypto->checkPassword("password", $hash));
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->crypto = new CourierMD5Raw($this->createMock(IL10N::class));
