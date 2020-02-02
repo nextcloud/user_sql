@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.4.1] - 2020-02-02
+### Fixed
+- Issue generating 'Object of class Closure could not be converted to string' log message
+
 ## [4.4.0] - 2019-10-09
 ### Added
 - Users can confirm passwords
@@ -134,6 +138,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Supported version of ownCloud, Nextcloud: ownCloud 10, Nextcloud 12
 
+[4.4.1]: https://github.com/nextcloud/user_sql/compare/v4.4.0...v4.4.1
 [4.4.0]: https://github.com/nextcloud/user_sql/compare/v4.3.0...v4.4.0
 [4.3.0]: https://github.com/nextcloud/user_sql/compare/v4.2.1...v4.3.0
 [4.2.1]: https://github.com/nextcloud/user_sql/compare/v4.2.0...v4.2.1
