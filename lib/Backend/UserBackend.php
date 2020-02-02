@@ -437,11 +437,10 @@ final class UserBackend extends ABackend implements
     /**
      * @inheritdoc
      */
-    public function getUsers(
-        $search = "", $limit = null, $offset = null, $callback = null
-    ) {
+    public function getUsers($search = "", $limit = null, $offset = null, $callback = null)
+    {
         $this->logger->debug(
-            "Entering getUsers($search, $limit, $offset, $callback)",
+            "Entering getUsers($search, $limit, $offset)",
             ["app" => $this->appName]
         );
 
@@ -478,7 +477,7 @@ final class UserBackend extends ABackend implements
 
         $this->cache->set($cacheKey, $users);
         $this->logger->debug(
-            "Returning getUsers($search, $limit, $offset, $callback): count("
+            "Returning getUsers($search, $limit, $offset): count("
             . count(
                 $users
             ) . ")", ["app" => $this->appName]
