@@ -2,7 +2,7 @@
 /**
  * Nextcloud - user_sql
  *
- * @copyright 2018 Marcin Łojewski <dev@mlojewski.me>
+ * @copyright 2020 Marcin Łojewski <dev@mlojewski.me>
  * @author    Marcin Łojewski <dev@mlojewski.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,6 +28,7 @@ use OC\DB\Connection;
 use OC\DB\ConnectionFactory;
 use OCA\UserSQL\Cache;
 use OCA\UserSQL\Constant\App;
+use OCA\UserSQL\Constant\DB;
 use OCA\UserSQL\Constant\Opt;
 use OCA\UserSQL\Crypto\IPasswordAlgorithm;
 use OCA\UserSQL\Platform\PlatformFactory;
@@ -206,6 +207,15 @@ class SettingsController extends Controller
                     )
                 ]
             ];
+        }
+
+        $safeStore = $this->request->getParam(str_replace(".", "-", Opt::SAFE_STORE), App::FALSE_VALUE);
+        if ($safeStore !== $this->properties[Opt::SAFE_STORE]) {
+            unset($this->properties[DB::HOSTNAME]);
+            unset($this->properties[DB::PASSWORD]);
+            unset($this->properties[DB::USERNAME]);
+            unset($this->properties[DB::DATABASE]);
+            $this->properties[Opt::SAFE_STORE] = $safeStore;
         }
 
         foreach ($properties as $key => $value) {

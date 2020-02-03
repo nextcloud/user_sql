@@ -2,7 +2,7 @@
 /**
  * Nextcloud - user_sql
  *
- * @copyright 2018 Marcin Łojewski <dev@mlojewski.me>
+ * @copyright 2020 Marcin Łojewski <dev@mlojewski.me>
  * @author    Marcin Łojewski <dev@mlojewski.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -59,6 +59,10 @@ class Properties implements \ArrayAccess
      * @var array The properties array.
      */
     private $data;
+    /**
+     * @var boolean Store confidential data in file.
+     */
+    private $safeStore;
 
     /**
      * The default constructor.
@@ -95,9 +99,15 @@ class Properties implements \ArrayAccess
 
         $params = $this->getParameterArray();
         $this->data = [];
+        $this->safeStore
+            = $this->config->getAppValue($this->appName, Opt::SAFE_STORE, App::FALSE_VALUE) === App::TRUE_VALUE;
 
         foreach ($params as $param) {
-            $value = $this->config->getAppValue($this->appName, $param, null);
+            if ($this->isSystemValue($param)) {
+                $value = $this->config->getSystemValue("user_sql." . $param, null);
+            } else {
+                $value = $this->config->getAppValue($this->appName, $param, null);
+            }
 
             if ($this->isBooleanParam($param)) {
                 if ($value === App::FALSE_VALUE) {
@@ -144,6 +154,16 @@ class Properties implements \ArrayAccess
     }
 
     /**
+     * @param $param string Parameter name.
+     *
+     * @return bool TRUE if this is a system wide parameter FALSE otherwise.
+     */
+    private function isSystemValue($param)
+    {
+        return $this->safeStore && in_array($param, array(DB::HOSTNAME, DB::PASSWORD, DB::USERNAME, DB::DATABASE));
+    }
+
+    /**
      * Is given parameter a boolean parameter.
      *
      * @param $param string Parameter name.
@@ -156,7 +176,8 @@ class Properties implements \ArrayAccess
             $param, [
                 Opt::APPEND_SALT, Opt::CASE_INSENSITIVE_USERNAME,
                 Opt::NAME_CHANGE, Opt::PASSWORD_CHANGE, Opt::PREPEND_SALT,
-                Opt::PROVIDE_AVATAR, Opt::REVERSE_ACTIVE, Opt::USE_CACHE
+                Opt::PROVIDE_AVATAR, Opt::REVERSE_ACTIVE, Opt::SAFE_STORE,
+                Opt::USE_CACHE
             ]
         );
     }
@@ -204,7 +225,15 @@ class Properties implements \ArrayAccess
      */
     public function offsetSet($offset, $value)
     {
-        $this->config->setAppValue($this->appName, $offset, $value);
+        if ($offset == Opt::SAFE_STORE) {
+            $this->safeStore = ($value === App::TRUE_VALUE);
+        }
+
+        if ($this->isSystemValue($offset)) {
+            $this->config->setSystemValue("user_sql." . $offset, $value);
+        } else {
+            $this->config->setAppValue($this->appName, $offset, $value);
+        }
 
         if ($this->isBooleanParam($offset)) {
             if ($value === App::FALSE_VALUE) {
@@ -228,7 +257,15 @@ class Properties implements \ArrayAccess
      */
     public function offsetUnset($offset)
     {
-        $this->config->deleteAppValue($this->appName, $offset);
+        if ($offset == Opt::SAFE_STORE) {
+            $this->safeStore = App::FALSE_VALUE;
+        }
+
+        if ($this->isSystemValue($offset)) {
+            $this->config->deleteSystemValue("user_sql." . $offset);
+        } else {
+            $this->config->deleteAppValue($this->appName, $offset);
+        }
         unset($this->data[$offset]);
     }
 }

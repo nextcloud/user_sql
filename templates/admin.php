@@ -2,7 +2,7 @@
 /**
  * Nextcloud - user_sql
  *
- * @copyright 2018 Marcin Łojewski <dev@mlojewski.me>
+ * @copyright 2020 Marcin Łojewski <dev@mlojewski.me>
  * @author    Marcin Łojewski <dev@mlojewski.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -98,7 +98,8 @@ function print_select_options(
                 print_text_input($l, "db-hostname", "Hostname", $_["db.hostname"]);
                 print_text_input($l, "db-database", "Database", $_["db.database"]);
                 print_text_input($l, "db-username", "Username", $_["db.username"]);
-                print_text_input($l, "db-password", "Password", $_["db.password"], "password"); ?>
+                print_text_input($l, "db-password", "Password", $_["db.password"], "password");
+                print_checkbox_input($l, "opt-safe_store", "System wide values", $_["opt.safe_store"]); ?>
                 <div class="button-right">
                     <input type="submit" id="user_sql-db_connection_verify" value="<?php p($l->t("Verify settings")); ?>">
                 </div>

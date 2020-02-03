@@ -40,6 +40,7 @@ Name | Description | Details
 **Database** | The name of the database. | Mandatory.
 **Username** | The name of the user for the connection. | Optional.
 **Password** | The password of the user for the connection. | Optional.
+**System wide values** | Place where database connection parameters are stored.<br/>- *true* - config.php (System wide values).<br/>- *false* - database (App values). | Optional.<br/>Default: *false*.
 
 #### Options
 
@@ -47,12 +48,12 @@ Here are all currently supported options.
 
 Name | Description | Details
 --- | --- | ---
-**Allow display name change** | With this option enabled user can change its display name. The display name change is propagated to the database. | Optional.<br/>Default: false.<br/>Requires: user *Display name* column.
-**Allow password change** | Can user change its password. The password change is propagated to the database. See [Hash algorithms](#hash-algorithms). | Optional.<br/>Default: false.
-**Allow providing avatar** | Can user provide its avatar. The value is used when column *Provide avatar* is not set. | Optional.<br/>Default: false.
-**Case-insensitive username** | Whether user query should be case-sensitive or case-insensitive. | Optional.<br/>Default: false.
-**Reverse active column** | Reverse value of active column in user table. | Optional.<br/>Default: false.
-**Use cache** | Use database query results cache. The cache can be cleared any time with the *Clear cache* button click. | Optional.<br/>Default: false.
+**Allow display name change** | With this option enabled user can change its display name. The display name change is propagated to the database. | Optional.<br/>Default: *false*.<br/>Requires: user *Display name* column.
+**Allow password change** | Can user change its password. The password change is propagated to the database. See [Hash algorithms](#hash-algorithms). | Optional.<br/>Default: *false*.
+**Allow providing avatar** | Can user provide its avatar. The value is used when column *Provide avatar* is not set. | Optional.<br/>Default: *false*.
+**Case-insensitive username** | Whether user query should be case-sensitive or case-insensitive. | Optional.<br/>Default: *false*.
+**Reverse active column** | Reverse value of active column in user table. | Optional.<br/>Default: *false*.
+**Use cache** | Use database query results cache. The cache can be cleared any time with the *Clear cache* button click. | Optional.<br/>Default: *false*.
 **Hash algorithm** | How users passwords are stored in the database. See [Hash algorithms](#hash-algorithms). | Mandatory.
 **Name sync** | Sync display name with the Nextcloud.<br/>- *None* - Disables this feature. This is the default option.<br/>- *Synchronise only once* - Copy the display name to the Nextcloud preferences if its not set.<br/>- *Nextcloud always wins* - Always copy the display name to the database. This updates the user table.<br/>- *SQL always wins* - Always copy the display name to the Nextcloud preferences. | Optional.<br/>Default: *None*.<br/>Requires: user *Display name* column.
 **Email sync** | Sync e-mail address with the Nextcloud.<br/>- *None* - Disables this feature. This is the default option.<br/>- *Synchronise only once* - Copy the e-mail address to the Nextcloud preferences if its not set.<br/>- *Nextcloud always wins* - Always copy the e-mail address to the database. This updates the user table.<br/>- *SQL always wins* - Always copy the e-mail address to the Nextcloud preferences. | Optional.<br/>Default: *None*.<br/>Requires: user *Email* column.
@@ -74,11 +75,11 @@ Name | Description | Details
 **Password** | Password hash column. | Mandatory for user backend.
 **Display name** | Display name column. | Optional.
 **Active** | Flag indicating if user can log in. | Optional.<br/>Default: true.
-**Disabled** | Flag indicating if user should not be visible (not included in searches). | Optional.<br/>Default: false.
-**Provide avatar** | Flag indicating if user can change its avatar. | Optional.<br/>Default: false.
+**Disabled** | Flag indicating if user should not be visible (not included in searches). | Optional.<br/>Default: *false*.
+**Provide avatar** | Flag indicating if user can change its avatar. | Optional.<br/>Default: *false*.
 **Salt** | Salt which is appended to password when checking or changing the password. | Optional.
-**Append salt** | Append a salt to the password. | Optional.<br/>Default: false.
-**Prepend salt** | Prepend a salt to the password. | Optional.<br/>Default: false.
+**Append salt** | Append a salt to the password. | Optional.<br/>Default: *false*.
+**Prepend salt** | Prepend a salt to the password. | Optional.<br/>Default: *false*.
 
 #### Group table
 

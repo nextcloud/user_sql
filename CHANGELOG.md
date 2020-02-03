@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Support for Nextcloud 19
 - Argon2id support
+- System wide values option
 
 ## [4.4.1] - 2020-02-02
 ### Fixed
