@@ -2,7 +2,7 @@
 /**
  * Nextcloud - user_sql
  *
- * @copyright 2018 Marcin Łojewski <dev@mlojewski.me>
+ * @copyright 2020 Marcin Łojewski <dev@mlojewski.me>
  * @author    Marcin Łojewski <dev@mlojewski.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -318,8 +318,14 @@ final class UserBackend extends ABackend implements
         }
 
         $caseSensitive = empty($this->properties[Opt::CASE_INSENSITIVE_USERNAME]);
-        $user = $this->userRepository->findByUid($uid, $caseSensitive);
-        if (!($user instanceof User) || ($caseSensitive && $user->uid !== $uid)) {
+        $emailLogin = !empty($this->properties[Opt::EMAIL_LOGIN]);
+        if ($emailLogin) {
+            $user = $this->userRepository->findByUidOrEmail($uid, $caseSensitive);
+        } else {
+            $user = $this->userRepository->findByUid($uid, $caseSensitive);
+        }
+
+        if (!($user instanceof User)) {
             return false;
         }
 

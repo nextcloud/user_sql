@@ -2,7 +2,7 @@
 /**
  * Nextcloud - user_sql
  *
- * @copyright 2018 Marcin Łojewski <dev@mlojewski.me>
+ * @copyright 2020 Marcin Łojewski <dev@mlojewski.me>
  * @author    Marcin Łojewski <dev@mlojewski.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -149,6 +149,18 @@ class QueryProvider implements \ArrayAccess
                 "SELECT $userColumns, u.$uPassword AS password " .
                 "FROM $user u " .
                 "WHERE u.$uUID = :$uidParam " .
+                (empty($uDisabled) ? "" : "AND NOT u.$uDisabled"),
+
+            Query::FIND_USER_BY_UID_OR_EMAIL =>
+                "SELECT $userColumns, u.$uPassword AS password " .
+                "FROM $user u " .
+                "WHERE u.$uUID = :$uidParam OR u.$uEmail = :$emailParam " .
+                (empty($uDisabled) ? "" : "AND NOT u.$uDisabled"),
+
+            Query::FIND_USER_BY_UID_OR_EMAIL_CASE_INSENSITIVE =>
+                "SELECT $userColumns, u.$uPassword AS password " .
+                "FROM $user u " .
+                "WHERE lower(u.$uUID) = lower(:$uidParam) OR lower(u.$uEmail) = lower(:$emailParam) " .
                 (empty($uDisabled) ? "" : "AND NOT u.$uDisabled"),
 
             Query::FIND_USER_CASE_INSENSITIVE =>

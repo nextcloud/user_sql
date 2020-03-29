@@ -174,7 +174,7 @@ class Properties implements \ArrayAccess
     {
         return in_array(
             $param, [
-                Opt::APPEND_SALT, Opt::CASE_INSENSITIVE_USERNAME,
+                Opt::APPEND_SALT, Opt::CASE_INSENSITIVE_USERNAME, Opt::EMAIL_LOGIN,
                 Opt::NAME_CHANGE, Opt::PASSWORD_CHANGE, Opt::PREPEND_SALT,
                 Opt::PROVIDE_AVATAR, Opt::REVERSE_ACTIVE, Opt::SAFE_STORE,
                 Opt::USE_CACHE

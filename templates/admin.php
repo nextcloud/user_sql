@@ -110,6 +110,7 @@ function print_select_options(
             <p class="settings-hint"><?php p($l->t("Here are all currently supported options.")); ?></p>
             <fieldset><?php
                 print_checkbox_input($l, "opt-name_change", "Allow display name change", $_["opt.name_change"]);
+                print_checkbox_input($l, "opt-email_login", "Allow email login", $_["opt.email_login"]);
                 print_checkbox_input($l, "opt-password_change", "Allow password change", $_["opt.password_change"]);
                 print_checkbox_input($l, "opt-provide_avatar", "Allow providing avatar", $_["opt.provide_avatar"]);
                 print_checkbox_input($l, "opt-case_insensitive_username", "Case-insensitive username", $_["opt.case_insensitive_username"]);

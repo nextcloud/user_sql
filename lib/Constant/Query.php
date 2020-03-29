@@ -2,7 +2,7 @@
 /**
  * Nextcloud - user_sql
  *
- * @copyright 2018 Marcin Łojewski <dev@mlojewski.me>
+ * @copyright 2020 Marcin Łojewski <dev@mlojewski.me>
  * @author    Marcin Łojewski <dev@mlojewski.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,6 +35,8 @@ final class Query
     const FIND_GROUP_USERS = "find_group_users";
     const FIND_GROUPS = "find_groups";
     const FIND_USER = "find_user";
+    const FIND_USER_BY_UID_OR_EMAIL = "find_user_by_uid_or_email";
+    const FIND_USER_BY_UID_OR_EMAIL_CASE_INSENSITIVE = "find_user_by_uid_or_email_case_insensitive";
     const FIND_USER_CASE_INSENSITIVE = "find_user_case_insensitive";
     const FIND_USER_GROUPS = "find_user_groups";
     const FIND_USERS = "find_users";

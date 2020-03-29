@@ -2,7 +2,7 @@
 /**
  * Nextcloud - user_sql
  *
- * @copyright 2018 Marcin Łojewski <dev@mlojewski.me>
+ * @copyright 2020 Marcin Łojewski <dev@mlojewski.me>
  * @author    Marcin Łojewski <dev@mlojewski.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -71,6 +71,31 @@ class UserRepository
         } else {
             return $this->dataQuery->queryEntity(
                 Query::FIND_USER_CASE_INSENSITIVE, User::class, [Query::UID_PARAM => $uid]
+            );
+        }
+    }
+
+    /**
+     * Get an user entity object.
+     *
+     * @param string $query         The user ID or email address.
+     * @param bool   $caseSensitive TRUE for case sensitive search,
+     *                              FALSE for case insensitive search.
+     *
+     * @return User The user entity, NULL if it does not exists or
+     *              FALSE on failure.
+     */
+    public function findByUidOrEmail($query, $caseSensitive = true)
+    {
+        if ($caseSensitive) {
+            return $this->dataQuery->queryEntity(
+                Query::FIND_USER_BY_UID_OR_EMAIL, User::class,
+                [Query::UID_PARAM => $query, Query::EMAIL_PARAM => $query]
+            );
+        } else {
+            return $this->dataQuery->queryEntity(
+                Query::FIND_USER_BY_UID_OR_EMAIL_CASE_INSENSITIVE, User::class,
+                [Query::UID_PARAM => $query, Query::EMAIL_PARAM => $query]
             );
         }
     }

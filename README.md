@@ -49,6 +49,7 @@ Here are all currently supported options.
 Name | Description | Details
 --- | --- | ---
 **Allow display name change** | With this option enabled user can change its display name. The display name change is propagated to the database. | Optional.<br/>Default: *false*.<br/>Requires: user *Display name* column.
+**Allow email login** | User input at login is considered to be either UID or email. | Optional.<br/>Default: *false*.<br/>Requires: user *Email* column.
 **Allow password change** | Can user change its password. The password change is propagated to the database. See [Hash algorithms](#hash-algorithms). | Optional.<br/>Default: *false*.
 **Allow providing avatar** | Can user provide its avatar. The value is used when column *Provide avatar* is not set. | Optional.<br/>Default: *false*.
 **Case-insensitive username** | Whether user query should be case-sensitive or case-insensitive. | Optional.<br/>Default: *false*.

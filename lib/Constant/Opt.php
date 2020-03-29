@@ -34,6 +34,7 @@ final class Opt
     const CRYPTO_PARAM_0 = "opt.crypto_param_0";
     const CRYPTO_PARAM_1 = "opt.crypto_param_1";
     const CRYPTO_PARAM_2 = "opt.crypto_param_2";
+    const EMAIL_LOGIN = "opt.email_login";
     const EMAIL_SYNC = "opt.email_sync";
     const HOME_LOCATION = "opt.home_location";
     const HOME_MODE = "opt.home_mode";
