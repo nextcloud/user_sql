@@ -54,6 +54,25 @@ class QueryProvider implements \ArrayAccess
     }
 
     /**
+     * Get first nonempty property value.
+     *
+     * @param mixed ...$keys Property keys.
+     *
+     * @return mixed
+     */
+    private function firstNonemptyProperty(...$keys)
+    {
+        foreach ($keys as $key) {
+            $value = $this->properties[$key];
+            if (!empty($value)) {
+                return $value;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Load queries to the array.
      */
     private function loadQueries()
@@ -64,19 +83,19 @@ class QueryProvider implements \ArrayAccess
 
         $gAdmin = $this->properties[DB::GROUP_ADMIN_COLUMN];
         $gGID = $this->properties[DB::GROUP_GID_COLUMN];
-        $gName = $this->properties[DB::GROUP_NAME_COLUMN] || $this->properties[DB::GROUP_GID_COLUMN];
+        $gName = $this->firstNonemptyProperty(DB::GROUP_NAME_COLUMN, DB::GROUP_GID_COLUMN);
 
         $uActive = $this->properties[DB::USER_ACTIVE_COLUMN];
         $uAvatar = $this->properties[DB::USER_AVATAR_COLUMN];
         $uDisabled = $this->properties[DB::USER_DISABLED_COLUMN];
         $uEmail = $this->properties[DB::USER_EMAIL_COLUMN];
         $uHome = $this->properties[DB::USER_HOME_COLUMN];
-        $uName = $this->properties[DB::USER_NAME_COLUMN] || $this->properties[DB::USER_USERNAME_COLUMN] || $this->properties[DB::USER_UID_COLUMN];
+        $uName = $this->firstNonemptyProperty(DB::USER_NAME_COLUMN, DB::USER_USERNAME_COLUMN, DB::USER_UID_COLUMN);
         $uPassword = $this->properties[DB::USER_PASSWORD_COLUMN];
         $uQuota = $this->properties[DB::USER_QUOTA_COLUMN];
         $uSalt = $this->properties[DB::USER_SALT_COLUMN];
         $uUID = $this->properties[DB::USER_UID_COLUMN];
-        $uUsername = $this->properties[DB::USER_USERNAME_COLUMN] || $this->properties[DB::USER_UID_COLUMN];
+        $uUsername = $this->firstNonemptyProperty(DB::USER_USERNAME_COLUMN, DB::USER_UID_COLUMN);
 
         $ugGID = $this->properties[DB::USER_GROUP_GID_COLUMN];
         $ugUID = $this->properties[DB::USER_GROUP_UID_COLUMN];
