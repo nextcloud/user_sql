@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - System wide values option
 - Allow email login option
 - UID user table column
+- GID user table column
 
 ## [4.4.1] - 2020-02-02
 ### Fixed

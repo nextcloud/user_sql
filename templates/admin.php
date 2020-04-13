@@ -179,9 +179,9 @@ function print_select_options(
                 print_text_input($l, "db-table-group", "Table name", $_["db.table.group"]); ?>
                 <h3><?php p($l->t("Columns")); ?></h3>
                 <?php
-                print_text_input($l, "db-table-group-column-admin", "Is admin", $_["db.table.group.column.admin"]);
+                print_text_input($l, "db-table-group-column-gid", "GID", $_["db.table.group.column.gid"]);
                 print_text_input($l, "db-table-group-column-name", "Display name", $_["db.table.group.column.name"]);
-                print_text_input($l, "db-table-group-column-gid", "Group name", $_["db.table.group.column.gid"]); ?>
+                print_text_input($l, "db-table-group-column-admin", "Is admin", $_["db.table.group.column.admin"]); ?>
             </fieldset>
         </div>
         <div class="section">
@@ -191,8 +191,8 @@ function print_select_options(
                 print_text_input($l, "db-table-user_group", "Table name", $_["db.table.user_group"]); ?>
                 <h3><?php p($l->t("Columns")); ?></h3>
                 <?php
-                print_text_input($l, "db-table-user_group-column-uid", "Username", $_["db.table.user_group.column.uid"]);
-                print_text_input($l, "db-table-user_group-column-gid", "Group name", $_["db.table.user_group.column.gid"]); ?>
+                print_text_input($l, "db-table-user_group-column-uid", "UID", $_["db.table.user_group.column.uid"]);
+                print_text_input($l, "db-table-user_group-column-gid", "GID", $_["db.table.user_group.column.gid"]); ?>
             </fieldset>
         </div>
     </div>

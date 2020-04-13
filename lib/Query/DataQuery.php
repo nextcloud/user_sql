@@ -115,7 +115,7 @@ class DataQuery
         }
 
         $this->logger->debug(
-            "Executing query:" . $query . ", " . implode(",", $params),
+            "Executing query: " . $query . ", " . implode(",", $params),
             ["app" => $this->appName]
         );
 

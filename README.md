@@ -69,7 +69,7 @@ The definition of user table. The table containing user accounts.
 Name | Description | Details
 --- | --- | ---
 **Table name** | The table name. | Mandatory for user backend.
-**UID** | UID column. | Mandatory for user backend.
+**UID** | User ID column. | Mandatory for user backend.
 **Username** | Username column. | Optional.
 **Email** | E-mail column. | Mandatory for *Email sync* option.
 **Quota** | Quota column. | Mandatory for *Quota sync* option.
@@ -90,9 +90,9 @@ The group definitions table.
 Name | Description | Details
 --- | --- | ---
 **Table name** | The table name. | Mandatory for group backend.
-**Is admin** | Flag indicating if its the admin group | Optional.
+**GID** | Group ID column. | Mandatory for group backend.
 **Display name** | Display name column. | Optional.
-**Group name** | Group name column. | Mandatory for group backend.
+**Is admin** | Flag indicating if its the admin group | Optional.
 
 #### User group table
 
@@ -101,8 +101,8 @@ Associative table which maps users to groups.
 Name | Description | Details
 --- | --- | ---
 **Table name** | The table name. | Mandatory for group backend.
-**Username** | Username column. | Mandatory for group backend.
-**Group name** | Group name column. | Mandatory for group backend.
+**UID** | User ID column. | Mandatory for group backend.
+**GID** | Group ID column. | Mandatory for group backend.
 
 ## Integrations
 
@@ -135,20 +135,20 @@ CREATE TABLE sql_user
 
 CREATE TABLE sql_group
 (
-  name         VARCHAR(16) PRIMARY KEY,
-  display_name TEXT        NULL,
-  admin        BOOLEAN     NOT NULL DEFAULT FALSE
+  gid   INT         PRIMARY KEY AUTO_INCREMENT,
+  name  VARCHAR(16) NOT NULL UNIQUE,
+  admin BOOLEAN     NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE sql_user_group
 (
-  username   VARCHAR(16) NOT NULL,
-  group_name VARCHAR(16) NOT NULL,
-  PRIMARY KEY (username, group_name),
-  FOREIGN KEY (username) REFERENCES sql_user (username),
-  FOREIGN KEY (group_name) REFERENCES sql_group (name),
-  INDEX sql_user_group_username_idx (username),
-  INDEX sql_user_group_group_name_idx (group_name)
+  uid INT NOT NULL,
+  gid INT NOT NULL,
+  PRIMARY KEY (uid, gid),
+  FOREIGN KEY (uid) REFERENCES sql_user (uid),
+  FOREIGN KEY (gid) REFERENCES sql_group (gid),
+  INDEX user_group_username_idx (uid),
+  INDEX user_group_group_name_idx (gid)
 );
 ```
 
