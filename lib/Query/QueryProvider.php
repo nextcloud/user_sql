@@ -64,18 +64,19 @@ class QueryProvider implements \ArrayAccess
 
         $gAdmin = $this->properties[DB::GROUP_ADMIN_COLUMN];
         $gGID = $this->properties[DB::GROUP_GID_COLUMN];
-        $gName = $this->properties[DB::GROUP_NAME_COLUMN];
+        $gName = $this->properties[DB::GROUP_NAME_COLUMN] || $this->properties[DB::GROUP_GID_COLUMN];
 
         $uActive = $this->properties[DB::USER_ACTIVE_COLUMN];
         $uAvatar = $this->properties[DB::USER_AVATAR_COLUMN];
         $uDisabled = $this->properties[DB::USER_DISABLED_COLUMN];
         $uEmail = $this->properties[DB::USER_EMAIL_COLUMN];
         $uHome = $this->properties[DB::USER_HOME_COLUMN];
-        $uName = $this->properties[DB::USER_NAME_COLUMN];
+        $uName = $this->properties[DB::USER_NAME_COLUMN] || $this->properties[DB::USER_USERNAME_COLUMN] || $this->properties[DB::USER_UID_COLUMN];
         $uPassword = $this->properties[DB::USER_PASSWORD_COLUMN];
         $uQuota = $this->properties[DB::USER_QUOTA_COLUMN];
         $uSalt = $this->properties[DB::USER_SALT_COLUMN];
         $uUID = $this->properties[DB::USER_UID_COLUMN];
+        $uUsername = $this->properties[DB::USER_USERNAME_COLUMN] || $this->properties[DB::USER_UID_COLUMN];
 
         $ugGID = $this->properties[DB::USER_GROUP_GID_COLUMN];
         $ugUID = $this->properties[DB::USER_GROUP_UID_COLUMN];
@@ -87,16 +88,18 @@ class QueryProvider implements \ArrayAccess
         $quotaParam = Query::QUOTA_PARAM;
         $searchParam = Query::SEARCH_PARAM;
         $uidParam = Query::UID_PARAM;
+        $usernameParam = Query::USERNAME_PARAM;
 
         $reverseActiveOpt = $this->properties[Opt::REVERSE_ACTIVE];
 
         $groupColumns
             = "g.$gGID AS gid, " .
-            (empty($gName) ? "g." . $gGID : "g." . $gName) . " AS name, " .
+            "g.$gName AS name, " .
             (empty($gAdmin) ? "false" : "g." . $gAdmin) . " AS admin";
         $userColumns
             = "u.$uUID AS uid, " .
-            (empty($uName) ? "u." . $uUID : "u." . $uName) . " AS name, " .
+            "u.$uUsername AS username, " .
+            "u.$uName AS name, " .
             (empty($uEmail) ? "null" : "u." . $uEmail) . " AS email, " .
             (empty($uQuota) ? "null" : "u." . $uQuota) . " AS quota, " .
             (empty($uHome) ? "null" : "u." . $uHome) . " AS home, " .
@@ -134,8 +137,7 @@ class QueryProvider implements \ArrayAccess
                 "SELECT ug.$ugUID AS uid " .
                 "FROM $userGroup ug " .
                 "WHERE ug.$ugGID = :$gidParam " .
-                "AND ug.$ugUID " .
-                "LIKE :$searchParam " .
+                "AND ug.$ugUID LIKE :$searchParam " .
                 "ORDER BY ug.$ugUID",
 
             Query::FIND_GROUPS =>
@@ -145,28 +147,34 @@ class QueryProvider implements \ArrayAccess
                 (empty($gName) ? "" : "OR g.$gName LIKE :$searchParam ") .
                 "ORDER BY g.$gGID",
 
-            Query::FIND_USER =>
-                "SELECT $userColumns, u.$uPassword AS password " .
+            Query::FIND_USER_BY_UID =>
+                "SELECT $userColumns " .
                 "FROM $user u " .
                 "WHERE u.$uUID = :$uidParam " .
                 (empty($uDisabled) ? "" : "AND NOT u.$uDisabled"),
 
-            Query::FIND_USER_BY_UID_OR_EMAIL =>
+            Query::FIND_USER_BY_USERNAME =>
                 "SELECT $userColumns, u.$uPassword AS password " .
                 "FROM $user u " .
-                "WHERE u.$uUID = :$uidParam OR u.$uEmail = :$emailParam " .
+                "WHERE u.$uUsername = :$usernameParam " .
                 (empty($uDisabled) ? "" : "AND NOT u.$uDisabled"),
 
-            Query::FIND_USER_BY_UID_OR_EMAIL_CASE_INSENSITIVE =>
+            Query::FIND_USER_BY_USERNAME_CASE_INSENSITIVE =>
                 "SELECT $userColumns, u.$uPassword AS password " .
                 "FROM $user u " .
-                "WHERE lower(u.$uUID) = lower(:$uidParam) OR lower(u.$uEmail) = lower(:$emailParam) " .
+                "WHERE lower(u.$uUsername) = lower(:$usernameParam) " .
                 (empty($uDisabled) ? "" : "AND NOT u.$uDisabled"),
 
-            Query::FIND_USER_CASE_INSENSITIVE =>
+            Query::FIND_USER_BY_USERNAME_OR_EMAIL =>
                 "SELECT $userColumns, u.$uPassword AS password " .
                 "FROM $user u " .
-                "WHERE lower(u.$uUID) = lower(:$uidParam) " .
+                "WHERE u.$uUsername = :$usernameParam OR u.$uEmail = :$emailParam " .
+                (empty($uDisabled) ? "" : "AND NOT u.$uDisabled"),
+
+            Query::FIND_USER_BY_USERNAME_OR_EMAIL_CASE_INSENSITIVE =>
+                "SELECT $userColumns, u.$uPassword AS password " .
+                "FROM $user u " .
+                "WHERE lower(u.$uUsername) = lower(:$usernameParam) OR lower(u.$uEmail) = lower(:$emailParam) " .
                 (empty($uDisabled) ? "" : "AND NOT u.$uDisabled"),
 
             Query::FIND_USER_GROUPS =>

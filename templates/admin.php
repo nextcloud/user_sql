@@ -154,7 +154,8 @@ function print_select_options(
                 print_text_input($l, "db-table-user", "Table name", $_["db.table.user"]); ?>
                 <h3><?php p($l->t("Columns")); ?></h3>
                 <?php
-                print_text_input($l, "db-table-user-column-uid", "Username", $_["db.table.user.column.uid"]);
+                print_text_input($l, "db-table-user-column-uid", "UID", $_["db.table.user.column.uid"]);
+                print_text_input($l, "db-table-user-column-username", "Username", $_["db.table.user.column.username"]);
                 print_text_input($l, "db-table-user-column-email", "Email", $_["db.table.user.column.email"]);
                 print_text_input($l, "db-table-user-column-quota", "Quota", $_["db.table.user.column.quota"]);
                 print_text_input($l, "db-table-user-column-home", "Home", $_["db.table.user.column.home"]);

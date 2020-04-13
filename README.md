@@ -69,7 +69,8 @@ The definition of user table. The table containing user accounts.
 Name | Description | Details
 --- | --- | ---
 **Table name** | The table name. | Mandatory for user backend.
-**Username** | Username column. | Mandatory for user backend.
+**UID** | UID column. | Mandatory for user backend.
+**Username** | Username column. | Optional.
 **Email** | E-mail column. | Mandatory for *Email sync* option.
 **Quota** | Quota column. | Mandatory for *Quota sync* option.
 **Home** | Home path column. | Mandatory for `Query` *Home sync* option.
@@ -119,7 +120,8 @@ If you don't have any database model yet you can use below tables (MySQL):
 ```
 CREATE TABLE sql_user
 (
-  username       VARCHAR(16) PRIMARY KEY,
+  uid            INT         PRIMARY KEY AUTO_INCREMENT,
+  username       VARCHAR(16) NOT NULL UNIQUE,
   display_name   TEXT        NULL,
   email          TEXT        NULL,
   quota          TEXT        NULL,
@@ -244,3 +246,4 @@ Since version 4.0.0 the whole core implementation has been rewritten.
   * Andreas Boehler for releasing the first version of this application
   * Johan Hendriks provided his user_postfixadmin
   * Ed Wildgoose for fixing possible SQL injection vulnerability
+  * Brandon Lee for implementing feature to separate uid from username resolving issues #108 & #121
