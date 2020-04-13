@@ -76,15 +76,41 @@ user_sql.adminSettingsUI = function () {
                                 var param = $("<div></div>");
                                 var label = $("<label></label>").attr({for: "opt-crypto_param_" + index});
                                 var title = $("<span></span>").text(data.data[index]["name"]);
-                                var input = $("<input/>").attr({
-                                    type: "number",
-                                    id: "opt-crypto_param_" + index,
-                                    name: "opt-crypto_param_" + index,
-                                    step: 1,
-                                    min: data.data[index]["min"],
-                                    max: data.data[index]["max"],
-                                    value: data.data[index]["value"]
-                                });
+
+                                var input = null;
+                                switch (data.data[index]["type"]) {
+                                    case "choice":
+                                        input = $("<select/>").attr({
+                                            id: "opt-crypto_param_" + index,
+                                            name: "opt-crypto_param_" + index,
+                                        });
+                                        data.data[index]["choices"].forEach(
+                                            function (item) {
+                                                if (data.data[index]["value"] === item) {
+                                                    input.append($("<option/>").attr({
+                                                        value: item,
+                                                        selected: "selected"
+                                                    }).text(item));
+                                                } else {
+                                                    input.append($("<option/>").attr({value: item}).text(item));
+                                                }
+                                            }
+                                        );
+                                        break;
+                                    case "int":
+                                        input = $("<input/>").attr({
+                                            type: "number",
+                                            id: "opt-crypto_param_" + index,
+                                            name: "opt-crypto_param_" + index,
+                                            step: 1,
+                                            min: data.data[index]["min"],
+                                            max: data.data[index]["max"],
+                                            value: data.data[index]["value"]
+                                        });
+                                        break;
+                                    default:
+                                        break;
+                                }
 
                                 label.append(title);
                                 param.append(label);

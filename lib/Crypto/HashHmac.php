@@ -2,7 +2,7 @@
 /**
  * Nextcloud - user_sql
  *
- * @copyright 2018 Marcin Łojewski <dev@mlojewski.me>
+ * @copyright 2020 Marcin Łojewski <dev@mlojewski.me>
  * @author    Marcin Łojewski <dev@mlojewski.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,41 +21,34 @@
 
 namespace OCA\UserSQL\Crypto;
 
-use OCA\UserSQL\Crypto\Param\IntParam;
+use OCA\UserSQL\Crypto\Param\ChoiceParam;
 use OCP\IL10N;
 
 /**
- * Blowfish Crypt hash implementation.
+ * HMAC hash implementation.
  *
- * @see    crypt()
+ * @see    hash_hmac()
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class CryptBlowfish extends AbstractAlgorithm
+class HashHmac extends AbstractAlgorithm
 {
+    const DEFAULT_ALGORITHM = "ripemd160";
+
     /**
-     * @var int Denotes the algorithmic cost that should be used.
+     * @var string Hashing algorithm name.
      */
-    private $cost;
+    private $hashingAlgorithm;
 
     /**
      * The class constructor.
      *
-     * @param IL10N $localization The localization service.
-     * @param int   $cost         Denotes the algorithmic cost that should
-     *                            be used.
+     * @param IL10N  $localization     The localization service.
+     * @param string $hashingAlgorithm Hashing algorithm name.
      */
-    public function __construct(IL10N $localization, $cost = 10)
+    public function __construct(IL10N $localization, $hashingAlgorithm = self::DEFAULT_ALGORITHM)
     {
         parent::__construct($localization);
-        $this->cost = $cost;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function checkPassword($password, $dbHash, $salt = null)
-    {
-        return password_verify($password, $dbHash);
+        $this->hashingAlgorithm = $hashingAlgorithm;
     }
 
     /**
@@ -63,9 +56,7 @@ class CryptBlowfish extends AbstractAlgorithm
      */
     public function getPasswordHash($password, $salt = null)
     {
-        return password_hash(
-            $password, PASSWORD_BCRYPT, ["cost" => $this->cost]
-        );
+        return hash_hmac($this->hashingAlgorithm, $password, $salt);
     }
 
     /**
@@ -73,16 +64,16 @@ class CryptBlowfish extends AbstractAlgorithm
      */
     public function configuration()
     {
-        return [new IntParam("Cost", 10, 4, 31)];
+        return [
+            new ChoiceParam("Hashing algorithm", self::DEFAULT_ALGORITHM, hash_hmac_algos())
+        ];
     }
 
     /**
-     * Get the algorithm name.
-     *
-     * @return string The algorithm name.
+     * @inheritdoc
      */
     protected function getAlgorithmName()
     {
-        return "Blowfish (Crypt)";
+        return "Hash HMAC";
     }
 }

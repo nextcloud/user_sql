@@ -2,7 +2,7 @@
 /**
  * Nextcloud - user_sql
  *
- * @copyright 2018 Marcin Łojewski <dev@mlojewski.me>
+ * @copyright 2020 Marcin Łojewski <dev@mlojewski.me>
  * @author    Marcin Łojewski <dev@mlojewski.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,23 +19,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace OCA\UserSQL\Crypto;
+namespace OCA\UserSQL\Crypto\Param;
 
 /**
- * A parameter of a hash algorithm.
+ * An integer parameter of a hash algorithm.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class CryptoParam
+class IntParam extends CryptoParam
 {
-    /**
-     * @var string Parameter name.
-     */
-    public $name;
-    /**
-     * @var int Parameter default value.
-     */
-    public $value;
+    const TYPE = "int";
+
     /**
      * @var int Minimal value for parameter.
      */
@@ -55,8 +49,7 @@ class CryptoParam
      */
     public function __construct($name, $value = null, $min = null, $max = null)
     {
-        $this->name = $name;
-        $this->value = $value;
+        parent::__construct(self::TYPE, $name, $value);
         $this->min = $min;
         $this->max = $max;
     }

@@ -19,6 +19,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use OCA\UserSQL\Crypto\IPasswordAlgorithm;
 use OCP\IL10N;
 
 script("user_sql", "settings");
@@ -125,14 +126,13 @@ function print_select_options(
                     $class = "OCA\\UserSQL\\Crypto\\" . basename(substr($filename, 0, -4));
                     try {
                         $passwordAlgorithm = new $class($l);
-                        if ($passwordAlgorithm instanceof
-                            \OCA\UserSQL\Crypto\IPasswordAlgorithm
-                        ) {
+                        if ($passwordAlgorithm instanceof IPasswordAlgorithm) {
                             $hashes[$class] = $passwordAlgorithm->getVisibleName();
                         }
                     } catch (Throwable $e) {
                     }
                 }
+                asort($hashes);
 
                 print_select_options($l, "opt-crypto_class", "Hash algorithm", $hashes, $_["opt.crypto_class"]); ?>
                 <div id="opt-crypto_params_loading" style="display: none">

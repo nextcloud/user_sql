@@ -199,6 +199,7 @@ Argon2i (Crypt) | Requires PHP >= 7.2. See [password_hash](http://php.net/manual
 Argon2id (Crypt) | Requires PHP >= 7.2. See [password_hash](http://php.net/manual/en/function.password-hash.php). | $argon2id$v=19$m=65536,t=4,p=1$eWhTd3huemlhNGFkWTVSSQ$BjSh9PINc9df9WU1zppBsYJKvkwUEYHYNUUMTj+QGPw
 Blowfish (Crypt) | See [password_hash](http://php.net/manual/en/function.password-hash.php). | $2y$10$5rsN1fmoSkaRy9bqhozAXOr0mn0QiVIfd2L04Bbk1Go9MjdvotwBq
 Extended DES (Crypt) | | cDRpdxPmHpzS.
+Hash HMAC | See [hash_hmac](https://www.php.net/manual/en/function.hash-hmac.php). | ba4f8624f0a4d1f2a3991f4d88cd9afb604dac20
 MD5 (Crypt) | | $1$RzaFbNcU$u9adfTY/Q6za6nu0Ogrl1/
 SHA256 (Crypt) | | $5$rounds=5000$VIYD0iHkg7uY9SRc$v2XLS/9dvfFN84mzGvW9wxnVt9Xd/urXaaTkpW8EwD1
 SHA512 (Crypt) | | $6$rounds=5000$yH.Q0OL4qbCOUJ3q$Xry5EVFva3wKnfo8/ktrugmBd8tcl34NK6rXInv1HhmdSUNLEm0La9JnA57rqwQ.9/Bz513MD4tvmmISLUIHs/

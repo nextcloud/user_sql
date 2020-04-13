@@ -21,6 +21,7 @@
 
 namespace OCA\UserSQL\Crypto;
 
+use OCA\UserSQL\Crypto\Param\IntParam;
 use OCP\IL10N;
 
 /**
@@ -40,7 +41,7 @@ class CryptSHA256 extends AbstractCrypt
      * The class constructor.
      *
      * @param IL10N $localization The localization service.
-     * @param   int $rounds       The number of rounds.
+     * @param int   $rounds       The number of rounds.
      *                            This value must be between 1000 and 999999999.
      */
     public function __construct(IL10N $localization, $rounds = 5000)
@@ -54,7 +55,7 @@ class CryptSHA256 extends AbstractCrypt
      */
     public function configuration()
     {
-        return [new CryptoParam("Rounds", 5000, 1000, 999999999)];
+        return [new IntParam("Rounds", 5000, 1000, 999999999)];
     }
 
     /**

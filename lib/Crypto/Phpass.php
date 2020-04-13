@@ -21,6 +21,7 @@
 
 namespace OCA\UserSQL\Crypto;
 
+use OCA\UserSQL\Crypto\Param\IntParam;
 use OCP\IL10N;
 
 /**
@@ -160,7 +161,7 @@ class Phpass extends AbstractAlgorithm
      */
     public function configuration()
     {
-        return [new CryptoParam("Iterations (log2)", 8, 4, 31)];
+        return [new IntParam("Iterations (log2)", 8, 4, 31)];
     }
 
     /**

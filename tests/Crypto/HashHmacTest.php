@@ -2,7 +2,7 @@
 /**
  * Nextcloud - user_sql
  *
- * @copyright 2018 Marcin Łojewski <dev@mlojewski.me>
+ * @copyright 2020 Marcin Łojewski <dev@mlojewski.me>
  * @author    Marcin Łojewski <dev@mlojewski.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,17 +21,17 @@
 
 namespace Tests\UserSQL\Crypto;
 
+use OCA\UserSQL\Crypto\HashHmac;
 use OCA\UserSQL\Crypto\IPasswordAlgorithm;
-use OCA\UserSQL\Crypto\SHA256;
 use OCP\IL10N;
 use Test\TestCase;
 
 /**
- * Unit tests for class <code>SHA256</code>.
+ * Unit tests for class <code>HashHmac</code>.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class SHA256Test extends TestCase
+class HashHmacTest extends TestCase
 {
     /**
      * @var IPasswordAlgorithm
@@ -40,11 +40,7 @@ class SHA256Test extends TestCase
 
     public function testCheckPassword()
     {
-        $this->assertTrue(
-            $this->crypto->checkPassword(
-                "password", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"
-            )
-        );
+        $this->assertTrue($this->crypto->checkPassword("password", "ba4f8624f0a4d1f2a3991f4d88cd9afb604dac20"));
     }
 
     public function testPasswordHash()
@@ -56,6 +52,6 @@ class SHA256Test extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->crypto = new SHA256($this->createMock(IL10N::class));
+        $this->crypto = new HashHmac($this->createMock(IL10N::class));
     }
 }

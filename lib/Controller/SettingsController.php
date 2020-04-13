@@ -31,6 +31,8 @@ use OCA\UserSQL\Constant\App;
 use OCA\UserSQL\Constant\DB;
 use OCA\UserSQL\Constant\Opt;
 use OCA\UserSQL\Crypto\IPasswordAlgorithm;
+use OCA\UserSQL\Crypto\Param\ChoiceParam;
+use OCA\UserSQL\Crypto\Param\IntParam;
 use OCA\UserSQL\Platform\PlatformFactory;
 use OCA\UserSQL\Properties;
 use OCP\AppFramework\Controller;
@@ -77,8 +79,7 @@ class SettingsController extends Controller
     public function __construct(
         $appName, IRequest $request, ILogger $logger, IL10N $localization,
         Properties $properties, Cache $cache
-    )
-    {
+    ) {
         parent::__construct($appName, $request);
         $this->appName = $appName;
         $this->logger = $logger;
@@ -267,12 +268,22 @@ class SettingsController extends Controller
             $reqParam = $this->request->getParam(
                 "opt-crypto_param_" . $i, null
             );
-            $cryptoParam = $configuration[$i];
-
-            if (is_null($reqParam) || $reqParam < $cryptoParam->min
-                || $reqParam > $cryptoParam->max
-            ) {
+            if (is_null($reqParam)) {
                 return false;
+            }
+
+            $cryptoParam = $configuration[$i];
+            switch ($cryptoParam->type) {
+            case ChoiceParam::TYPE:
+                if (!in_array($reqParam, $cryptoParam->choices)) {
+                    return false;
+                }
+                break;
+            case IntParam::TYPE:
+                if ($reqParam < $cryptoParam->min || $reqParam > $cryptoParam->max) {
+                    return false;
+                }
+                break;
             }
         }
 
