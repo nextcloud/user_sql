@@ -5,7 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-### Added
+### Fixed
+- [issue#123](https://github.com/nextcloud/user_sql/issues/123) - sync exception - Duplicate entry
 
 ## [4.5.0] - 2020-04-13
 ### Added

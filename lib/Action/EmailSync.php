@@ -99,9 +99,7 @@ class EmailSync implements IUserAction
                 $this->config->setUserValue(
                     $user->uid, "settings", "email", $user->email
                 );
-                \OC::$server->getUserManager()->get($user->uid)->triggerChange(
-                    'eMailAddress', $user->email, null
-                );
+                \OC::$server->getUserManager()->get($user->uid)->setEMailAddress($user->email);
             }
 
             $result = true;
@@ -123,9 +121,7 @@ class EmailSync implements IUserAction
                 $this->config->setUserValue(
                     $user->uid, "settings", "email", $user->email
                 );
-                \OC::$server->getUserManager()->get($user->uid)->triggerChange(
-                    'eMailAddress', $user->email, null
-                );
+                \OC::$server->getUserManager()->get($user->uid)->setEMailAddress($user->email);
             }
 
             $result = true;
