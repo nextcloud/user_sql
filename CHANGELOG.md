@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - UID user table column
 - GID user table column
 - HMAC hash implementation
+- Default group option
 
 ## [4.4.1] - 2020-02-02
 ### Fixed

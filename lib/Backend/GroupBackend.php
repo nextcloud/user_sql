@@ -23,6 +23,7 @@ namespace OCA\UserSQL\Backend;
 
 use OCA\UserSQL\Cache;
 use OCA\UserSQL\Constant\DB;
+use OCA\UserSQL\Constant\Opt;
 use OCA\UserSQL\Model\Group;
 use OCA\UserSQL\Properties;
 use OCA\UserSQL\Repository\GroupRepository;
@@ -42,6 +43,8 @@ final class GroupBackend extends ABackend implements
     IGroupDetailsBackend,
     IIsAdminBackend
 {
+    const USER_SQL_GID = "user_sql";
+
     /**
      * @var string The application name.
      */
@@ -105,12 +108,30 @@ final class GroupBackend extends ABackend implements
             return $groups;
         }
 
-        $groups = $this->groupRepository->findAllBySearchTerm(
-            "%" . $search . "%", $limit, $offset
+        $groups = $this->groupRepository->findAllBySearchTerm("%" . $search . "%", $limit, $offset);
+        $groups = $this->setCacheAndMap($cacheKey, $groups);
+
+        $this->logger->debug(
+            "Returning getGroups($search, $limit, $offset): count(" . count(
+                $groups
+            ) . ")", ["app" => $this->appName]
         );
 
+        return $groups;
+    }
+
+    /**
+     * Set groups in cache and map them to GIDs.
+     *
+     * @param $cacheKey string Cache key.
+     * @param $groups   array Fetched groups.
+     *
+     * @return array Array of GIDs.
+     */
+    private function setCacheAndMap($cacheKey, $groups)
+    {
         if ($groups === false) {
-            return [];
+            return $this->defaultGroupSet() ? [self::USER_SQL_GID] : [];
         }
 
         foreach ($groups as $group) {
@@ -122,15 +143,20 @@ final class GroupBackend extends ABackend implements
                 return $group->gid;
             }, $groups
         );
+        if ($this->defaultGroupSet()) {
+            $groups[] = self::USER_SQL_GID;
+        }
 
         $this->cache->set($cacheKey, $groups);
-        $this->logger->debug(
-            "Returning getGroups($search, $limit, $offset): count(" . count(
-                $groups
-            ) . ")", ["app" => $this->appName]
-        );
-
         return $groups;
+    }
+
+    /**
+     * @return bool Whether default group option is set.
+     */
+    private function defaultGroupSet()
+    {
+        return !empty($this->properties[Opt::DEFAULT_GROUP]);
     }
 
     /**
@@ -154,7 +180,7 @@ final class GroupBackend extends ABackend implements
             return $count;
         }
 
-        $count = $this->groupRepository->countAll($gid, "%" . $search . "%");
+        $count = $this->groupRepository->countAll($this->substituteGid($gid), "%" . $search . "%");
 
         if ($count === false) {
             return 0;
@@ -167,6 +193,18 @@ final class GroupBackend extends ABackend implements
         );
 
         return $count;
+    }
+
+    /**
+     * Substitute GID to '%' if it's default group.
+     *
+     * @param $gid string Group ID.
+     *
+     * @return string '%' if it's default group otherwise given GID.
+     */
+    private function substituteGid($gid)
+    {
+        return $this->defaultGroupSet() && $gid === self::USER_SQL_GID ? "%" : $gid;
     }
 
     /**
@@ -222,22 +260,8 @@ final class GroupBackend extends ABackend implements
         }
 
         $groups = $this->groupRepository->findAllByUid($uid);
+        $groups = $this->setCacheAndMap($cacheKey, $groups);
 
-        if ($groups === false) {
-            return [];
-        }
-
-        foreach ($groups as $group) {
-            $this->cache->set("group_" . $group->gid, $group);
-        }
-
-        $groups = array_map(
-            function ($group) {
-                return $group->gid;
-            }, $groups
-        );
-
-        $this->cache->set($cacheKey, $groups);
         $this->logger->debug(
             "Returning getUserGroups($uid): count(" . count(
                 $groups
@@ -255,6 +279,10 @@ final class GroupBackend extends ABackend implements
         $this->logger->debug(
             "Entering groupExists($gid)", ["app" => $this->appName]
         );
+
+        if ($this->defaultGroupSet() && $gid === self::USER_SQL_GID) {
+            return true;
+        }
 
         $group = $this->getGroup($gid);
 
@@ -339,7 +367,7 @@ final class GroupBackend extends ABackend implements
         }
 
         $uids = $this->groupRepository->findAllUidsBySearchTerm(
-            $gid, "%" . $search . "%", $limit, $offset
+            $this->substituteGid($gid), "%" . $search . "%", $limit, $offset
         );
 
         if ($uids === false) {
@@ -402,6 +430,10 @@ final class GroupBackend extends ABackend implements
         $this->logger->debug(
             "Entering getGroupDetails($gid)", ["app" => $this->appName]
         );
+
+        if ($this->defaultGroupSet() && $gid === self::USER_SQL_GID) {
+            return ["displayName" => $this->properties[Opt::DEFAULT_GROUP]];
+        }
 
         $group = $this->getGroup($gid);
 
