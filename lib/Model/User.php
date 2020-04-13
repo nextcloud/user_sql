@@ -2,7 +2,7 @@
 /**
  * Nextcloud - user_sql
  *
- * @copyright 2018 Marcin Łojewski <dev@mlojewski.me>
+ * @copyright 2020 Marcin Łojewski <dev@mlojewski.me>
  * @author    Marcin Łojewski <dev@mlojewski.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,9 +29,13 @@ namespace OCA\UserSQL\Model;
 class User
 {
     /**
-     * @var string The UID (username).
+     * @var mixed The UID.
      */
     public $uid;
+    /**
+     * @var string The user's username (login name).
+     */
+    public $username;
     /**
      * @var string The user's email address.
      */

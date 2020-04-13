@@ -34,10 +34,11 @@ final class Query
     const FIND_GROUP = "find_group";
     const FIND_GROUP_USERS = "find_group_users";
     const FIND_GROUPS = "find_groups";
-    const FIND_USER = "find_user";
-    const FIND_USER_BY_UID_OR_EMAIL = "find_user_by_uid_or_email";
-    const FIND_USER_BY_UID_OR_EMAIL_CASE_INSENSITIVE = "find_user_by_uid_or_email_case_insensitive";
-    const FIND_USER_CASE_INSENSITIVE = "find_user_case_insensitive";
+    const FIND_USER_BY_UID = "find_user_by_uid";
+    const FIND_USER_BY_USERNAME = "find_user_by_username";
+    const FIND_USER_BY_USERNAME_CASE_INSENSITIVE = "find_user_by_username_case_insensitive";
+    const FIND_USER_BY_USERNAME_OR_EMAIL = "find_user_by_username_or_email";
+    const FIND_USER_BY_USERNAME_OR_EMAIL_CASE_INSENSITIVE = "find_user_by_username_or_email_case_insensitive";
     const FIND_USER_GROUPS = "find_user_groups";
     const FIND_USERS = "find_users";
     const UPDATE_DISPLAY_NAME = "update_display_name";
@@ -52,4 +53,5 @@ final class Query
     const QUOTA_PARAM = "quota";
     const SEARCH_PARAM = "search";
     const UID_PARAM = "uid";
+    const USERNAME_PARAM = "username";
 }
