@@ -127,6 +127,21 @@ user_sql.adminSettingsUI = function () {
             cryptoChanged();
         };
 
+        $("#db-driver").change(function () {
+            var ssl_ca = $("#db-ssl_ca").parent().parent();
+            var ssl_cert = $("#db-ssl_cert").parent().parent();
+            var ssl_key = $("#db-ssl_key").parent().parent();
+            if ($("#db-driver").val() === 'mysql') {
+                ssl_ca.show();
+                ssl_cert.show();
+                ssl_key.show();
+            } else {
+                ssl_ca.hide();
+                ssl_cert.hide();
+                ssl_key.hide();
+            }
+        });
+
         $("#user_sql-db_connection_verify").click(function (event) {
             return click(event, "/apps/user_sql/settings/db/verify");
         });
