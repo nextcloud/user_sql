@@ -34,9 +34,11 @@ use OCA\UserSQL\Crypto\IPasswordAlgorithm;
 use OCA\UserSQL\Model\User;
 use OCA\UserSQL\Properties;
 use OCA\UserSQL\Repository\UserRepository;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\ILogger;
+use OCP\Security\Events\ValidatePasswordPolicyEvent;
 use OCP\User\Backend\ABackend;
 use OCP\User\Backend\ICheckPasswordBackend;
 use OCP\User\Backend\ICountUsersBackend;
@@ -96,6 +98,10 @@ final class UserBackend extends ABackend implements
      * @var EventDispatcher The event dispatcher.
      */
     private $eventDispatcher;
+	/**
+	 * @var IEventDispatcher The new event dispatcher.
+	 */
+    private $newEventDispatcher;
     /**
      * @var IUserAction[] The actions to execute.
      */
@@ -112,11 +118,12 @@ final class UserBackend extends ABackend implements
      * @param IL10N           $localization    The localization service.
      * @param IConfig         $config          The config instance.
      * @param EventDispatcher $eventDispatcher The event dispatcher.
+     * @param IEventDispatcher $newEventDispatcher The new event dispatcher.
      */
     public function __construct(
         $AppName, Cache $cache, ILogger $logger, Properties $properties,
         UserRepository $userRepository, IL10N $localization, IConfig $config,
-        EventDispatcher $eventDispatcher
+        EventDispatcher $eventDispatcher, IEventDispatcher $newEventDispatcher
     ) {
         $this->appName = $AppName;
         $this->cache = $cache;
@@ -126,6 +133,7 @@ final class UserBackend extends ABackend implements
         $this->localization = $localization;
         $this->config = $config;
         $this->eventDispatcher = $eventDispatcher;
+        $this->newEventDispatcher = $newEventDispatcher;
         $this->actions = [];
 
         $this->initActions();
@@ -515,10 +523,8 @@ final class UserBackend extends ABackend implements
             return false;
         }
 
-        $event = new GenericEvent($password);
-        $this->eventDispatcher->dispatch(
-            'OCP\PasswordPolicy::validate', $event
-        );
+        $event = new ValidatePasswordPolicyEvent($password);
+        $this->newEventDispatcher->dispatchTyped($event);
 
         $user = $this->userRepository->findByUid($uid);
         if (!($user instanceof User)) {
