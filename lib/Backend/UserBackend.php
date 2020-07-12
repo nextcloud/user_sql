@@ -104,13 +104,13 @@ final class UserBackend extends ABackend implements
     /**
      * The default constructor.
      *
-     * @param string          $AppName         The application name.
-     * @param Cache           $cache           The cache instance.
-     * @param ILogger         $logger          The logger instance.
-     * @param Properties      $properties      The properties array.
-     * @param UserRepository  $userRepository  The user repository.
-     * @param IL10N           $localization    The localization service.
-     * @param IConfig         $config          The config instance.
+     * @param string           $AppName         The application name.
+     * @param Cache            $cache           The cache instance.
+     * @param ILogger          $logger          The logger instance.
+     * @param Properties       $properties      The properties array.
+     * @param UserRepository   $userRepository  The user repository.
+     * @param IL10N            $localization    The localization service.
+     * @param IConfig          $config          The config instance.
      * @param IEventDispatcher $eventDispatcher The event dispatcher.
      */
     public function __construct(
