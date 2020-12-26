@@ -160,7 +160,7 @@ class Properties implements \ArrayAccess
      */
     private function isSystemValue($param)
     {
-        return $this->safeStore && in_array($param, array(DB::HOSTNAME, DB::PASSWORD, DB::USERNAME, DB::DATABASE));
+        return $this->safeStore && in_array($param, array(DB::HOSTNAME, DB::PASSWORD, DB::USERNAME, DB::DATABASE, DB::SSL_CA, DB::SSL_CERT, DB::SSL_KEY));
     }
 
     /**

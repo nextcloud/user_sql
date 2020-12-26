@@ -146,6 +146,9 @@ class SettingsController extends Controller
         $dbDatabase = $this->request->getParam("db-database");
         $dbUsername = $this->request->getParam("db-username");
         $dbPassword = $this->request->getParam("db-password");
+        $dbSSL_ca = $this->request->getParam("db-ssl_ca");
+        $dbSSL_cert = $this->request->getParam("db-ssl_cert");
+        $dbSSL_key = $this->request->getParam("db-ssl_key");
 
         if (empty($dbDriver)) {
             throw new DatabaseException("No database driver specified.");
@@ -160,8 +163,18 @@ class SettingsController extends Controller
             "password" => $dbPassword,
             "user" => $dbUsername,
             "dbname" => $dbDatabase,
-            "tablePrefix" => ""
+            "tablePrefix" => "",
+            "driverOptions" => array()
         ];
+
+        if ($dbDriver == 'mysql') {
+            if ($dbSSL_ca)
+                $parameters["driverOptions"][\PDO::MYSQL_ATTR_SSL_CA] = \OC::$SERVERROOT.'/'.$dbSSL_ca;
+            if ($dbSSL_cert)
+                $parameters["driverOptions"][\PDO::MYSQL_ATTR_SSL_CERT] = \OC::$SERVERROOT.'/'.$dbSSL_cert;
+            if ($dbSSL_key)
+                $parameters["driverOptions"][\PDO::MYSQL_ATTR_SSL_KEY] = \OC::$SERVERROOT.'/'.$dbSSL_key;
+        }
 
         $connection = $connectionFactory->getConnection($dbDriver, $parameters);
         $connection->executeQuery("SELECT 'user_sql'");
@@ -216,6 +229,9 @@ class SettingsController extends Controller
             unset($this->properties[DB::PASSWORD]);
             unset($this->properties[DB::USERNAME]);
             unset($this->properties[DB::DATABASE]);
+            unset($this->properties[DB::SSL_CA]);
+            unset($this->properties[DB::SSL_CERT]);
+            unset($this->properties[DB::SSL_KEY]);
             $this->properties[Opt::SAFE_STORE] = $safeStore;
         }
 

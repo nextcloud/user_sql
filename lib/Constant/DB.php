@@ -32,6 +32,9 @@ final class DB
     const DRIVER = "db.driver";
     const HOSTNAME = "db.hostname";
     const PASSWORD = "db.password";
+    const SSL_CA = "db.ssl_ca";
+    const SSL_CERT = "db.ssl_cert";
+    const SSL_KEY = "db.ssl_key";
     const USERNAME = "db.username";
 
     const GROUP_TABLE = "db.table.group";

@@ -40,6 +40,9 @@ Name | Description | Details
 **Database** | The name of the database. | Mandatory.
 **Username** | The name of the user for the connection. | Optional.
 **Password** | The password of the user for the connection. | Optional.
+**SSL CA** | The file path to the SSL certificate authority (relative to Nextcloud serverroot) | Optional.<br/>Requires: SQL driver *mysql*.
+**SSL Certificate** | The file path to the SSL certificate (relative to Nextcloud serverroot) | Optional.<br/>Requires: SQL driver *mysql*.
+**SSL Key** | The file path to the SSL key (relative to Nextcloud serverroot) | Optional.<br/>Requires: SQL driver *mysql*.
 **System wide values** | Place where database connection parameters are stored.<br/>- *true* - config.php (System wide values).<br/>- *false* - database (App values). | Optional.<br/>Default: *false*.
 
 #### Options

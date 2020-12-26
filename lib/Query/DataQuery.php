@@ -145,8 +145,18 @@ class DataQuery
             "password" => $this->properties[DB::PASSWORD],
             "user" => $this->properties[DB::USERNAME],
             "dbname" => $this->properties[DB::DATABASE],
-            "tablePrefix" => ""
+            "tablePrefix" => "",
+            "driverOptions" => array()
         );
+
+        if ($this->properties[DB::DRIVER] == 'mysql') {
+            if ($this->properties[DB::SSL_CA])
+                $parameters["driverOptions"][\PDO::MYSQL_ATTR_SSL_CA] = \OC::$SERVERROOT.'/'.$this->properties[DB::SSL_CA];
+            if ($this->properties[DB::SSL_CERT])
+                $parameters["driverOptions"][\PDO::MYSQL_ATTR_SSL_CERT] = \OC::$SERVERROOT.'/'.$this->properties[DB::SSL_CERT];
+            if ($this->properties[DB::SSL_KEY])
+                $parameters["driverOptions"][\PDO::MYSQL_ATTR_SSL_KEY] = \OC::$SERVERROOT.'/'.$this->properties[DB::SSL_KEY];
+        }
 
         $this->connection = $connectionFactory->getConnection(
             $this->properties[DB::DRIVER], $parameters

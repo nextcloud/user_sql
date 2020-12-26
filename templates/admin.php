@@ -100,6 +100,9 @@ function print_select_options(
                 print_text_input($l, "db-database", "Database", $_["db.database"]);
                 print_text_input($l, "db-username", "Username", $_["db.username"]);
                 print_text_input($l, "db-password", "Password", $_["db.password"], "password");
+                print_text_input($l, "db-ssl_ca", "SSL CA", $_["db.ssl_ca"]);
+                print_text_input($l, "db-ssl_cert", "SSL Certificate", $_["db.ssl_cert"]);
+                print_text_input($l, "db-ssl_key", "SSL Key", $_["db.ssl_key"]);
                 print_checkbox_input($l, "opt-safe_store", "System wide values", $_["opt.safe_store"]); ?>
                 <div class="button-right">
                     <input type="submit" id="user_sql-db_connection_verify" value="<?php p($l->t("Verify settings")); ?>">
