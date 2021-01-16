@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Fixed
 - [issue#123](https://github.com/nextcloud/user_sql/issues/123) - sync exception - Duplicate entry
+### Added
+- Support for Nextcloud 20
 
 ## [4.5.0] - 2020-04-13
 ### Added
