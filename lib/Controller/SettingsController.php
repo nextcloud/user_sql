@@ -2,7 +2,7 @@
 /**
  * Nextcloud - user_sql
  *
- * @copyright 2020 Marcin Łojewski <dev@mlojewski.me>
+ * @copyright 2021 Marcin Łojewski <dev@mlojewski.me>
  * @author    Marcin Łojewski <dev@mlojewski.me>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -168,12 +168,15 @@ class SettingsController extends Controller
         ];
 
         if ($dbDriver == 'mysql') {
-            if ($dbSSL_ca)
-                $parameters["driverOptions"][\PDO::MYSQL_ATTR_SSL_CA] = \OC::$SERVERROOT.'/'.$dbSSL_ca;
-            if ($dbSSL_cert)
-                $parameters["driverOptions"][\PDO::MYSQL_ATTR_SSL_CERT] = \OC::$SERVERROOT.'/'.$dbSSL_cert;
-            if ($dbSSL_key)
-                $parameters["driverOptions"][\PDO::MYSQL_ATTR_SSL_KEY] = \OC::$SERVERROOT.'/'.$dbSSL_key;
+            if ($dbSSL_ca) {
+                $parameters["driverOptions"][\PDO::MYSQL_ATTR_SSL_CA] = \OC::$SERVERROOT . '/' . $dbSSL_ca;
+            }
+            if ($dbSSL_cert) {
+                $parameters["driverOptions"][\PDO::MYSQL_ATTR_SSL_CERT] = \OC::$SERVERROOT . '/' . $dbSSL_cert;
+            }
+            if ($dbSSL_key) {
+                $parameters["driverOptions"][\PDO::MYSQL_ATTR_SSL_KEY] = \OC::$SERVERROOT . '/' . $dbSSL_key;
+            }
         }
 
         $connection = $connectionFactory->getConnection($dbDriver, $parameters);
