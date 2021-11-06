@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.7.1]
+- Support for Nextcloud 22, 23
+
 ## [4.7.0]
 ### Changed
 - Support for Doctrine 3
@@ -160,6 +163,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Supported version of ownCloud, Nextcloud: ownCloud 10, Nextcloud 12
 
+[4.7.1]: https://github.com/nextcloud/user_sql/compare/v4.7.0...v4.7.1
 [4.7.0]: https://github.com/nextcloud/user_sql/compare/v4.6.0...v4.7.0
 [4.6.0]: https://github.com/nextcloud/user_sql/compare/v4.5.0...v4.6.0
 [4.5.0]: https://github.com/nextcloud/user_sql/compare/v4.4.1...v4.5.0
