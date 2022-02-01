@@ -455,23 +455,40 @@ final class UserBackend extends ABackend implements
         $users = $this->cache->get($cacheKey);
 
         if (!is_null($users)) {
+
             $this->logger->debug(
                 "Returning from cache getUsers($search, $limit, $offset): count("
                 . count($users) . ")", ["app" => $this->appName]
             );
-            return $users;
-        }
+            $users = array_map(function($array) {
+              $object = new User();
+              foreach ($array as $key => $value) {
+                $object->{$key} = $value;
+              }
+              return $object;
+            }, $users);
 
-        $users = $this->userRepository->findAllBySearchTerm(
-            "%" . $search . "%", $limit, $offset
-        );
+        } else {
 
-        if ($users === false) {
-            return [];
-        }
+            $users = $this->userRepository->findAllBySearchTerm(
+                "%" . $search . "%", $limit, $offset
+            );
 
-        foreach ($users as $user) {
-            $this->cache->set("user_" . $user->uid, $user);
+            if ($users === false) {
+                return [];
+            }
+
+            foreach ($users as $user) {
+                $this->cache->set("user_" . $user->uid, $user);
+            }
+
+            $this->cache->set($cacheKey, $users);
+            $this->logger->debug(
+                "Returning getUsers($search, $limit, $offset): count("
+                . count(
+                    $users
+                ) . ")", ["app" => $this->appName]
+            );
         }
 
         $callback = is_callable($callback)
@@ -480,14 +497,6 @@ final class UserBackend extends ABackend implements
                 return $user->uid;
             };
         $users = array_map($callback, $users);
-
-        $this->cache->set($cacheKey, $users);
-        $this->logger->debug(
-            "Returning getUsers($search, $limit, $offset): count("
-            . count(
-                $users
-            ) . ")", ["app" => $this->appName]
-        );
 
         return $users;
     }
