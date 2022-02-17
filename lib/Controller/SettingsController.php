@@ -92,6 +92,8 @@ class SettingsController extends Controller
      * Verify the database connection parameters.
      *
      * @return array The request status.
+     *
+     * @AuthorizedAdminSetting(settings=OCA\UserSQL\Settings\Admin)
      */
     public function verifyDbConnection()
     {
@@ -189,6 +191,8 @@ class SettingsController extends Controller
      * Save application properties.
      *
      * @return array The request status.
+     *
+     * @AuthorizedAdminSetting(settings=OCA\UserSQL\Settings\Admin)
      */
     public function saveProperties()
     {
@@ -329,6 +333,8 @@ class SettingsController extends Controller
      * Clear the application cache memory.
      *
      * @return array The request status.
+     *
+     * @AuthorizedAdminSetting(settings=OCA\UserSQL\Settings\Admin)
      */
     public function clearCache()
     {
@@ -356,6 +362,8 @@ class SettingsController extends Controller
      * Autocomplete for table select options.
      *
      * @return array The database table list.
+     *
+     * @AuthorizedAdminSetting(settings=OCA\UserSQL\Settings\Admin)
      */
     public function tableAutocomplete()
     {
@@ -385,6 +393,8 @@ class SettingsController extends Controller
      * Autocomplete for column select options - user table.
      *
      * @return array The database table's column list.
+     *
+     * @AuthorizedAdminSetting(settings=OCA\UserSQL\Settings\Admin)
      */
     public function userTableAutocomplete()
     {
@@ -430,6 +440,8 @@ class SettingsController extends Controller
      * Autocomplete for column select options - user_group table.
      *
      * @return array The database table's column list.
+     *
+     * @AuthorizedAdminSetting(settings=OCA\UserSQL\Settings\Admin)
      */
     public function userGroupTableAutocomplete()
     {
@@ -451,6 +463,8 @@ class SettingsController extends Controller
      * Autocomplete for column select options - group table.
      *
      * @return array The database table's column list.
+     *
+     * @AuthorizedAdminSetting(settings=OCA\UserSQL\Settings\Admin)
      */
     public function groupTableAutocomplete()
     {
@@ -473,6 +487,8 @@ class SettingsController extends Controller
      *
      * @return array Password algorithm parameters.
      * @throws ReflectionException Whenever Opt class cannot be initiated.
+     *
+     * @AuthorizedAdminSetting(settings=OCA\UserSQL\Settings\Admin)
      */
     public function cryptoParams()
     {
