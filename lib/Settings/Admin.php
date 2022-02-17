@@ -23,14 +23,14 @@ namespace OCA\UserSQL\Settings;
 
 use OCA\UserSQL\Properties;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\Settings\ISettings;
+use OCP\Settings\IDelegatedSettings;
 
 /**
  * The administrator's settings page.
  *
  * @author Marcin Łojewski <dev@mlojewski.me>
  */
-class Admin implements ISettings
+class Admin implements IDelegatedSettings
 {
     /**
      * @var string The application name.
@@ -75,5 +75,13 @@ class Admin implements ISettings
     public function getPriority()
     {
         return 25;
+    }
+
+    public function getName(): ?string {
+        return null; // Only one setting in this section
+    }
+
+    public function getAuthorizedAppConfig(): array {
+        return []; // Custom controller
     }
 }
