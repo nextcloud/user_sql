@@ -135,7 +135,7 @@ class QueryProvider implements \ArrayAccess
                 "AND g.$gAdmin",
 
             Query::COUNT_GROUPS =>
-                "SELECT COUNT(ug.$ugGID) " .
+                "SELECT COUNT(DISTINCT ug.$ugUID) " .
                 "FROM $userGroup ug " .
                 "WHERE ug.$ugGID LIKE :$gidParam " .
                 "AND ug.$ugUID LIKE :$searchParam",
@@ -152,7 +152,7 @@ class QueryProvider implements \ArrayAccess
                 "WHERE g.$gGID = :$gidParam",
 
             Query::FIND_GROUP_USERS =>
-                "SELECT ug.$ugUID AS uid " .
+                "SELECT DISTINCT ug.$ugUID AS uid " .
                 "FROM $userGroup ug " .
                 "WHERE ug.$ugGID LIKE :$gidParam " .
                 "AND ug.$ugUID LIKE :$searchParam " .
