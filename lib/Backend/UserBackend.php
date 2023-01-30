@@ -459,6 +459,18 @@ final class UserBackend extends ABackend implements
                 "Returning from cache getUsers($search, $limit, $offset): count("
                 . count($users) . ")", ["app" => $this->appName]
             );
+            // convert to user-model
+            foreach ($users as $index => $cachedUser) {
+              if (!is_array($cachedUser)) {
+                break;
+              }
+              $user = new User();
+              foreach ($cachedUser as $key => $value) {
+                $user->{$key} = $value;
+              }
+              $users[$index] = $user;
+            }
+
             return $users;
         }
 
