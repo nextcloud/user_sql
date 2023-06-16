@@ -109,7 +109,15 @@ class DataQuery
         }
 
         $query = $this->queryProvider[$queryName];
-        $result = $this->connection->prepare($query, $limit, $offset);
+        try {
+            $result = $this->connection->prepare($query, $limit, $offset);
+        } catch (DBALException  $exception) {
+            $this->logger->error(
+                "Could not prepare the query: " . $exception->getMessage(),
+                ["app" => $this->appName]
+            );
+            return false;
+        }
 
         foreach ($params as $param => $value) {
             $result->bindValue(":" . $param, $value);
