@@ -238,7 +238,7 @@ class QueryProvider implements \ArrayAccess
     /**
      * @inheritdoc
      */
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset):bool
     {
         return isset($this->queries[$offset]);
     }
@@ -246,7 +246,7 @@ class QueryProvider implements \ArrayAccess
     /**
      * @inheritdoc
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset):mixed
     {
         if (isset($this->queries[$offset])) {
             return $this->queries[$offset];
@@ -258,7 +258,7 @@ class QueryProvider implements \ArrayAccess
     /**
      * @inheritdoc
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value):void
     {
         $this->queries[$offset] = $value;
     }
@@ -266,7 +266,7 @@ class QueryProvider implements \ArrayAccess
     /**
      * @inheritdoc
      */
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset):void
     {
         unset($this->queries[$offset]);
     }
