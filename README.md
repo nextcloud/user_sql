@@ -63,7 +63,7 @@ Name | Description | Details
 **Email sync** | Sync e-mail address with the Nextcloud.<br/>- *None* - Disables this feature. This is the default option.<br/>- *Synchronise only once* - Copy the e-mail address to the Nextcloud preferences if its not set.<br/>- *Nextcloud always wins* - Always copy the e-mail address to the database. This updates the user table.<br/>- *SQL always wins* - Always copy the e-mail address to the Nextcloud preferences. | Optional.<br/>Default: *None*.<br/>Requires: user *Email* column.
 **Quota sync** | Sync user quota with the Nextcloud.<br/>- *None* - Disables this feature. This is the default option.<br/>- *Synchronise only once* - Copy the user quota to the Nextcloud preferences if its not set.<br/>- *Nextcloud always wins* - Always copy the user quota to the database. This updates the user table.<br/>- *SQL always wins* - Always copy the user quota to the Nextcloud preferences. | Optional.<br/>Default: *None*.<br/>Requires: user *Quota* column.
 **Home mode** | User storage path.<br/>- *Default* - Let the Nextcloud manage this. The default option.<br/>- *Query* - Use location from the user table pointed by the *home* column.<br/>- *Static* - Use static location pointed by the *Home Location* option. | Optional<br/>Default: *Default*.
-**Home location** | User storage path for the `Static` *Home mode*. The `%u` variable is replaced with the username of the user. | Mandatory if the *Home mode* is set to `Static`.
+**Home location** | User storage path for the `Static` *Home mode*. The `%u` variable is replaced with the uid of the user. | Mandatory if the *Home mode* is set to `Static`.
 **Default group** | Default group for all 'User SQL' users. | Optional.
 
 #### User table
@@ -74,7 +74,7 @@ Name | Description | Details
 --- | --- | ---
 **Table name** | The table name. | Mandatory for user backend.
 **UID** | User ID column. | Mandatory for user backend.
-**Username** | Username column. | Optional.
+**Username** | Username column which is used **only** for password verification. | Optional. If unsure leave it blank and use only the `uid` column.
 **Email** | E-mail column. | Mandatory for *Email sync* option.
 **Quota** | Quota column. | Mandatory for *Quota sync* option.
 **Home** | Home path column. | Mandatory for `Query` *Home sync* option.
@@ -120,12 +120,15 @@ For all options to work three tables are required:
 If you already have an existing database you can always create database views which fits this model,
 but be aware that some functionalities requires data changes (update queries).
 
-If you don't have any database model yet you can use below tables (MySQL):
+If you don't have any database model yet you can use below tables
+(MySQL). Please note that the optional `username` above really is only
+used for password matching and defaults to be equal to the `uid`
+column. You also may want to compare with the `oc_users` and
+`oc_groups` table from you Nextcloud instance.
 ```
 CREATE TABLE sql_user
 (
-  uid            INT         PRIMARY KEY AUTO_INCREMENT,
-  username       VARCHAR(16) NOT NULL UNIQUE,
+  uid            VARCHAR(64) PRIMARY KEY,
   display_name   TEXT        NULL,
   email          TEXT        NULL,
   quota          TEXT        NULL,
@@ -139,15 +142,15 @@ CREATE TABLE sql_user
 
 CREATE TABLE sql_group
 (
-  gid   INT         PRIMARY KEY AUTO_INCREMENT,
-  name  VARCHAR(16) NOT NULL UNIQUE,
-  admin BOOLEAN     NOT NULL DEFAULT FALSE
+  gid   VARCHAR(64)  PRIMARY KEY,
+  name  VARCHAR(255) NOT NULL,
+  admin BOOLEAN      NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE sql_user_group
 (
-  uid INT NOT NULL,
-  gid INT NOT NULL,
+  uid   VARCHAR(64),
+  gid   VARCHAR(64),
   PRIMARY KEY (uid, gid),
   FOREIGN KEY (uid) REFERENCES sql_user (uid),
   FOREIGN KEY (gid) REFERENCES sql_group (gid),
