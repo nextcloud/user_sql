@@ -224,6 +224,27 @@ class DataQuery
     }
 
     /**
+     * Fetch values from all columns which the given query returns.
+     *
+     * @param string $queryName The query to execute.
+     * @param array  $params    The query parameters to bind.
+     * @param int    $limit     Results limit. Defaults to -1 (no limit).
+     * @param int    $offset    Results offset. Defaults to 0.
+     *
+     * @return array|bool Queried column or FALSE on failure.
+     */
+    public function queryColumns(
+        $queryName, $params = [], $limit = -1, $offset = 0
+    ) {
+        $result = $this->execQuery($queryName, $params, $limit, $offset);
+        if ($result === false) {
+            return false;
+        }
+
+        return $result->fetchAll();
+    }
+
+    /**
      * Fetch entity returned by the given query.
      *
      * @param string $queryName   The query to execute.

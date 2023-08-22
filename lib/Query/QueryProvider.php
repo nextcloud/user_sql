@@ -154,14 +154,23 @@ class QueryProvider implements \ArrayAccess
                 "FROM $group g " .
                 "WHERE g.$gGID = :$gidParam",
 
-            Query::FIND_GROUP_USERS =>
-                "SELECT DISTINCT ug.$ugUID AS uid " .
-                "FROM $userGroup ug " .
-                "LEFT JOIN $user u ON u.$uUID = ug.$ugUID " .
+            Query::FIND_GROUP_UIDS =>
+                "SELECT DISTINCT u.$uUID AS uid " .
+                "FROM $user u " .
+                "LEFT JOIN $userGroup ug ON u.$uUID = ug.$ugUID " .
                 "WHERE ug.$ugGID LIKE :$gidParam " .
-                "AND ug.$ugUID LIKE :$searchParam " .
+                "AND u.$uUID LIKE :$searchParam " .
                 (empty($uDisabled) ? "" : "AND NOT u.$uDisabled ") .
-                "ORDER BY ug.$ugUID",
+                "ORDER BY u.$uUID",
+
+            Query::FIND_GROUP_USERS =>
+                "SELECT DISTINCT u.$uUID AS uid, u.$uName AS name " .
+                "FROM $user u " .
+                "LEFT JOIN $userGroup ug ON u.$uUID = ug.$ugUID " .
+                "WHERE ug.$ugGID LIKE :$gidParam " .
+                "AND u.$uUID LIKE :$searchParam " .
+                (empty($uDisabled) ? "" : "AND NOT u.$uDisabled ") .
+                "ORDER BY u.$uUID",
 
             Query::FIND_GROUPS =>
                 "SELECT $groupColumns " .

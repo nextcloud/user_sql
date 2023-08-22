@@ -31,7 +31,11 @@ use OCP\Group\Backend\ABackend;
 use OCP\Group\Backend\ICountUsersBackend;
 use OCP\Group\Backend\IGroupDetailsBackend;
 use OCP\Group\Backend\IIsAdminBackend;
+use OCP\Group\Backend\ISearchableGroupBackend;
 use OCP\ILogger;
+use OCP\IUserManager;
+
+use OC\User\LazyUser;
 
 /**
  * The SQL group backend manager.
@@ -41,7 +45,8 @@ use OCP\ILogger;
 final class GroupBackend extends ABackend implements
     ICountUsersBackend,
     IGroupDetailsBackend,
-    IIsAdminBackend
+    IIsAdminBackend,
+	ISearchableGroupBackend
 {
     const USER_SQL_GID = "user_sql";
 
@@ -354,16 +359,16 @@ final class GroupBackend extends ABackend implements
             ["app" => $this->appName]
         );
 
-        $cacheKey = self::class . "group_users_" . $gid . "_" . $search . "_"
+        $cacheKey = self::class . "group_uids_" . $gid . "_" . $search . "_"
             . $limit . "_" . $offset;
-        $users = $this->cache->get($cacheKey);
+        $uids = $this->cache->get($cacheKey);
 
-        if (!is_null($users)) {
+        if (!is_null($uids)) {
             $this->logger->debug(
                 "Returning from cache usersInGroup($gid, $search, $limit, $offset): count("
-                . count($users) . ")", ["app" => $this->appName]
+                . count($uids) . ")", ["app" => $this->appName]
             );
-            return $users;
+            return $uids;
         }
 
         $uids = $this->groupRepository->findAllUidsBySearchTerm(
@@ -382,6 +387,50 @@ final class GroupBackend extends ABackend implements
 
         return $uids;
     }
+
+	/**
+     * @inheritdoc
+     */
+	public function searchInGroup(string $gid, string $search = '', int $limit = -1, int $offset = 0): array
+	{
+		$this->logger->debug(
+            "Entering searchInGroup($gid, $search, $limit, $offset)",
+            ["app" => $this->appName]
+        );
+
+        $cacheKey = self::class . "group_users_" . $gid . "_" . $search . "_"
+            . $limit . "_" . $offset;
+        $names = $this->cache->get($cacheKey);
+
+        if ($names === null) {
+			$names = $this->groupRepository->findAllUsersBySearchTerm(
+				$this->substituteGid($gid), "%" . $search . "%", $limit, $offset
+			);
+
+			if ($names === false) {
+				return [];
+			}
+
+			$this->cache->set($cacheKey, $names);
+			$this->logger->debug(
+				"Using from DB searchInGroup($gid, $search, $limit, $offset): count("
+					. count($names) . ")", ["app" => $this->appName]
+			);
+		} else {
+            $this->logger->debug(
+                "Using from cache searchInGroup($gid, $search, $limit, $offset): count("
+					. count($names) . ")", ["app" => $this->appName]
+            );
+        }
+
+		$users = [];
+		$userManager = \OCP\Server::get(IUserManager::class);
+		foreach ($names as $uid => $name) {
+			$users[$uid] = new LazyUser($uid, $userManager, $name);
+		}
+
+		return $users;
+	}
 
     /**
      * @inheritdoc

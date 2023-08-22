@@ -92,10 +92,33 @@ class GroupRepository
         $gid, $search = "", $limit = -1, $offset = 0
     ) {
         return $this->dataQuery->queryColumn(
+            Query::FIND_GROUP_UIDS,
+            [Query::GID_PARAM => $gid, Query::SEARCH_PARAM => $search], $limit,
+            $offset
+        );
+    }
+
+    /**
+     * Get a list of all user IDs and their display-name belonging to the group.
+     *
+     * @param string $gid    The group ID.
+     * @param string $search The UID search term. Defaults to "" (empty string).
+     * @param int    $limit  (optional) Results limit.
+     *                       Defaults to -1 (no limit).
+     * @param int    $offset (optional) Results offset. Defaults to 0.
+     *
+     * @return array<string, string> Array of display-names indexed by UIDs belonging to the group
+     *                  or FALSE on failure.
+     */
+    public function findAllUsersBySearchTerm(
+        $gid, $search = "", $limit = -1, $offset = 0
+    ) {
+		$data = $this->dataQuery->queryColumns(
             Query::FIND_GROUP_USERS,
             [Query::GID_PARAM => $gid, Query::SEARCH_PARAM => $search], $limit,
             $offset
         );
+		return array_column($data, QUERY::NAME_PARAM, Query::UID_PARAM);
     }
 
     /**
