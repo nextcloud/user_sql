@@ -129,10 +129,13 @@ class QueryProvider implements \ArrayAccess
         $this->queries = [
             Query::BELONGS_TO_ADMIN =>
                 "SELECT COUNT(g.$gGID) > 0 AS admin " .
-                "FROM $group g, $userGroup ug " .
+                "FROM $group g " .
+                "LEFT JOIN $userGroup ug ON ug.$ugGID = g.$gGID " .
+                (empty($uDisabled) ? "" : "LEFT JOIN $user u ON u.$uUID = ug.$ugUID ") .
                 "WHERE ug.$ugGID = g.$gGID " .
                 "AND ug.$ugUID = :$uidParam " .
-                "AND g.$gAdmin",
+                "AND g.$gAdmin" .
+                (empty($uDisabled) ? "" : " AND NOT u.$uDisabled"),
 
             Query::COUNT_GROUPS =>
                 "SELECT COUNT(DISTINCT ug.$ugUID) " .
@@ -154,8 +157,10 @@ class QueryProvider implements \ArrayAccess
             Query::FIND_GROUP_USERS =>
                 "SELECT DISTINCT ug.$ugUID AS uid " .
                 "FROM $userGroup ug " .
+                "LEFT JOIN $user u ON u.$uUID = ug.$ugUID " .
                 "WHERE ug.$ugGID LIKE :$gidParam " .
                 "AND ug.$ugUID LIKE :$searchParam " .
+                (empty($uDisabled) ? "" : "AND NOT u.$uDisabled ") .
                 "ORDER BY ug.$ugUID",
 
             Query::FIND_GROUPS =>
@@ -168,38 +173,38 @@ class QueryProvider implements \ArrayAccess
             Query::FIND_USER_BY_UID =>
                 "SELECT $userColumns " .
                 "FROM $user u " .
-                "WHERE u.$uUID = :$uidParam " .
-                (empty($uDisabled) ? "" : "AND NOT u.$uDisabled"),
+                "WHERE u.$uUID = :$uidParam" .
+                (empty($uDisabled) ? "" : " AND NOT u.$uDisabled"),
 
             Query::FIND_USER_BY_USERNAME =>
                 "SELECT $userColumns, u.$uPassword AS password " .
                 "FROM $user u " .
-                "WHERE u.$uUsername = :$usernameParam " .
-                (empty($uDisabled) ? "" : "AND NOT u.$uDisabled"),
+                "WHERE u.$uUsername = :$usernameParam" .
+                (empty($uDisabled) ? "" : " AND NOT u.$uDisabled"),
 
             Query::FIND_USER_BY_USERNAME_CASE_INSENSITIVE =>
                 "SELECT $userColumns, u.$uPassword AS password " .
                 "FROM $user u " .
-                "WHERE lower(u.$uUsername) = lower(:$usernameParam) " .
-                (empty($uDisabled) ? "" : "AND NOT u.$uDisabled"),
+                "WHERE lower(u.$uUsername) = lower(:$usernameParam)" .
+                (empty($uDisabled) ? "" : " AND NOT u.$uDisabled"),
 
             Query::FIND_USER_BY_USERNAME_OR_EMAIL =>
                 "SELECT $userColumns, u.$uPassword AS password " .
                 "FROM $user u " .
-                "WHERE u.$uUsername = :$usernameParam OR u.$uEmail = :$emailParam " .
-                (empty($uDisabled) ? "" : "AND NOT u.$uDisabled"),
+                "WHERE u.$uUsername = :$usernameParam OR u.$uEmail = :$emailParam" .
+                (empty($uDisabled) ? "" : " AND NOT u.$uDisabled"),
 
             Query::FIND_USER_BY_USERNAME_OR_EMAIL_CASE_INSENSITIVE =>
                 "SELECT $userColumns, u.$uPassword AS password " .
                 "FROM $user u " .
-                "WHERE lower(u.$uUsername) = lower(:$usernameParam) OR lower(u.$uEmail) = lower(:$emailParam) " .
-                (empty($uDisabled) ? "" : "AND NOT u.$uDisabled"),
+                "WHERE lower(u.$uUsername) = lower(:$usernameParam) OR lower(u.$uEmail) = lower(:$emailParam)" .
+                (empty($uDisabled) ? "" : " AND NOT u.$uDisabled"),
 
             Query::FIND_USER_GROUPS =>
                 "SELECT $groupColumns " .
-                "FROM $group g, $userGroup ug " .
-                "WHERE ug.$ugGID = g.$gGID " .
-                "AND ug.$ugUID = :$uidParam " .
+                "FROM $group g " .
+                "LEFT JOIN $userGroup ug ON ug.$ugGID = g.$gGID " .
+                "WHERE ug.$ugUID = :$uidParam " .
                 "ORDER BY g.$gGID",
 
             Query::FIND_USERS =>
@@ -210,7 +215,7 @@ class QueryProvider implements \ArrayAccess
                 (empty($uName) ? "" : "OR u.$uName LIKE :$searchParam ") .
                 (empty($uEmail) ? "" : "OR u.$uEmail LIKE :$searchParam ") .
                 ")" .
-                (empty($uDisabled) ? "" : "AND NOT u.$uDisabled ") .
+                (empty($uDisabled) ? "" : " AND NOT u.$uDisabled ") .
                 "ORDER BY u.$uUID",
 
             Query::UPDATE_DISPLAY_NAME =>
