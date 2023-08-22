@@ -109,13 +109,13 @@ class DataQuery
         }
 
         $query = $this->queryProvider[$queryName];
+
         try {
             $result = $this->connection->prepare($query, $limit, $offset);
         } catch (DBALException  $exception) {
-            $this->logger->error(
-                "Could not prepare the query: " . $exception->getMessage(),
-                ["app" => $this->appName]
-            );
+            $this->logger->logException(
+				$exception, [ 'message' => "Could not prepare the query: " . $query ]
+			);
             return false;
         }
 
@@ -123,20 +123,16 @@ class DataQuery
             $result->bindValue(":" . $param, $value);
         }
 
-        $this->logger->debug(
-            "Executing query: " . $query . ", " . implode(",", $params),
-            ["app" => $this->appName]
-        );
+        $this->logger->debug("Executing query: " . $query . ", " . implode(",", $params));
 
         try {
             $result = $result->execute();
             return $result;
 
         } catch (DBALException  $exception) {
-            $this->logger->error(
-                "Could not execute the query: " . $exception->getMessage(),
-                ["app" => $this->appName]
-            );
+            $this->logger->logException(
+				$exception, [ 'message' => "Could not execute the query: " . $query ]
+			);
             return false;
         }
     }
