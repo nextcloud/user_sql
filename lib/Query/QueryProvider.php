@@ -140,8 +140,10 @@ class QueryProvider implements \ArrayAccess
             Query::COUNT_GROUPS =>
                 "SELECT COUNT(DISTINCT ug.$ugUID) " .
                 "FROM $userGroup ug " .
+                (empty($uDisabled) ? "" : "LEFT JOIN $user u ON u.$uUID = ug.$ugUID ") .
                 "WHERE ug.$ugGID LIKE :$gidParam " .
-                "AND ug.$ugUID LIKE :$searchParam",
+                "AND ug.$ugUID LIKE :$searchParam" .
+                (empty($uDisabled) ? "" : " AND NOT u.$uDisabled"),
 
             Query::COUNT_USERS =>
                 "SELECT COUNT(u.$uUID) AS count " .
