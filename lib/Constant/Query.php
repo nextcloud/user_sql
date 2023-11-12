@@ -32,6 +32,7 @@ final class Query
     const COUNT_GROUPS = "count_groups";
     const COUNT_USERS = "count_users";
     const FIND_GROUP = "find_group";
+    const FIND_GROUP_UIDS = "find_group_uids";
     const FIND_GROUP_USERS = "find_group_users";
     const FIND_GROUPS = "find_groups";
     const FIND_USER_BY_UID = "find_user_by_uid";

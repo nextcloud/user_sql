@@ -129,16 +129,21 @@ class QueryProvider implements \ArrayAccess
         $this->queries = [
             Query::BELONGS_TO_ADMIN =>
                 "SELECT COUNT(g.$gGID) > 0 AS admin " .
-                "FROM $group g, $userGroup ug " .
+                "FROM $group g " .
+                "LEFT JOIN $userGroup ug ON ug.$ugGID = g.$gGID " .
+                (empty($uDisabled) ? "" : "LEFT JOIN $user u ON u.$uUID = ug.$ugUID ") .
                 "WHERE ug.$ugGID = g.$gGID " .
                 "AND ug.$ugUID = :$uidParam " .
-                "AND g.$gAdmin",
+                "AND g.$gAdmin" .
+                (empty($uDisabled) ? "" : " AND NOT u.$uDisabled"),
 
             Query::COUNT_GROUPS =>
-                "SELECT COUNT(ug.$ugGID) " .
+                "SELECT COUNT(DISTINCT ug.$ugUID) " .
                 "FROM $userGroup ug " .
+                (empty($uDisabled) ? "" : "LEFT JOIN $user u ON u.$uUID = ug.$ugUID ") .
                 "WHERE ug.$ugGID LIKE :$gidParam " .
-                "AND ug.$ugUID LIKE :$searchParam",
+                "AND ug.$ugUID LIKE :$searchParam" .
+                (empty($uDisabled) ? "" : " AND NOT u.$uDisabled"),
 
             Query::COUNT_USERS =>
                 "SELECT COUNT(u.$uUID) AS count " .
@@ -151,12 +156,23 @@ class QueryProvider implements \ArrayAccess
                 "FROM $group g " .
                 "WHERE g.$gGID = :$gidParam",
 
-            Query::FIND_GROUP_USERS =>
-                "SELECT ug.$ugUID AS uid " .
-                "FROM $userGroup ug " .
+            Query::FIND_GROUP_UIDS =>
+                "SELECT DISTINCT u.$uUID AS uid " .
+                "FROM $user u " .
+                "LEFT JOIN $userGroup ug ON u.$uUID = ug.$ugUID " .
                 "WHERE ug.$ugGID LIKE :$gidParam " .
-                "AND ug.$ugUID LIKE :$searchParam " .
-                "ORDER BY ug.$ugUID",
+                "AND u.$uUID LIKE :$searchParam " .
+                (empty($uDisabled) ? "" : "AND NOT u.$uDisabled ") .
+                "ORDER BY u.$uUID",
+
+            Query::FIND_GROUP_USERS =>
+                "SELECT DISTINCT u.$uUID AS uid, u.$uName AS name " .
+                "FROM $user u " .
+                "LEFT JOIN $userGroup ug ON u.$uUID = ug.$ugUID " .
+                "WHERE ug.$ugGID LIKE :$gidParam " .
+                "AND u.$uUID LIKE :$searchParam " .
+                (empty($uDisabled) ? "" : "AND NOT u.$uDisabled ") .
+                "ORDER BY u.$uUID",
 
             Query::FIND_GROUPS =>
                 "SELECT $groupColumns " .
@@ -168,38 +184,38 @@ class QueryProvider implements \ArrayAccess
             Query::FIND_USER_BY_UID =>
                 "SELECT $userColumns " .
                 "FROM $user u " .
-                "WHERE u.$uUID = :$uidParam " .
-                (empty($uDisabled) ? "" : "AND NOT u.$uDisabled"),
+                "WHERE u.$uUID = :$uidParam" .
+                (empty($uDisabled) ? "" : " AND NOT u.$uDisabled"),
 
             Query::FIND_USER_BY_USERNAME =>
                 "SELECT $userColumns, u.$uPassword AS password " .
                 "FROM $user u " .
-                "WHERE u.$uUsername = :$usernameParam " .
-                (empty($uDisabled) ? "" : "AND NOT u.$uDisabled"),
+                "WHERE u.$uUsername = :$usernameParam" .
+                (empty($uDisabled) ? "" : " AND NOT u.$uDisabled"),
 
             Query::FIND_USER_BY_USERNAME_CASE_INSENSITIVE =>
                 "SELECT $userColumns, u.$uPassword AS password " .
                 "FROM $user u " .
-                "WHERE lower(u.$uUsername) = lower(:$usernameParam) " .
-                (empty($uDisabled) ? "" : "AND NOT u.$uDisabled"),
+                "WHERE lower(u.$uUsername) = lower(:$usernameParam)" .
+                (empty($uDisabled) ? "" : " AND NOT u.$uDisabled"),
 
             Query::FIND_USER_BY_USERNAME_OR_EMAIL =>
                 "SELECT $userColumns, u.$uPassword AS password " .
                 "FROM $user u " .
-                "WHERE u.$uUsername = :$usernameParam OR u.$uEmail = :$emailParam " .
-                (empty($uDisabled) ? "" : "AND NOT u.$uDisabled"),
+                "WHERE u.$uUsername = :$usernameParam OR u.$uEmail = :$emailParam" .
+                (empty($uDisabled) ? "" : " AND NOT u.$uDisabled"),
 
             Query::FIND_USER_BY_USERNAME_OR_EMAIL_CASE_INSENSITIVE =>
                 "SELECT $userColumns, u.$uPassword AS password " .
                 "FROM $user u " .
-                "WHERE lower(u.$uUsername) = lower(:$usernameParam) OR lower(u.$uEmail) = lower(:$emailParam) " .
-                (empty($uDisabled) ? "" : "AND NOT u.$uDisabled"),
+                "WHERE lower(u.$uUsername) = lower(:$usernameParam) OR lower(u.$uEmail) = lower(:$emailParam)" .
+                (empty($uDisabled) ? "" : " AND NOT u.$uDisabled"),
 
             Query::FIND_USER_GROUPS =>
                 "SELECT $groupColumns " .
-                "FROM $group g, $userGroup ug " .
-                "WHERE ug.$ugGID = g.$gGID " .
-                "AND ug.$ugUID = :$uidParam " .
+                "FROM $group g " .
+                "LEFT JOIN $userGroup ug ON ug.$ugGID = g.$gGID " .
+                "WHERE ug.$ugUID = :$uidParam " .
                 "ORDER BY g.$gGID",
 
             Query::FIND_USERS =>
@@ -210,7 +226,7 @@ class QueryProvider implements \ArrayAccess
                 (empty($uName) ? "" : "OR u.$uName LIKE :$searchParam ") .
                 (empty($uEmail) ? "" : "OR u.$uEmail LIKE :$searchParam ") .
                 ")" .
-                (empty($uDisabled) ? "" : "AND NOT u.$uDisabled ") .
+                (empty($uDisabled) ? "" : " AND NOT u.$uDisabled ") .
                 "ORDER BY u.$uUID",
 
             Query::UPDATE_DISPLAY_NAME =>
@@ -238,7 +254,7 @@ class QueryProvider implements \ArrayAccess
     /**
      * @inheritdoc
      */
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset):bool
     {
         return isset($this->queries[$offset]);
     }
@@ -246,7 +262,7 @@ class QueryProvider implements \ArrayAccess
     /**
      * @inheritdoc
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset):mixed
     {
         if (isset($this->queries[$offset])) {
             return $this->queries[$offset];
@@ -258,7 +274,7 @@ class QueryProvider implements \ArrayAccess
     /**
      * @inheritdoc
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value):void
     {
         $this->queries[$offset] = $value;
     }
@@ -266,7 +282,7 @@ class QueryProvider implements \ArrayAccess
     /**
      * @inheritdoc
      */
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset):void
     {
         unset($this->queries[$offset]);
     }

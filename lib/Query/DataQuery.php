@@ -109,26 +109,30 @@ class DataQuery
         }
 
         $query = $this->queryProvider[$queryName];
-        $result = $this->connection->prepare($query, $limit, $offset);
+
+        try {
+            $result = $this->connection->prepare($query, $limit, $offset);
+        } catch (DBALException  $exception) {
+            $this->logger->logException(
+				$exception, [ 'message' => "Could not prepare the query: " . $query ]
+			);
+            return false;
+        }
 
         foreach ($params as $param => $value) {
             $result->bindValue(":" . $param, $value);
         }
 
-        $this->logger->debug(
-            "Executing query: " . $query . ", " . implode(",", $params),
-            ["app" => $this->appName]
-        );
+        $this->logger->debug("Executing query: " . $query . ", " . implode(",", $params));
 
         try {
             $result = $result->execute();
             return $result;
 
         } catch (DBALException  $exception) {
-            $this->logger->error(
-                "Could not execute the query: " . $exception->getMessage(),
-                ["app" => $this->appName]
-            );
+            $this->logger->logException(
+				$exception, [ 'message' => "Could not execute the query: " . $query ]
+			);
             return false;
         }
     }
@@ -217,6 +221,27 @@ class DataQuery
         }
 
         return $result->fetchFirstColumn();
+    }
+
+    /**
+     * Fetch values from all columns which the given query returns.
+     *
+     * @param string $queryName The query to execute.
+     * @param array  $params    The query parameters to bind.
+     * @param int    $limit     Results limit. Defaults to -1 (no limit).
+     * @param int    $offset    Results offset. Defaults to 0.
+     *
+     * @return array|bool Queried column or FALSE on failure.
+     */
+    public function queryColumns(
+        $queryName, $params = [], $limit = -1, $offset = 0
+    ) {
+        $result = $this->execQuery($queryName, $params, $limit, $offset);
+        if ($result === false) {
+            return false;
+        }
+
+        return $result->fetchAll();
     }
 
     /**
